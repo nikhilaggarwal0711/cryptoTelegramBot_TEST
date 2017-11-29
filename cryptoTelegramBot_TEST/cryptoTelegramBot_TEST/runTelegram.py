@@ -19,7 +19,7 @@ class RunTelegram:
         telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=60))
         
     def getlastOffset(self):
-        self.lastOffset = self.db.getLastOffset()
+        self.lastOffset = self.db.getlastOffset()
 
     def getUpdates(self):
         self.updates = self.TelegramBot.getUpdates(int(self.lastOffset)+1)
