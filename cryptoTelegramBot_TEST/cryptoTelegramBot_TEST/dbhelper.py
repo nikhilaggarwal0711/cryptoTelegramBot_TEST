@@ -62,7 +62,7 @@ class DBHelper:
         self.conn.commit()
 
     def getNewListings(self):
-        self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders FROM bittrex group by marketname having count(marketname)=1")
+        self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders,fetchTime FROM bittrex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
     
@@ -71,3 +71,6 @@ class DBHelper:
         chatIds = self.DB.fetchall()
         return chatIds
     
+    def insertIntoExchange(self, marketName , fetchTime):
+        self.DB.execute("""INSERT INTO bittrex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
+        self.conn.commit()

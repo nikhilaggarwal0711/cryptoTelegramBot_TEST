@@ -27,11 +27,11 @@ class RunTelegram:
         self.fetchTime = int(time.time())
         
     def getLastOffset(self):
-        print "Inside getLastOffset -- Telegram"
+        #print "Inside getLastOffset -- Telegram"
         self.lastOffset = self.db.getLastOffset()
 
     def getUpdates(self):
-        print "Inside getUpdates -- Telegram"
+        #print "Inside getUpdates -- Telegram"
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,update):
@@ -63,9 +63,12 @@ class RunTelegram:
 
 
     def sendTelegramMessage(self):
-        print "Inside sendTelegramMessage -- Telegram"
+        #print "Inside sendTelegramMessage -- Telegram"
         self.TelegramBot.sendMessage(self.chatId,self.message)
 
+    def insertIntoExchange(self, marketName , fetchTime):
+        self.db.insertIntoExchange(marketName , fetchTime)
+    
     def start(self,sleepTime):
         print "Start method -- Telegram"
         self.sleepTime = sleepTime
@@ -80,7 +83,12 @@ class RunTelegram:
                         self.message = str(market) + "\nNew Market Added\nMarket Name : "+str(newMarket[0])+"\nVolume : "+str(newMarket[1])+"\nBid : "+str(newMarket[2])+"\nAsk : "+str(newMarket[3])+"\nOpen Buy Orders : "+str(newMarket[4])+"\nOpen Sell Orders : "+str(newMarket[5])
                         self.chatId = user[0]
                         self.sendTelegramMessage()
-
+                
+                for newMarket in newMarkets:
+                    self.insertIntoExchange(str(newMarket[0]) , str(newMarket[6]) )
+                
+                newMarkets=""
+                allUsers=""
 #                Reply to users
                 self.setFetchTime()
                 self.getLastOffset()
