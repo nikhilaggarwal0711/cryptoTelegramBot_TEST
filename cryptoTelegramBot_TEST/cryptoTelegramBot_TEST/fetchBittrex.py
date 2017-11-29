@@ -13,7 +13,7 @@ class fetchBittrex:
         print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
 
-    def delTillFetchTime(self):
+    def setDelTillFetchTime(self):
         print "delTillFetchTime -- Bittrex"
 #        deleteTime = 172800
         deleteTime = 1
@@ -45,7 +45,7 @@ class fetchBittrex:
             
     def saveIntoDB(self): 
         print "saveIntoDB -- Bittrex"           
-        self.db.addBittrex(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
+        self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):
         print "deleteFromDB_fetchTime -- Bittrex"
