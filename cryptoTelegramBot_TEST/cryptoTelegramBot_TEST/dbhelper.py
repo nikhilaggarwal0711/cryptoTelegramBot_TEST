@@ -42,8 +42,12 @@ class DBHelper:
         return lastOffset
 
     def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text):
-        self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
-        self.conn.commit()
+        print "Inside addBotMessage -- DBHELPER"
+        try:
+            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
+            self.conn.commit()
+        except Exception as e: 
+            print(e)
 
     def getNewListings(self):
         self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders FROM bittrex group by marketname having count(marketname)=1")
