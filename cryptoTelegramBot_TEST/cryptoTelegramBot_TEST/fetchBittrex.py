@@ -27,7 +27,7 @@ class fetchBittrex:
         length = len(json.loads(self.data)["result"])
 
         for x in range(0,length):
-            print "Add data for loop  -- Bittrex"
+            #print "Add data for loop  -- Bittrex"
             self.MarketName = self.jsonList["result"][x]["MarketName"].encode('utf-8')
             self.High = self.jsonList["result"][x]["High"]
             self.Low = self.jsonList["result"][x]["Low"]
@@ -45,7 +45,7 @@ class fetchBittrex:
             self.saveIntoDB()
 
     def saveIntoDB(self): 
-        print "saveIntoDB -- Bittrex"           
+        #print "saveIntoDB -- Bittrex"           
         self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):
