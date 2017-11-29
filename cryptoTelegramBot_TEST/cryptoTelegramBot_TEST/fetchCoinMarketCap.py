@@ -2,11 +2,16 @@ from time import sleep
 import time
 import requests
 import json
+from dbhelper import DBHelper
 
+
+    
 class fetchCoinMarketCap:
     def __init__(self):
         print "Inside fetchCoinmarketcap constructor"
         self.link1 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
+        self.db = DBHelper()
+        self.db.setup()
     
     def setFetchTime(self):
         print "setFetchTime"
@@ -52,10 +57,9 @@ class fetchCoinMarketCap:
         print "deleteFromDB_fetchTime"
         self.db.deleteFromDB_fetchTime("coinmarketcap",self.delTillFetchTime)
 
-    def start(self,sleepTime,db):
+    def start(self,sleepTime):
         print "Start method"
         self.sleepTime = sleepTime
-        self.db = db
         try:
             while True:
                 try:

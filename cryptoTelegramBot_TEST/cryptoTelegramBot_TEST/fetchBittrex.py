@@ -8,7 +8,9 @@ class fetchBittrex:
     def __init__(self):
         print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
-
+        self.db = DBHelper()
+        self.db.setup()
+        
     def setFetchTime(self):
         print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
@@ -52,10 +54,9 @@ class fetchBittrex:
         print "deleteFromDB_fetchTime -- Bittrex"
         self.db.deleteFromDB_fetchTime("bittrex",self.delTillFetchTime)
     
-    def start(self,sleepTime,db):
+    def start(self,sleepTime):
         print "Start method -- Bittrex"
         self.sleepTime = sleepTime
-        self.db = db
         try:
             while True:
                 try:

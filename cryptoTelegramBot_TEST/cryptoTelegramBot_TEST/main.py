@@ -5,20 +5,18 @@ import urllib
 from myThread import MyThread
 
 import config
-from dbhelper import DBHelper
 
 
 
 def main():
     print "inside main "
-    db = DBHelper()
-    db.setup()
+
 #    last_update_id = None
     print "Starting Thread"
-    thread1 = MyThread("coinMarketCap",60,db)
-    thread2 = MyThread("bittrex",43200,db)
-#    thread3 = myThread("twitter",60,db)
-#    thread4 = myThread("telegram",60,db)
+    thread1 = MyThread("coinMarketCap",60)
+    thread2 = MyThread("bittrex",43200)
+#    thread3 = myThread("twitter",60)
+#    thread4 = myThread("telegram",60)
 
     print "Starting Threads"
     #start new Threads
