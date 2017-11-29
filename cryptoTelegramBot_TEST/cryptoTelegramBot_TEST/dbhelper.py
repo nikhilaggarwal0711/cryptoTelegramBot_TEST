@@ -44,7 +44,7 @@ class DBHelper:
     def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text):
         print "Inside addBotMessage -- DBHELPER"
         try:
-            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
+            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
             self.conn.commit()
         except Exception as e: 
             print(e)
