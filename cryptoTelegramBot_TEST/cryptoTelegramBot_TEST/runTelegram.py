@@ -32,7 +32,7 @@ class RunTelegram:
 
     def getUpdates(self):
         print "Inside getUpdates -- Telegram"
-        self.updates = self.TelegramBot.getUpdates(int(self.lastOffset)+1)
+        self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=100)
 
     def fetchData(self,update):
         print "Inside fetchData -- Telegram"
