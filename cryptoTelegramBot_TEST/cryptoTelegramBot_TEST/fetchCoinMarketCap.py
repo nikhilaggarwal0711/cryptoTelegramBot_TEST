@@ -12,7 +12,7 @@ class fetchCoinMarketCap:
         print "setFetchTime"
         self.fetchTime = int(time.time())
 
-    def delTillFetchTime(self):
+    def setDelTillFetchTime(self):
         print "delTillFetchTime"
         self.delTillFetchTime = self.fetchTime - 172800
 
@@ -38,13 +38,16 @@ class fetchCoinMarketCap:
             self.percent_change_7d = self.jsonList[x]["percent_change_7d"]
             self.last_updated = self.jsonList[x]["last_updated"]
             
+            self.saveIntoDB()
+
+            
     def saveIntoDB(self):   
         print "SaveIntoDB"         
         self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):
         print "deleteFromDB_fetchTime"
-        self.db.deleteFromDB_fetchTime("coinmarketcap",self.delTillFetchTime())
+        self.db.deleteFromDB_fetchTime("coinmarketcap",self.delTillFetchTime)
 
     def start(self,sleepTime,db):
         print "Start method"
@@ -55,8 +58,7 @@ class fetchCoinMarketCap:
                 try:
                     self.setFetchTime()
                     self.fetchData()
-                    self.saveIntoDB()
-                    self.delTillFetchTime()
+                    self.setDelTillFetchTime()
                     self.deleteFromDB_fetchTime()
                 except:
                     print "exception caught in while loop"
