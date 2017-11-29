@@ -64,8 +64,11 @@ class RunTelegram:
 
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
-        self.TelegramBot.sendMessage(self.chatId,self.message)
-
+        try:
+            self.TelegramBot.sendMessage(self.chatId,self.message)
+        except Exception as e: 
+            print(e)
+            
     def insertIntoBittrex_DB(self, marketName , fetchTime):
         self.db.insertIntoBittrex_DuplicateRow(marketName , fetchTime)
     
@@ -110,5 +113,6 @@ class RunTelegram:
             except Exception as e: 
                 print(e)
                 #print "Exception Caught"
-            sleep(self.sleepTime)
+            #sleep(self.sleepTime)
+            sleep(0.5)
 
