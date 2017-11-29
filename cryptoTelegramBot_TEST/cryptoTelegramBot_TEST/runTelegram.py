@@ -11,7 +11,8 @@ class RunTelegram:
         self.TelegramBot = telepot.Bot(self.TOKEN)
         self.db = DBHelper()
         self.db.setup()
-        
+        self.category = "g"
+
     def setup_pythonAnyWhere(self):
         print "Inside setup method -- Telegram" 
         proxy_url = TELEGRAM.proxy_url
@@ -29,7 +30,7 @@ class RunTelegram:
         self.updates = self.TelegramBot.getUpdates(int(self.lastOffset)+1)
 
     def fetchData(self,update):
-        print "Inside fetchData -- "
+        print "Inside fetchData -- Telegram"
         self.text = update["message"]["text"]
         self.chatId = update["message"]["from"]["id"]
         self.offsetId = update["update_id"]
@@ -43,7 +44,7 @@ class RunTelegram:
     def newUser(self):
         print "Inside newUser -- Telegram"
         self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts"
-
+        
     def addBotMessage(self):
         print "Inside addBotMessage -- Telegram"
         self.db.addBotMessage(self.lastOffset,self.chatId , self.firstName, "g" , self.offsetId, self.fetchTime)
