@@ -26,7 +26,7 @@ class fetchBittrex:
         self.jsonList  = json.loads(self.data)
         length = len(json.loads(self.data)["result"])
 
-        for x in range(0,len(length)):
+        for x in range(0,length):
             print "Add data for loop  -- Bittrex"
             self.MarketName = self.jsonList["result"][x]["MarketName"].encode('utf-8')
             self.High = self.jsonList["result"][x]["High"]
