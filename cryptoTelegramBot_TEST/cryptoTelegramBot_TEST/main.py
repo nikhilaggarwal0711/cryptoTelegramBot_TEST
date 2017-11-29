@@ -2,7 +2,7 @@ import json
 import requests
 import time
 import urllib
-import myThread
+from myThread import MyThread
 
 import config
 from dbhelper import DBHelper
@@ -15,7 +15,7 @@ def main():
     db.setup()
 #    last_update_id = None
     print "Starting Thread"
-    thread1 = myThread("coinMarketCap",60,db)
+    thread1 = MyThread("coinMarketCap",60,db)
 #    thread2 = myThread("bittrex",43200,db)
 #    thread3 = myThread("twitter",60,db)
 #    thread4 = myThread("telegram",60,db)
