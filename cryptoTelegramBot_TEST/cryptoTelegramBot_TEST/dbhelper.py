@@ -49,10 +49,6 @@ class DBHelper:
         except Exception as e: 
             print(e)
 
-    def getNewListings(self):
-        self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders FROM bittrex group by marketname having count(marketname)=1")
-        newMarkets = self.DB.fetchall()
-    
     def addBittrex(self,MarketName,High,Low,Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime):
         self.DB.execute("""INSERT INTO bittrex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(MarketName,float(High),float(Low),Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime))
         self.conn.commit()
@@ -64,5 +60,14 @@ class DBHelper:
     def deleteFromDB_fetchTime(self,tablename , delTillFetchTime):
         self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
         self.conn.commit()
-     
+
+    def getNewListings(self):
+        self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders FROM bittrex group by marketname having count(marketname)=1")
+        newMarkets = self.DB.fetchall()
+        return newMarkets
+    
+    def getAllUsers(self):
+        self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
+        chatIds = self.DB.fetchall()
+        return chatIds
     

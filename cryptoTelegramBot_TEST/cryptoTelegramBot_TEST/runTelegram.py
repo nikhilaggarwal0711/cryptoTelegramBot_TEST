@@ -32,7 +32,7 @@ class RunTelegram:
 
     def getUpdates(self):
         print "Inside getUpdates -- Telegram"
-        self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=100)
+        self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,update):
         print "Inside fetchData -- Telegram"
@@ -50,8 +50,8 @@ class RunTelegram:
         print "Inside newUser -- Telegram"
         self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts"
         
-    def addBotMessage(self):
-        print "Inside addBotMessage -- Telegram"
+    def addBotMessageInDB(self):
+        print "Inside addBotMessageInDB -- Telegram"
         self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
         
     def handleUpdate(self):
@@ -71,6 +71,17 @@ class RunTelegram:
         self.sleepTime = sleepTime
         while True:
             try:
+#               Send New Market Notification
+                newMarkets = self.db.getNewListings()
+                market = "Bittrex"
+                allUsers = self.db.getAllUsers()
+                for user in allUsers:
+                    for newMarket in newMarkets:
+                        self.message = str(market) + "\nNew Market Added\nMarket Name : "+str(newMarket[0])+"\nVolume : "+str(newMarket[1])+"\nBid : "+str(newMarket[2])+"\nAsk : "+str(newMarket[3])+"\nOpen Buy Orders : "+str(newMarket[4])+"\nOpen Sell Orders : "+str(newMarket[5])
+                        self.chatId = user[0]
+                        self.sendTelegramMessage()
+
+#                Reply to users
                 self.setFetchTime()
                 self.getLastOffset()
                 self.getUpdates()
@@ -82,7 +93,7 @@ class RunTelegram:
                             self.newUser()
                         else:
                             self.handleUpdate()
-                        self.addBotMessage()
+                        self.addBotMessageInDB()
                         self.sendTelegramMessage()
                     except Exception as e: 
                         print(e)
