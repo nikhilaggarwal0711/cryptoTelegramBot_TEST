@@ -16,8 +16,8 @@ class MyThread(Thread):
         print "Starting run method of MyThread"
         if ( self.threadName == "coinMarketCap" ):
             print "coinmarketcap"
-            #fcmc = fetchCoinMarketCap()
-            #fcmc.start(self.sleepTime, self.db)
+            fcmc = fetchCoinMarketCap()
+            fcmc.start(self.sleepTime, self.db)
         elif  ( self.threadName == "bittrex" ):
             print "bittrex"
             fb = fetchBittrex()
