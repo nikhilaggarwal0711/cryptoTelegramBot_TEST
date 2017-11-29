@@ -52,7 +52,7 @@ class RunTelegram:
         
     def addBotMessage(self):
         print "Inside addBotMessage -- Telegram"
-        self.db.addBotMessage(self.lastOffset,self.chatId , self.firstName, "g" , self.offsetId, self.fetchTime)
+        self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
         
     def handleUpdate(self):
         print "Inside handleUpdate -- Telegram"
@@ -82,7 +82,7 @@ class RunTelegram:
                             self.newUser()
                         else:
                             self.handleUpdate()
-                        self.addBotMessage(self.chatId ,self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
+                        self.addBotMessage()
                         self.sendTelegramMessage()
                     except Exception as e: 
                         print(e)
