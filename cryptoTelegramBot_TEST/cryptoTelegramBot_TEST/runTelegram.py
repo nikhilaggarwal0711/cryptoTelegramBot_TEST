@@ -27,11 +27,11 @@ class RunTelegram:
         self.fetchTime = int(time.time())
         
     def getLastOffset(self):
-        #print "Inside getLastOffset -- Telegram"
+        print "Inside getLastOffset -- Telegram"
         self.lastOffset = self.db.getLastOffset()
 
     def getUpdates(self):
-        #print "Inside getUpdates -- Telegram"
+        print "Inside getUpdates -- Telegram"
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,update):
@@ -74,6 +74,7 @@ class RunTelegram:
         self.sleepTime = sleepTime
         while True:
             try:
+                print "At beginning of while loop -- Telegram"
 #               Send New Market Notification
                 newMarkets = self.db.getNewListings()
                 market = "Bittrex"
