@@ -6,7 +6,7 @@ from dbhelper import DBHelper
 
 
     
-class fetchCoinMarketCap:
+class FetchCoinMarketCap:
     def __init__(self):
         print "Inside fetchCoinmarketcap constructor"
         self.link1 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
@@ -30,7 +30,7 @@ class fetchCoinMarketCap:
         self.jsonList  = json.loads(self.data)
 
         for x in range(0,len(self.jsonList)):
-            print "print data for loop - coinmarketcap" 
+            #print "print data for loop - coinmarketcap" 
             self.id = self.jsonList[x]["id"]
             self.name = self.jsonList[x]["name"]
             self.symbol = self.jsonList[x]["symbol"]
@@ -50,7 +50,7 @@ class fetchCoinMarketCap:
 
             
     def saveIntoDB(self):   
-        print "SaveIntoDB -- coinmarketcap"         
+        #print "SaveIntoDB -- coinmarketcap"         
         self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):

@@ -1,7 +1,7 @@
 from threading import Thread
-from fetchCoinMarketCap import fetchCoinMarketCap
-from fetchBittrex import fetchBittrex
-from runTelegram import runTelegram
+from fetchCoinMarketCap import FetchCoinMarketCap
+from fetchBittrex import FetchBittrex
+from runTelegram import RunTelegram
 
 
 class MyThread(Thread):
@@ -15,15 +15,16 @@ class MyThread(Thread):
         print "Starting run method of MyThread"
         if ( self.threadName == "coinMarketCap" ):
             print "coinmarketcap"
-            fcmc = fetchCoinMarketCap()
-            fcmc.start(self.sleepTime)
+            #fcmc = FetchCoinMarketCap()
+            #fcmc.start(self.sleepTime)
         elif  ( self.threadName == "bittrex" ):
             print "bittrex"
-            fb = fetchBittrex()
-            fb.start(self.sleepTime)
+            #fb = FetchBittrex()
+            #fb.start(self.sleepTime)
         elif ( self.threadName == "telegram" ):
             print "telegram"
-            #rt = runTelegram()
-            #rt.start(self.sleepTime)
+            rt = RunTelegram()
+            rt.setup_pythonAnyWhere()
+            rt.start(self.sleepTime)
         else:
             print "Wrong input"
