@@ -14,7 +14,9 @@ class fetchCoinMarketCap:
 
     def setDelTillFetchTime(self):
         print "delTillFetchTime"
-        self.delTillFetchTime = self.fetchTime - 172800
+        #deleteTime = 172800
+        deleteTime = 1
+        self.delTillFetchTime = self.fetchTime - deleteTime
 
     def fetchData(self):
         print "fetchData"
