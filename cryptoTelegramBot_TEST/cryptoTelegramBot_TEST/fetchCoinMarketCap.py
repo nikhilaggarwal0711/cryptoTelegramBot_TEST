@@ -5,15 +5,19 @@ import json
 
 class fetchCoinMarketCap:
     def __init__(self):
+        print "Inside fetchCoinmarketcap constructor"
         self.link1 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
     
     def setFetchTime(self):
+        print "setFetchTime"
         self.fetchTime = int(time.time())
 
     def delTillFetchTime(self):
+        print "delTillFetchTime"
         self.delTillFetchTime = self.fetchTime - 172800
 
     def fetchData(self):
+        print "fetchData"
         self.f1 = requests.get(url = self.link1)
         self.data = self.f1.text.replace("null","0")
         self.jsonList  = json.loads(self.data)
@@ -34,13 +38,16 @@ class fetchCoinMarketCap:
             self.percent_change_7d = self.jsonList[x]["percent_change_7d"]
             self.last_updated = self.jsonList[x]["last_updated"]
             
-    def saveIntoDB(self):            
+    def saveIntoDB(self):   
+        print "SaveIntoDB"         
         self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):
+        print "deleteFromDB_fetchTime"
         self.db.deleteFromDB_fetchTime("coinmarketcap",self.delTillFetchTime())
 
     def start(self,sleepTime,db):
+        print "Start method"
         self.sleepTime = sleepTime
         self.db = db
         try:
