@@ -1,12 +1,4 @@
-import json
-import requests
-import time
-import urllib
 from myThread import MyThread
-
-import config
-
-
 
 def main():
     #print "inside main "
@@ -33,9 +25,4 @@ def main():
     print "Program Ends"
     
 def my_long_running_process():
-    #print "Inside long process"
-#    if __name__ == '__main__':
-    #print "startin main"
     main()
-    #else:
-        ##print "inside else"
