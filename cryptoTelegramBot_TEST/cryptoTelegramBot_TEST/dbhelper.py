@@ -32,7 +32,7 @@ class DBHelper:
             return 'new'
 
     def getLastOffset(self):
-        self.DB.execute("""SELECT MAX(offset) from botMessages""")
+        self.DB.execute("""SELECT MAX(offsetId) from botMessages""")
         lastOffsets = self.DB.fetchall()
         for lastOffset in lastOffsets:
             if lastOffset[0] is None:
