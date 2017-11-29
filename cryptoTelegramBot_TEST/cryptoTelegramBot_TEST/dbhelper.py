@@ -13,15 +13,15 @@ class DBHelper:
 
     def setup(self):
         tblstmt1 = "CREATE TABLE IF NOT EXISTS botMessages ( chatId text,firstName text , category text,offSetId text,fetchTime int(11), message text)"
-        self.conn.execute(tblstmt1)
+        self.DB.execute(tblstmt1)
         self.conn.commit()
  
         tblstmt2 = "CREATE TABLE IF NOT EXISTS bittrex ( marketname text,high decimal(18,8) ,low decimal(18,8) ,volume decimal(18,8) ,last decimal(18,8) ,basevolume decimal(18,8) ,timestampp text,bid decimal(18,8) ,ask decimal(18,8) ,openbuyorders int(11) ,opensellorders int(11) ,prevday decimal(18,8) ,created text,fetchTime int(11) )"
-        self.conn.execute(tblstmt2)
+        self.DB.execute(tblstmt2)
         self.conn.commit()
         
         tblstmt3 = "CREATE TABLE IF NOT EXISTS coinmarketcap ( id text,name text,symbol text,rank int(11) ,price_usd decimal(18,2) ,price_btc decimal(38,6) ,24h_volume_usd decimal(38,8) ,market_cap_usd decimal(38,8) ,available_supply decimal(38,8) ,total_supply decimal(38,8) ,percent_change_1h decimal(38,8) ,percent_change_24h decimal(38,8) ,percent_change_7d decimal(38,8) ,last_updated text,fetchTime int(11) )"
-        self.conn.execute(tblstmt3)
+        self.DB.execute(tblstmt3)
         self.conn.commit()
 
     def checkUser(self, chatId):
