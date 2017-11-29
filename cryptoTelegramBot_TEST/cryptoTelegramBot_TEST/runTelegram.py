@@ -110,5 +110,5 @@ class RunTelegram:
             except Exception as e: 
                 print(e)
                 #print "Exception Caught"
-            sleep(0.5)
+            sleep(self.sleepTime)
 

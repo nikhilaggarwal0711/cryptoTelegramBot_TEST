@@ -5,9 +5,9 @@ def main():
 
 #    last_update_id = None
     print "Starting Thread"
-    thread1 = MyThread("coinMarketCap",60)
-    thread2 = MyThread("bittrex",43200)
-    thread3 = MyThread("telegram",60)
+    thread1 = MyThread("coinMarketCap",43200)
+    thread2 = MyThread("bittrex",60)
+    thread3 = MyThread("telegram",0.5)
 #    thread4 = myThread("telegram",60)
 
     #print "Starting Threads"
