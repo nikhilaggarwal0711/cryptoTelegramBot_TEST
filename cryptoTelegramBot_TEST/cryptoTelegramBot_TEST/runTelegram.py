@@ -3,6 +3,7 @@ import urllib3
 from config import TELEGRAM
 from dbhelper import  DBHelper
 from time import sleep
+import time
 
 class RunTelegram:
     def __init__(self):
@@ -20,6 +21,10 @@ class RunTelegram:
                 'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=60),
         }
         telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=60))
+
+    def setFetchTime(self):
+        print "setFetchTime -- Telegram"
+        self.fetchTime = int(time.time())
         
     def getLastOffset(self):
         print "Inside getLastOffset -- Telegram"
@@ -66,6 +71,7 @@ class RunTelegram:
         self.sleepTime = sleepTime
         while True:
             try:
+                self.setFetchTime()
                 self.getLastOffset()
                 self.getUpdates()
                 for update in self.updates:
