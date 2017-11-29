@@ -1,6 +1,5 @@
 #import sqlite3
 import MySQLdb
-import user
 from config import MYSQL
 
 class DBHelper:
@@ -8,6 +7,8 @@ class DBHelper:
     def __init__(self):
         print "Inside DBHelper constructor"
         self.conn = MySQLdb.connect(host = MYSQL.HOST, user = MYSQL.USER, passwd = MYSQL.PASSWORD, db = MYSQL.DBNAME)
+        self.conn.autocommit(True)
+        
         print "Setting cursor now"
         self.DB = self.conn.cursor()
 
@@ -66,7 +67,7 @@ class DBHelper:
         self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders,fetchTime FROM bittrex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
-    
+
     def getAllUsers(self):
         self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
         chatIds = self.DB.fetchall()
