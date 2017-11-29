@@ -18,8 +18,8 @@ class RunTelegram:
         }
         telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=60))
         
-    def getlastOffset(self):
-        self.lastOffset = self.db.getlastOffset()
+    def getLastOffset(self):
+        self.lastOffset = self.db.getLastOffset()
 
     def getUpdates(self):
         self.updates = self.TelegramBot.getUpdates(int(self.lastOffset)+1)
@@ -27,7 +27,7 @@ class RunTelegram:
     def fetchData(self,update):
         self.text = update["message"]["text"]
         self.chatId = update["message"]["from"]["id"]
-        self.offSetId = update["update_id"]
+        self.offsetId = update["update_id"]
         self.firstName = update["message"]["from"]["first_name"]
 
     #Following function will return either new or old
@@ -38,7 +38,7 @@ class RunTelegram:
         self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts"
 
     def addBotMessage(self):
-        self.db.addBotMessage(self.lastOffset,self.chatId , self.firstName, "g" , self.offSetid, self.fetchTime)
+        self.db.addBotMessage(self.lastOffset,self.chatId , self.firstName, "g" , self.offsetId, self.fetchTime)
         
     def handleUpdate(self):
         if self.text == "/start" or self.text == "start":
@@ -55,7 +55,7 @@ class RunTelegram:
         self.sleepTime = sleepTime
         while True:
             try:
-                self.getlastOffset()
+                self.getLastOffset()
                 self.getUpdates()
                 for update in self.updates:
                     try:
@@ -65,7 +65,7 @@ class RunTelegram:
                             self.newUser()
                         else:
                             self.handleUpdate()
-                        self.addBotMessage(self.chatId ,self.firstName, self.category , self.offSetId, self.fetchTime, self.text)
+                        self.addBotMessage(self.chatId ,self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
                         self.sendTelegramMessage()
                     except Exception as e: 
                         print(e)

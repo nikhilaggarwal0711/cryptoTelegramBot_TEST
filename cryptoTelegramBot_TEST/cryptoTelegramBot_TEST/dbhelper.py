@@ -12,7 +12,7 @@ class DBHelper:
         self.DB = self.conn.cursor()
 
     def setup(self):
-        tblstmt1 = "CREATE TABLE IF NOT EXISTS botMessages ( chatId text,firstName text , category text,offSetId text,fetchTime int(11), message text)"
+        tblstmt1 = "CREATE TABLE IF NOT EXISTS botMessages ( chatId text,firstName text , category text,offsetId text,fetchTime int(11), message text)"
         self.DB.execute(tblstmt1)
         self.conn.commit()
  
@@ -31,7 +31,7 @@ class DBHelper:
         else:
             return 'new'
 
-    def getlastOffset(self):
+    def getLastOffset(self):
         self.DB.execute("""SELECT MAX(offset) from botMessages""")
         lastOffsets = self.DB.fetchall()
         for lastOffset in lastOffsets:
@@ -41,8 +41,8 @@ class DBHelper:
                 lastOffset = lastOffset[0]
         return lastOffset
 
-    def addBotMessage(self, chatId ,firstName, category , offSetId, fetchTime, text):
-        self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s)""", (chatId ,firstName, category , offSetId, fetchTime, text))
+    def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text):
+        self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
         self.conn.commit()
 
     def getNewListings(self):
