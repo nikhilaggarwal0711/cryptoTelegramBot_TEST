@@ -15,20 +15,20 @@ def main():
     db.setup()
 #    last_update_id = None
     print "Starting Thread"
-    thread1 = MyThread("coinMarketCap",60,db)
+#    thread1 = MyThread("coinMarketCap",60,db)
     thread2 = MyThread("bittrex",43200,db)
 #    thread3 = myThread("twitter",60,db)
 #    thread4 = myThread("telegram",60,db)
 
     print "Starting Threads"
     #start new Threads
-    thread1.start()
+#    thread1.start()
     thread2.start()
 #    thread3.start()
 #    thread4.start()
 
     #Waiting for Threads to finish
-    thread1.join()
+#    thread1.join()
     thread2.join()
 #    thread3.join()
 #    thread4.join()
