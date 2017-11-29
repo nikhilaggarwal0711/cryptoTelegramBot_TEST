@@ -7,7 +7,7 @@ import time
 
 class RunTelegram:
     def __init__(self):
-        print "Inside telegram constructor -- Telegram"
+        #print "Inside telegram constructor -- Telegram"
         self.TOKEN = TELEGRAM.token
         self.TelegramBot = telepot.Bot(self.TOKEN)
         self.db = DBHelper()
@@ -15,7 +15,7 @@ class RunTelegram:
         self.category = "g"
 
     def setup_pythonAnyWhere(self):
-        print "Inside setup method -- Telegram" 
+        #print "Inside setup method -- Telegram" 
         proxy_url = TELEGRAM.proxy_url
         telepot.api._pools = {
                 'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=60),
@@ -23,19 +23,19 @@ class RunTelegram:
         telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=60))
 
     def setFetchTime(self):
-        print "setFetchTime -- Telegram"
+        #print "setFetchTime -- Telegram"
         self.fetchTime = int(time.time())
         
     def getLastOffset(self):
-        print "Inside getLastOffset -- Telegram"
+        #print "Inside getLastOffset -- Telegram"
         self.lastOffset = self.db.getLastOffset()
 
     def getUpdates(self):
-        print "Inside getUpdates -- Telegram"
+        #print "Inside getUpdates -- Telegram"
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,update):
-        print "Inside fetchData -- Telegram"
+        #print "Inside fetchData -- Telegram"
         self.text = update["message"]["text"]
         self.chatId = update["message"]["from"]["id"]
         self.offsetId = update["update_id"]
@@ -43,19 +43,19 @@ class RunTelegram:
 
     #Following function will return either new or old
     def checkUser(self):
-        print "Inside checkUser -- Telegram"
+        #print "Inside checkUser -- Telegram"
         self.user = self.db.checkUser(self.chatId)
 
     def newUser(self):
-        print "Inside newUser -- Telegram"
+        #print "Inside newUser -- Telegram"
         self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts"
         
     def addBotMessageInDB(self):
-        print "Inside addBotMessageInDB -- Telegram"
+        #print "Inside addBotMessageInDB -- Telegram"
         self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
         
     def handleUpdate(self):
-        print "Inside handleUpdate -- Telegram"
+        #print "Inside handleUpdate -- Telegram"
         if self.text == "/start" or self.text == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         else:
@@ -63,20 +63,20 @@ class RunTelegram:
 
 
     def sendTelegramMessage(self):
-        #print "Inside sendTelegramMessage -- Telegram"
+        ##print "Inside sendTelegramMessage -- Telegram"
         self.TelegramBot.sendMessage(self.chatId,self.message)
 
-    def insertIntoExchange(self, marketName , fetchTime):
-        self.db.insertIntoExchange(marketName , fetchTime)
+    def insertIntoBittrex_DB(self, marketName , fetchTime):
+        self.db.insertIntoBittrex_DuplicateRow(marketName , fetchTime)
     
     def start(self,sleepTime):
-        print "Start method -- Telegram"
+        #print "Start method -- Telegram"
         self.sleepTime = sleepTime
         while True:
             try:
-                print "At beginning of while loop -- Telegram"
+                #print "At beginning of while loop -- Telegram"
 #               Send New Market Notification
-                newMarkets = self.db.getNewListings()
+                newMarkets = self.db.getNewListingsBittrex()
                 market = "Bittrex"
                 allUsers = self.db.getAllUsers()
                 for user in allUsers:
@@ -86,7 +86,7 @@ class RunTelegram:
                         self.sendTelegramMessage()
                 
                 for newMarket in newMarkets:
-                    self.insertIntoExchange(str(newMarket[0]) , str(newMarket[6]) )
+                    self.insertIntoBittrex_DB(str(newMarket[0]) , str(newMarket[6]) )
                 
                 newMarkets=""
                 allUsers=""
@@ -106,9 +106,9 @@ class RunTelegram:
                         self.sendTelegramMessage()
                     except Exception as e: 
                         print(e)
-                        print "Exception caught inside for loop"
+                        #print "Exception caught inside for loop"
             except Exception as e: 
                 print(e)
-                print "Exception Caught"
+                #print "Exception Caught"
             sleep(0.5)
 

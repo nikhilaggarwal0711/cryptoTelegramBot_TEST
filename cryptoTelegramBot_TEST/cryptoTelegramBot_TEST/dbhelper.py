@@ -5,11 +5,11 @@ from config import MYSQL
 class DBHelper:
 
     def __init__(self):
-        print "Inside DBHelper constructor"
+        ##print "Inside DBHelper constructor"
         self.conn = MySQLdb.connect(host = MYSQL.HOST, user = MYSQL.USER, passwd = MYSQL.PASSWORD, db = MYSQL.DBNAME)
         self.conn.autocommit(True)
         
-        print "Setting cursor now"
+        ##print "Setting cursor now"
         self.DB = self.conn.cursor()
 
     def setup(self):
@@ -43,7 +43,7 @@ class DBHelper:
         return lastOffset
 
     def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text):
-        print "Inside addBotMessage -- DBHELPER"
+        ##print "Inside addBotMessage -- DBHELPER"
         try:
             self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
             self.conn.commit()
@@ -62,8 +62,8 @@ class DBHelper:
         self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
         self.conn.commit()
 
-    def getNewListings(self):
-        print "getNewListings -- DBHelper from Telegram"
+    def getNewListingsBittrex(self):
+        ##print "getNewListings -- DBHelper from Telegram"
         self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders,fetchTime FROM bittrex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
@@ -73,6 +73,6 @@ class DBHelper:
         chatIds = self.DB.fetchall()
         return chatIds
     
-    def insertIntoExchange(self, marketName , fetchTime):
+    def insertIntoBittrex_DuplicateRow(self, marketName , fetchTime):
         self.DB.execute("""INSERT INTO bittrex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
         self.conn.commit()

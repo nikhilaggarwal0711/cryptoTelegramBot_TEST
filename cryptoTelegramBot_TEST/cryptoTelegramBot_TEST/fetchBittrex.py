@@ -6,31 +6,31 @@ from time import sleep
 
 class FetchBittrex:
     def __init__(self):
-        print "inside Bittrex constructor"
+        #print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
         self.db = DBHelper()
         self.db.setup()
         
     def setFetchTime(self):
-        print "setFetchTime -- Bittrex"
+        #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
 
     def setDelTillFetchTime(self):
-        print "delTillFetchTime -- Bittrex"
+        #print "delTillFetchTime -- Bittrex"
         #2days older data.
         deleteTime = 172800
 #        deleteTime = 1
         self.delTillFetchTime = self.fetchTime - deleteTime
 
     def fetchData(self):
-        print "fetchData -- Bittrex"
+        #print "fetchData -- Bittrex"
         self.f1 = requests.get(url = self.link1)
         self.data = self.f1.text.replace("null","0")
         self.jsonList  = json.loads(self.data)
         length = len(json.loads(self.data)["result"])
 
         for x in range(0,length):
-            #print "Add data for loop  -- Bittrex"
+            ##print "Add data for loop  -- Bittrex"
             self.MarketName = self.jsonList["result"][x]["MarketName"].encode('utf-8')
             self.High = self.jsonList["result"][x]["High"]
             self.Low = self.jsonList["result"][x]["Low"]
@@ -48,15 +48,15 @@ class FetchBittrex:
             self.saveIntoDB()
 
     def saveIntoDB(self): 
-        #print "saveIntoDB -- Bittrex"           
+        ##print "saveIntoDB -- Bittrex"           
         self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)
 
     def deleteFromDB_fetchTime(self):
-        print "deleteFromDB_fetchTime -- Bittrex"
+        #print "deleteFromDB_fetchTime -- Bittrex"
         self.db.deleteFromDB_fetchTime("bittrex",self.delTillFetchTime)
     
     def start(self,sleepTime):
-        print "Start method -- Bittrex"
+        #print "Start method -- Bittrex"
         self.sleepTime = sleepTime
         try:
             while True:
@@ -67,8 +67,8 @@ class FetchBittrex:
                     self.deleteFromDB_fetchTime()
                 except Exception as e: 
                     print(e)
-                    print "exception caught in while loop -- Bittrex"
+                    #print "exception caught in while loop -- Bittrex"
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)
-            print "Exception caught in start function -- Bittrex"
+            #print "Exception caught in start function -- Bittrex"

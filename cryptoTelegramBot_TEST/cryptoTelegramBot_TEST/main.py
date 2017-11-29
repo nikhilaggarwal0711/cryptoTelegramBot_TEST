@@ -9,7 +9,7 @@ import config
 
 
 def main():
-    print "inside main "
+    #print "inside main "
 
 #    last_update_id = None
     print "Starting Thread"
@@ -18,7 +18,7 @@ def main():
     thread3 = MyThread("telegram",60)
 #    thread4 = myThread("telegram",60)
 
-    print "Starting Threads"
+    #print "Starting Threads"
     #start new Threads
     thread1.start()
     thread2.start()
@@ -33,10 +33,9 @@ def main():
     print "Program Ends"
     
 def my_long_running_process():
-    print "Inside long process"
+    #print "Inside long process"
 #    if __name__ == '__main__':
-    print "startin main"
+    #print "startin main"
     main()
     #else:
-        #print "inside else"
-my_long_running_process()
+        ##print "inside else"
