@@ -75,13 +75,13 @@ class DBHelper:
         self.conn.commit()
 
     def getNewListingsBittrex(self):
-        ##print "getNewListings -- DBHelper from Telegram"
+        #print "getNewListings -- DBHelper from Telegram"
         self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders,fetchTime FROM bittrex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
 
     def getNewListingsBitfinex(self):
-        ##print "getNewListings -- DBHelper from Telegram"
+        print "getNewListings -- DBHelper from Telegram"
         self.DB.execute("SELECT marketname,bid,ask,low,high,volume,fetchTime FROM bitfinex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
