@@ -33,11 +33,11 @@ class FetchBitfinex:
 
         for x in range(0,length1):
             print "fetchData -- for loop -- Bitfinex"
-            self.f2 = requests.get(url = (self.symbolDetails_link + self.jsonList[x]))
+            self.f2 = requests.get(url = (self.symbolDetails_link + self.jsonList1[x]))
             self.data2 = self.f2.text.replace("null","0")
             self.jsonList2  = json.loads(self.data2)
             
-            self.marketname = self.jsonList[x]
+            self.marketname = self.jsonList1[x]
             self.mid = self.jsonList2["mid"]
             self.bid = self.jsonList2["bid"]
             self.ask = self.jsonLis2t[x]["ask"]
