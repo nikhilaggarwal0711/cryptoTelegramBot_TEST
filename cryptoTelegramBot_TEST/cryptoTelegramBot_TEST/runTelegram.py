@@ -79,19 +79,29 @@ class RunTelegram:
             try:
                 #print "At beginning of while loop -- Telegram"
 #               Send New Market Notification
-                newMarkets = self.db.getNewListingsBittrex()
-                market = "Bittrex"
+                newMarketsBittrex = self.db.getNewListingsBittrex()
+                newMarketsBitfinex = self.db.getNewListingsBitfinex()
+                
                 allUsers = self.db.getAllUsers()
                 for user in allUsers:
-                    for newMarket in newMarkets:
+                    market = "Bittrex"
+                    for newMarket in newMarketsBittrex:
                         self.message = str(market) + "\nNew Market Added\nMarket Name : "+str(newMarket[0])+"\nVolume : "+str(newMarket[1])+"\nBid : "+str(newMarket[2])+"\nAsk : "+str(newMarket[3])+"\nOpen Buy Orders : "+str(newMarket[4])+"\nOpen Sell Orders : "+str(newMarket[5])
                         self.chatId = user[0]
                         self.sendTelegramMessage()
+
+                    market = "Bitfinex"
+                    for newMarket in newMarketsBitfinex:
+                        self.message = str(market) + "\nNew Market Added\nMarket Name : "+str(newMarket[0])+"\nBid : "+str(newMarket[1])+"\nAsk : "+str(newMarket[2])+"\nLow : "+str(newMarket[3])+"\nHigh : "+str(newMarket[4])+"\nVolume : "+str(newMarket[5])
+                        self.chatId = user[0]
+                        #self.sendTelegramMessage()
                 
-                for newMarket in newMarkets:
+                for newMarket in newMarketsBittrex:
                     self.insertIntoBittrex_DB(str(newMarket[0]) , str(newMarket[6]) )
+                for newMarket in newMarketsBitfinex:
+                    self.insertIntoBitfinex_DB(str(newMarket[0]) , str(newMarket[6]) )
                 
-                newMarkets=""
+                newMarketsBittrex=""
                 allUsers=""
 #                Reply to users
                 self.setFetchTime()

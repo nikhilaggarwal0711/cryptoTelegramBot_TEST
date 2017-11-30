@@ -1,6 +1,7 @@
 from threading import Thread
 from fetchCoinMarketCap import FetchCoinMarketCap
 from fetchBittrex import FetchBittrex
+from fetchBitfinex import FetchBitfinex
 from runTelegram import RunTelegram
 
 
@@ -19,8 +20,12 @@ class MyThread(Thread):
             fcmc.start(self.sleepTime)
         elif  ( self.threadName == "bittrex" ):
             #print "bittrex"
-            fb = FetchBittrex()
-            fb.start(self.sleepTime)
+            fBittrex = FetchBittrex()
+            fBittrex.start(self.sleepTime)
+        elif  ( self.threadName == "bitfinex" ):
+            #print "bitfinex"
+            fBitfinex = FetchBitfinex()
+            fBitfinex.start(self.sleepTime)
         elif ( self.threadName == "telegram" ):
             #print "telegram"
             rt = RunTelegram()

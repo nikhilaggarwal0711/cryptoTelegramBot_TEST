@@ -65,8 +65,10 @@ class FetchBittrex:
                     self.fetchData()
                     self.setDelTillFetchTime()
                     self.deleteFromDB_fetchTime()
+                    self.sleepTime = sleepTime
                 except Exception as e: 
                     print(e)
+                    self.sleepTime = 2 * self.sleepTime
                     #print "exception caught in while loop -- Bittrex"
                 sleep(self.sleepTime)
         except Exception as e: 
