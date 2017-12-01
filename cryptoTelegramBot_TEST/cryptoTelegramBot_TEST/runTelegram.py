@@ -71,6 +71,9 @@ class RunTelegram:
             
     def insertIntoBittrex_DB(self, marketName , fetchTime):
         self.db.insertIntoBittrex_DuplicateRow(marketName , fetchTime)
+            
+    def insertIntoBitfinex_DB(self, marketName , fetchTime):
+        self.db.insertIntoBitfinex_DuplicateRow(marketName , fetchTime)
     
     def start(self,sleepTime):
         #print "Start method -- Telegram"
