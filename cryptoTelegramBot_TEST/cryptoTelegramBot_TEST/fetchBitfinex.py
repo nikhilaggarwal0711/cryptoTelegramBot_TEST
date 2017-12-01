@@ -47,7 +47,7 @@ class FetchBitfinex:
             self.marketname = self.jsonList1[x]
             self.mid = self.jsonList2["mid"]
             self.bid = self.jsonList2["bid"]
-            self.ask = self.jsonList2[x]["ask"]
+            self.ask = self.jsonList2["ask"]
             self.last_price = self.jsonList2["last_price"]
             self.low = self.jsonList2["low"]
             self.high = self.jsonList2["high"]
