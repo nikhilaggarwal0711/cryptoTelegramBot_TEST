@@ -45,8 +45,9 @@ class FetchBitfinex:
                 self.jsonList2  = json.loads(self.data2)
                 print "jsonlist2 -- bitfinex"
                 
+                print "marketname --> " +  self.jsonList1[x]
                 self.marketname = self.jsonList1[x]
-                print self.jsonList2["mid"]
+                print "mid --> " +  self.jsonList2["mid"]
                 self.mid = self.jsonList2["mid"]
                 self.bid = self.jsonList2["bid"]
                 self.ask = self.jsonList2["ask"]
