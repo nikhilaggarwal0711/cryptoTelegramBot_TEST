@@ -97,7 +97,7 @@ class RunTelegram:
                     for newMarket in newMarketsBitfinex:
                         self.message = str(market) + "\nNew Market Added\nMarket Name : "+str(newMarket[0])+"\nBid : "+str(newMarket[1])+"\nAsk : "+str(newMarket[2])+"\nLow : "+str(newMarket[3])+"\nHigh : "+str(newMarket[4])+"\nVolume : "+str(newMarket[5])
                         self.chatId = user[0]
-                        #self.sendTelegramMessage()
+                        self.sendTelegramMessage()
                 
                 for newMarket in newMarketsBittrex:
                     self.insertIntoBittrex_DB(str(newMarket[0]) , str(newMarket[6]) )
