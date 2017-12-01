@@ -47,8 +47,11 @@ class FetchBitfinex:
                 
                 print "marketname --> " +  self.jsonList1[x]
                 self.marketname = self.jsonList1[x]
-                print "mid --> " +  self.jsonList2["mid"]
-                self.mid = self.jsonList2["mid"]
+                try:
+                    print "mid --> " +  self.jsonList2["mid"]
+                    self.mid = self.jsonList2["mid"]
+                except Exception as e:
+                    print(e)
                 self.bid = self.jsonList2["bid"]
                 self.ask = self.jsonList2["ask"]
                 self.last_price = self.jsonList2["last_price"]
