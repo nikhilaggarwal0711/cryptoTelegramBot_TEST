@@ -27,15 +27,22 @@ class FetchBitfinex:
     def fetchData(self):
         print "fetchData -- Bitfinex"
         self.f1 = requests.get(url = self.allSymbols_link)
+        print "url set -- Bitfinex"
         self.data1 = self.f1.text.replace("null","0")
+        print "replace null -- Bitfinex"
         self.jsonList1  = json.loads(self.data1)
+        print "jsonlist1 -- bitfinex"
         length1 = len(json.loads(self.data1))
-
+        print "length1 -- bitfinex"
+        
         for x in range(0,length1):
             print "fetchData -- for loop -- Bitfinex"
-            self.f2 = requests.get(url = (self.symbolDetails_link + self.jsonList1[x]))
+            self.f2 = requests.get(url = self.symbolDetails_link + self.jsonList1[x])
+            print "url set 2 -- Bitfinex"
             self.data2 = self.f2.text.replace("null","0")
+            print "replace null 2 -- Bitfinex"
             self.jsonList2  = json.loads(self.data2)
+            print "jsonlist2 -- bitfinex"
             
             self.marketname = self.jsonList1[x]
             self.mid = self.jsonList2["mid"]
