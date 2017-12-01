@@ -61,7 +61,7 @@ class FetchBitfinex:
                 
                 self.saveIntoDB()
                 #Added delay of 1 second so as to avoid crossing ErrorLimit 
-                sleep(1)
+                sleep(2)
             except Exception as e: 
                     print(e)
                     #print "mid --> " + self.jsonList2["mid"]

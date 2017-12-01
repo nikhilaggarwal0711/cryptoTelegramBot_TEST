@@ -8,7 +8,7 @@ def main():
     thread1 = MyThread("coinMarketCap",43200)
     thread2 = MyThread("bittrex",60)
     thread3 = MyThread("telegram",0.5)
-    thread4 = MyThread("bitfinex",60)
+    thread4 = MyThread("bitfinex",90)
 
     #print "Starting Threads"
     #start new Threads
