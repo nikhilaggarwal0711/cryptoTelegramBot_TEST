@@ -46,6 +46,7 @@ class FetchBitfinex:
                 print "jsonlist2 -- bitfinex"
                 
                 self.marketname = self.jsonList1[x]
+                print self.jsonList2["mid"]
                 self.mid = self.jsonList2["mid"]
                 self.bid = self.jsonList2["bid"]
                 self.ask = self.jsonList2["ask"]
@@ -58,6 +59,7 @@ class FetchBitfinex:
                 self.saveIntoDB()
             except Exception as e: 
                     print(e)
+                    print "mid --> " + self.jsonList2["mid"]
                 
 
     def saveIntoDB(self): 
