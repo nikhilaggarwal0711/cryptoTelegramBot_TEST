@@ -42,7 +42,7 @@ class FetchBitfinex:
                 print "url set 2 -- Bitfinex"
                 self.data2 = self.f2.text.replace("null","0")
                 print "DATA -- bitfinex"
-                print self.data2
+                print self.data2 
                 print "replace null 2 -- Bitfinex"
                 self.jsonList2  = json.loads(self.data2)
                 print "jsonlist2 -- bitfinex"
