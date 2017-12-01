@@ -36,25 +36,29 @@ class FetchBitfinex:
         print "length1 -- bitfinex"
         
         for x in range(0,length1):
-            print "fetchData -- for loop -- Bitfinex"
-            self.f2 = requests.get(url = self.symbolDetails_link + self.jsonList1[x])
-            print "url set 2 -- Bitfinex"
-            self.data2 = self.f2.text.replace("null","0")
-            print "replace null 2 -- Bitfinex"
-            self.jsonList2  = json.loads(self.data2)
-            print "jsonlist2 -- bitfinex"
-            
-            self.marketname = self.jsonList1[x]
-            self.mid = self.jsonList2["mid"]
-            self.bid = self.jsonList2["bid"]
-            self.ask = self.jsonList2["ask"]
-            self.last_price = self.jsonList2["last_price"]
-            self.low = self.jsonList2["low"]
-            self.high = self.jsonList2["high"]
-            self.volume = self.jsonList2["volume"]
-            self.timestamp = self.jsonList2["timestamp"]
-            
-            self.saveIntoDB()
+            try:
+                print "fetchData -- for loop -- Bitfinex"
+                self.f2 = requests.get(url = self.symbolDetails_link + self.jsonList1[x])
+                print "url set 2 -- Bitfinex"
+                self.data2 = self.f2.text.replace("null","0")
+                print "replace null 2 -- Bitfinex"
+                self.jsonList2  = json.loads(self.data2)
+                print "jsonlist2 -- bitfinex"
+                
+                self.marketname = self.jsonList1[x]
+                self.mid = self.jsonList2["mid"]
+                self.bid = self.jsonList2["bid"]
+                self.ask = self.jsonList2["ask"]
+                self.last_price = self.jsonList2["last_price"]
+                self.low = self.jsonList2["low"]
+                self.high = self.jsonList2["high"]
+                self.volume = self.jsonList2["volume"]
+                self.timestamp = self.jsonList2["timestamp"]
+                
+                self.saveIntoDB()
+            except Exception as e: 
+                    print(e)
+                
 
     def saveIntoDB(self): 
         print "saveIntoDB -- Bitfinex"           
