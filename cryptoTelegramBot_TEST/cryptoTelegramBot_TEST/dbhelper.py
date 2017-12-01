@@ -29,7 +29,7 @@ class DBHelper:
         self.DB.execute(tblstmt4)
         self.conn.commit()
 
-        tblstmt5 = "CREATE TABLE IF NOT EXISTS bitfinex (marketname text,mid decimal(18,8),bid decimal(18,8),ask decimal(18,8),last_price decimal(18,8),low decimal(18,8),high decimal(18,8),volume decimal(18,8), timestampp text,fetchTime int)"
+        tblstmt5 = "CREATE TABLE IF NOT EXISTS bitfinex (marketname text,mid decimal(18,9),bid decimal(18,9),ask decimal(18,9),last_price decimal(18,9),low decimal(18,9),high decimal(18,9),volume decimal(18,9), timestampp text,fetchTime int)"
         self.DB.execute(tblstmt5)
         self.conn.commit()
 
