@@ -73,7 +73,7 @@ class FetchBitfinex:
 
     def deleteFromDB_fetchTime(self):
         #print "deleteFromDB_fetchTime -- Bitfinex"
-        self.db.deleteFromDB_fetchTime("bitfinex",self.delTillFetchTime)
+        self.db.deleteFromDB_fetchTime("bitfinex",self.delTillFetchTime) 
     
     def start(self,sleepTime):
         #print "Start method -- Bitfinex"
