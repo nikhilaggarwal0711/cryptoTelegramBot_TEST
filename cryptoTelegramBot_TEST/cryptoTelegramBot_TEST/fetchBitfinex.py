@@ -41,17 +41,16 @@ class FetchBitfinex:
                 self.f2 = requests.get(url = self.symbolDetails_link + self.jsonList1[x])
                 print "url set 2 -- Bitfinex"
                 self.data2 = self.f2.text.replace("null","0")
+                print "DATA -- bitfinex"
+                print self.data2
                 print "replace null 2 -- Bitfinex"
                 self.jsonList2  = json.loads(self.data2)
                 print "jsonlist2 -- bitfinex"
                 
                 print "marketname --> " +  self.jsonList1[x]
                 self.marketname = self.jsonList1[x]
-                try:
-                    print "mid --> " +  self.jsonList2["mid"]
-                    self.mid = self.jsonList2["mid"]
-                except Exception as e:
-                    print(e)
+                print "mid --> " +  self.jsonList2["mid"]
+                self.mid = self.jsonList2["mid"]
                 self.bid = self.jsonList2["bid"]
                 self.ask = self.jsonList2["ask"]
                 self.last_price = self.jsonList2["last_price"]
