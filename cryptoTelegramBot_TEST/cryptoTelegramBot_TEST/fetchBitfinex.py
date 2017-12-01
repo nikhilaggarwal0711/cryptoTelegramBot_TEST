@@ -60,6 +60,7 @@ class FetchBitfinex:
                 self.timestamp = self.jsonList2["timestamp"]
                 
                 self.saveIntoDB()
+                sleep(1)
             except Exception as e: 
                     print(e)
                     print "mid --> " + self.jsonList2["mid"]
