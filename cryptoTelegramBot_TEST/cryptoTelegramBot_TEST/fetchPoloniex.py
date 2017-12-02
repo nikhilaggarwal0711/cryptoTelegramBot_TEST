@@ -3,6 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
+from test.test_bufio import lengths
 
 class FetchPoloniex:
     def __init__(self):
@@ -26,16 +27,24 @@ class FetchPoloniex:
         print "fetchData -- Poloniex"
         self.f1 = requests.get(url = self.link1)
         self.data = self.f1.text.replace("null","0")
+        print "DATA --> " + self.data
         self.jsonList  = json.loads(self.data)
         length = len(json.loads(self.data))
-
+        print "Length --> " + length
+        
         for x in range(0,length):
             print "Add data for loop  -- Poloniex"
+            print "currencySymbol --> " + self.jsonList[x]
             self.currencySymbol = self.jsonList[x]
+            print "id --> " + self.jsonList[x]["id"]
             self.id = self.jsonList[x]["id"]
+            print "name --> " + self.jsonList[x]["name"]
             self.name = self.jsonList[x]["name"]
+            print "disabled --> " + self.jsonList[x]["disabled"]
             self.disabled = self.jsonList[x]["disabled"]
+            print "delisted --> " + self.jsonList[x]["delisted"]
             self.delisted = self.jsonList[x]["delisted"]
+            print "frozen --> " + self.jsonList[x]["frozen"]
             self.frozen = self.jsonList[x]["frozen"]
 
             self.saveIntoDB()
