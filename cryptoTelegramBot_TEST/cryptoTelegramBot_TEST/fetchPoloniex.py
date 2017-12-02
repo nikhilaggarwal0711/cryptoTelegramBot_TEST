@@ -26,25 +26,29 @@ class FetchPoloniex:
         print "fetchData -- Poloniex"
         self.f1 = requests.get(url = self.link1)
         self.data = self.f1.text.replace("null","0")
-        print "DATA --> " + self.data
-        self.jsonList  = json.loads(self.data)
-        length = len(json.loads(self.data))
+        print "DATA --> " + str(self.data)
+        #self.jsonList  = json.loads(self.data)
+        #length = len(json.loads(self.data))
+        #print "Length --> " + str(length)
+        self.currencyList = map(str, self.data.keys())
+        print "Currencies --> " + str(self.currencyList)
+        length = len(self.currencyList)
         print "Length --> " + str(length)
         
         for x in range(0,length):
             print "Add data for loop  -- Poloniex"
-            print "currencySymbol --> " + self.jsonList[x]
-            self.currencySymbol = self.jsonList[x]
-            print "id --> " + self.jsonList[x]["id"]
-            self.id = self.jsonList[x]["id"]
-            print "name --> " + self.jsonList[x]["name"]
-            self.name = self.jsonList[x]["name"]
-            print "disabled --> " + self.jsonList[x]["disabled"]
-            self.disabled = self.jsonList[x]["disabled"]
-            print "delisted --> " + self.jsonList[x]["delisted"]
-            self.delisted = self.jsonList[x]["delisted"]
-            print "frozen --> " + self.jsonList[x]["frozen"]
-            self.frozen = self.jsonList[x]["frozen"]
+            print "currencySymbol --> " + str(self.currencyList[x])
+            self.currencySymbol = self.currencyList[x]
+            print "id --> " + str(self.data[self.currencyList[x]]["id"])
+            self.id = self.data[self.currencyList[x]]["id"]
+            print "name --> " + str(self.data[self.currencyList[x]]["name"])
+            self.name = self.data[self.currencyList[x]]["name"]
+            print "disabled --> " + str(self.data[self.currencyList[x]]["disabled"])
+            self.disabled = self.data[self.currencyList[x]]["disabled"]
+            print "delisted --> " + str(self.data[self.currencyList[x]]["delisted"])
+            self.delisted = self.data[self.currencyList[x]]["delisted"]
+            print "frozen --> " + str(self.data[self.currencyList[x]]["frozen"])
+            self.frozen = self.data[self.currencyList[x]]["frozen"]
 
             self.saveIntoDB()
 
