@@ -3,7 +3,6 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
-from test.test_bufio import lengths
 
 class FetchPoloniex:
     def __init__(self):
