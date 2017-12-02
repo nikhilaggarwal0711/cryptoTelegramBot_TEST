@@ -29,7 +29,7 @@ class FetchPoloniex:
         print "DATA --> " + self.data
         self.jsonList  = json.loads(self.data)
         length = len(json.loads(self.data))
-        print "Length --> " + length
+        print "Length --> " + str(length)
         
         for x in range(0,length):
             print "Add data for loop  -- Poloniex"
