@@ -74,6 +74,9 @@ class RunTelegram:
             
     def insertIntoBitfinex_DB(self, marketName , fetchTime):
         self.db.insertIntoBitfinex_DuplicateRow(marketName , fetchTime)
+            
+    def insertIntoPoloniex_DB(self, currencySymbol , fetchTime):
+        self.db.insertIntoPoloniex_DuplicateRow(currencySymbol , fetchTime)
     
     def start(self,sleepTime):
         #print "Start method -- Telegram"
@@ -84,6 +87,7 @@ class RunTelegram:
 #               Send New Market Notification
                 newMarketsBittrex = self.db.getNewListingsBittrex()
                 newMarketsBitfinex = self.db.getNewListingsBitfinex()
+                newMarketsPoloniex = self.db.getNewListingsPoloniex()
                 
                 allUsers = self.db.getAllUsers()
                 for user in allUsers:
@@ -99,12 +103,22 @@ class RunTelegram:
                         self.chatId = user[0]
                         self.sendTelegramMessage()
                 
+                    market = "Poloniex" 
+                    for newMarket in newMarketsPoloniex:
+                        self.message = str(market) + "\nNew Market Added\nCurrency Symbol : "+str(newMarket[0])+"\nCurrency Name : "+str(newMarket[1])
+                        self.chatId = user[0]
+                        #self.sendTelegramMessage()
+                
                 for newMarket in newMarketsBittrex:
                     self.insertIntoBittrex_DB(str(newMarket[0]) , str(newMarket[6]) )
                 for newMarket in newMarketsBitfinex:
                     self.insertIntoBitfinex_DB(str(newMarket[0]) , str(newMarket[6]) )
+                for newMarket in newMarketsPoloniex:
+                    self.insertIntoPoloniex_DB(str(newMarket[0]) , str(newMarket[2]) )
                 
                 newMarketsBittrex=""
+                newMarketsBitfinex=""
+                newMarketsPoloniex=""
                 allUsers=""
 #                Reply to users
                 self.setFetchTime()
