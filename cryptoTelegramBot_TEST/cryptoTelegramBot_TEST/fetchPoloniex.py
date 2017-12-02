@@ -24,8 +24,8 @@ class FetchPoloniex:
 
     def fetchData(self):
         print "fetchData -- Poloniex"
-        self.f1 = requests.get(url = self.link1)
-        self.data = self.f1.text.replace("null","0")
+        self.data = requests.get(url = self.link1)
+        #self.data = self.f1.text.replace("null","0")
         print "DATA --> " + str(self.data)
         #self.jsonList  = json.loads(self.data)
         #length = len(json.loads(self.data))
