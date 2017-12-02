@@ -2,6 +2,7 @@ from threading import Thread
 from fetchCoinMarketCap import FetchCoinMarketCap
 from fetchBittrex import FetchBittrex
 from fetchBitfinex import FetchBitfinex
+from fetchPoloniex import FetchPoloniex
 from runTelegram import RunTelegram
 
 
@@ -26,6 +27,10 @@ class MyThread(Thread):
             #print "bitfinex"
             fBitfinex = FetchBitfinex()
             fBitfinex.start(self.sleepTime)
+        elif  ( self.threadName == "poloniex" ):
+            #print "Poloniex"
+            fPoloniex = FetchPoloniex()
+            fPoloniex.start(self.sleepTime)
         elif ( self.threadName == "telegram" ):
             #print "telegram"
             rt = RunTelegram()

@@ -33,6 +33,10 @@ class DBHelper:
         self.DB.execute(tblstmt5)
         self.conn.commit()
 
+        tblstmt6 = "CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen,fetchTime int,fetchTime int)"
+        self.DB.execute(tblstmt6)
+        self.conn.commit()
+
     def checkUser(self, chatId):
         rowsCount = self.DB.execute("""SELECT chatId from botMessages where chatId=%s""",[chatId])
         if ( rowsCount > 0 ):
@@ -62,6 +66,10 @@ class DBHelper:
         self.DB.execute("""INSERT INTO bittrex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(MarketName,float(High),float(Low),Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime))
         self.conn.commit()
   
+    def addPoloniex(self,currencySymbol,idd,name,disabled,delisted,frozen,fetchTime):
+        self.DB.execute("""INSERT INTO poloniex VALUES (%s,%s,%s,%s,%s,%s,%s)""",(currencySymbol,idd,name,disabled,delisted,frozen,fetchTime))
+        self.conn.commit()
+  
     def addBitfinex(self,marketName,mid,bid,ask,last_price,low,high,volume,timestamp,fetchTime):
         self.DB.execute("""INSERT INTO bitfinex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(marketName,float(mid),float(bid),float(ask),float(last_price),float(low),float(high),float(volume),timestamp,fetchTime))
         self.conn.commit()
@@ -85,6 +93,12 @@ class DBHelper:
         self.DB.execute("SELECT marketname,bid,ask,low,high,volume,fetchTime FROM bitfinex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
         return newMarkets
+ 
+    def getNewListingsPoloniex(self):
+        print "getNewListings -- DBHelper from Telegram"
+        self.DB.execute("SELECT currencySymbol,name,fetchTime FROM poloniex WHERE disabled=0 AND delisted=0 AND frozen=0 group by currencySymbol having count(currencySymbol)=1")
+        newMarkets = self.DB.fetchall()
+        return newMarkets
     
     def insertIntoBittrex_DuplicateRow(self, marketName , fetchTime):
         self.DB.execute("""INSERT INTO bittrex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
@@ -92,6 +106,10 @@ class DBHelper:
 
     def insertIntoBitfinex_DuplicateRow(self, marketName , fetchTime):
         self.DB.execute("""INSERT INTO bitfinex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
+        self.conn.commit()
+
+    def insertIntoPoloniex_DuplicateRow(self, currencySymbol , fetchTime):
+        self.DB.execute("""INSERT INTO poloniex (currencySymbol, fetchTime) VALUES (%s,%s)""",(currencySymbol , int(fetchTime)+1 ))
         self.conn.commit()
 
     def getAllUsers(self):
