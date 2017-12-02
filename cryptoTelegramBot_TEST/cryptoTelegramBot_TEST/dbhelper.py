@@ -33,7 +33,7 @@ class DBHelper:
         self.DB.execute(tblstmt5)
         self.conn.commit()
 
-        tblstmt6 = "CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen,fetchTime int,fetchTime int)"
+        tblstmt6 = "CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen,fetchTime int)"
         self.DB.execute(tblstmt6)
         self.conn.commit()
 
