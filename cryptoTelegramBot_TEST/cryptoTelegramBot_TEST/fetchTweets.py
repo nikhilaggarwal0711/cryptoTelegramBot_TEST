@@ -81,6 +81,8 @@ class StdOutListener(StreamListener):
                     print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8')
+                    else:
+                        inReplyToScreenName = ""
                     db.insertIntoTweets(screen_name,created_at,tweet,inReplyToScreenName,fetchTime)
                 except Exception, e:
                         print "Error. Inside StdOutListener class.... Error: "
