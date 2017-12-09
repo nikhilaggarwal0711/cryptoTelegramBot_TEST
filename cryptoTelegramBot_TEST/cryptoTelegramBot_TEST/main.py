@@ -11,7 +11,7 @@ def main():
     thread4 = MyThread("bitfinex",90)
     thread5 = MyThread("poloniex",60)
     thread6 = MyThread("twitter",30)
-    
+
     #print "Starting Threads"
     #start new Threads
 #    thread1.start()
