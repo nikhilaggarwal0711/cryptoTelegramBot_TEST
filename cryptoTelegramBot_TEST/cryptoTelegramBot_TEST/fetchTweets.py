@@ -81,8 +81,8 @@ class StdOutListener(StreamListener):
                     print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
-                    #else:
-                        #inReplyToScreenName = "NULL"
+                    else:
+                        inReplyToScreenName = ""
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
                     db.insertIntoTweets(screen_name,created_at,tweet,str(inReplyToScreenName),fetchTime)
