@@ -39,7 +39,6 @@ class MyThread(Thread):
         elif ( self.threadName == "twitter" ):
             #print "telegram"
             rtwitter = FetchTweets()
-            rtwitter.setup_pythonAnyWhere()
             rtwitter.start(self.sleepTime)
         else:
             print "Wrong input"

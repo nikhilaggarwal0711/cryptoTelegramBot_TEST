@@ -16,7 +16,10 @@ class FetchTweets:
         #print "inside Twitter constructor"
         self.db = DBHelper()
         self.db.setup()
-        
+    
+    def setFetchTime(self):
+        self.fetchTime = int(time.time())
+
 
     def setDelTillFetchTime(self):
         #print "delTillFetchTime -- Twitter"
@@ -35,7 +38,6 @@ class FetchTweets:
         self.sleepTime = sleepTime
         while True:
             try:
-                self.setFetchTime()
                 print "Waiting for " + str(self.sleepTime) + " seconds before trying .... "
                 time.sleep(self.sleepTime)
                 #This handles Twitter authentication and the connection to Twitter Streaming API
@@ -69,19 +71,19 @@ class StdOutListener(StreamListener):
                 #print data
                 try:
                     fetchTime = int(time.time())
-                    self.db = DBHelper()
-                    self.db.setup()
+                    db = DBHelper()
+                    db.setup()
                     config = json.loads(data)
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
                     tweet = config["text"].encode('utf-8')
-                    self.db.insertIntoTweets(screen_name,created_at,tweet,fetchTime)
+                    db.insertIntoTweets(screen_name,created_at,tweet,fetchTime)
                 except Exception, e:
-                        print "Error. Restarting Stream.... Error: "
+                        print "Error. Inside StdOutListener class.... Error: "
                         print e.__doc__
                         print e.message
-                        self.db.closeConnection()
-                
+                        #self.db.closeConnection()
+
                 #Writing tweets in file as well, incase miss any in database because of any formating issue
                 try:
                     with open(Twitter.tweetFileLocation + Twitter.tweetFileName,'a+') as f:
