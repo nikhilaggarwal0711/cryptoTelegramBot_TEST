@@ -37,7 +37,7 @@ class DBHelper:
         self.DB.execute(tblstmt6)
         self.conn.commit()
 
-        tblstmt7 = "CREATE TABLE IF NOT EXISTS tweets (screen_name text, created_at text, tweet text, fetchTime int)"
+        tblstmt7 = "CREATE TABLE IF NOT EXISTS tweets (screen_name text, created_at text, tweet text, inReplyToScreenName text, fetchTime int)"
         self.DB.execute(tblstmt7)
         self.conn.commit()
 
@@ -121,8 +121,8 @@ class DBHelper:
         chatIds = self.DB.fetchall()
         return chatIds
     
-    def insertIntoTweets(self, screen_name, created_at, tweet, fetchTime):
-        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, fetchTime) VALUES (%s,%s,%s,%s)""",(screen_name, created_at, tweet, int(fetchTime) ))
+    def insertIntoTweets(self, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
+        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s)""",(screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
         self.conn.commit()
 
     def closeConnection(self):
