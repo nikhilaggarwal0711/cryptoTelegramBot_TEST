@@ -37,6 +37,10 @@ class DBHelper:
         self.DB.execute(tblstmt6)
         self.conn.commit()
 
+        tblstmt7 = "CREATE TABLE IF NOT EXISTS tweets (screen_name text, created_at text, tweet text, fetchTime int)"
+        self.DB.execute(tblstmt7)
+        self.conn.commit()
+
     def checkUser(self, chatId):
         rowsCount = self.DB.execute("""SELECT chatId from botMessages where chatId=%s""",[chatId])
         if ( rowsCount > 0 ):
@@ -116,3 +120,10 @@ class DBHelper:
         self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
         chatIds = self.DB.fetchall()
         return chatIds
+    
+    def insertIntoTweets(self, screen_name, created_at, tweet, fetchTime):
+        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, fetchTime) VALUES (%s,%s,%s,%s)""",(screen_name, created_at, tweet, int(fetchTime) ))
+        self.conn.commit()
+
+    def closeConnection(self):
+        self.conn.close()

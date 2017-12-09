@@ -4,7 +4,7 @@ from fetchBittrex import FetchBittrex
 from fetchBitfinex import FetchBitfinex
 from fetchPoloniex import FetchPoloniex
 from runTelegram import RunTelegram
-
+from fetchTweets import FetchTweets
 
 class MyThread(Thread):
     def __init__(self,threadName,sleepTime):
@@ -36,5 +36,10 @@ class MyThread(Thread):
             rt = RunTelegram()
             rt.setup_pythonAnyWhere()
             rt.start(self.sleepTime)
+        elif ( self.threadName == "twitter" ):
+            #print "telegram"
+            rtwitter = FetchTweets()
+            rtwitter.setup_pythonAnyWhere()
+            rtwitter.start(self.sleepTime)
         else:
             print "Wrong input"

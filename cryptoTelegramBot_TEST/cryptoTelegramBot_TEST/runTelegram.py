@@ -48,7 +48,7 @@ class RunTelegram:
 
     def newUser(self):
         #print "Inside newUser -- Telegram"
-        self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts"
+        self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts\n6. Real time price\n7.DoubleTrouble Game - To 100 BTC from 0.1 BTC"
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
