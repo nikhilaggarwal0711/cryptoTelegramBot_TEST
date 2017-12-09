@@ -79,7 +79,7 @@ class StdOutListener(StreamListener):
                     tweet = config["text"].encode('utf-8')
                     inReplyToScreenName = config["in_reply_to_screen_name"]
                     print "inReplyToScreenName --> " + str(inReplyToScreenName)
-                    if not (inReplyToScreenName is not None):
+                    if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8')
                     db.insertIntoTweets(screen_name,created_at,tweet,inReplyToScreenName,fetchTime)
                 except Exception, e:
