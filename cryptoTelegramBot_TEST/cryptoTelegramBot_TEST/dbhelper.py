@@ -122,7 +122,7 @@ class DBHelper:
         return chatIds
     
     def insertIntoTweets(self, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
-        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s)""",(screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
+        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s)""",(screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
         self.conn.commit()
 
     def closeConnection(self):
