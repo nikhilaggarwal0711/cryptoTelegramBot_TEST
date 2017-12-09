@@ -80,7 +80,7 @@ class StdOutListener(StreamListener):
                     inReplyToScreenName = config["in_reply_to_screen_name"]
                     print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
-                        inReplyToScreenName = inReplyToScreenName.encode('utf-8')
+                        inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
                     else:
                         inReplyToScreenName = "NULL"
                         print "inReplyToScreenName --> " + inReplyToScreenName
