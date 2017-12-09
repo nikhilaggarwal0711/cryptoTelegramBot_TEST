@@ -77,7 +77,7 @@ class StdOutListener(StreamListener):
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
                     tweet = config["text"].encode('utf-8')
-                    inReplyToScreenName = config["user"]["in_reply_to_screen_name"].encode('utf-8')
+                    inReplyToScreenName = config["in_reply_to_screen_name"].encode('utf-8')
                     db.insertIntoTweets(screen_name,created_at,tweet,inReplyToScreenName,fetchTime)
                 except Exception, e:
                         print "Error. Inside StdOutListener class.... Error: "
