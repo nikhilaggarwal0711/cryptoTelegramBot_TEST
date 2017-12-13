@@ -224,26 +224,27 @@ class RunTelegram:
 #Send alerts 
                 for user in allUsers:
                     alerts = self.db.getAlerts()
-                    for alert in alerts:
-                        alert_id = alert[0]
-                        self.chatId = alert[1]
-                        alert_type = alert[2]
-                        coin_symbol = alert[3]
-                        alert_price = alert[4]
-                        price_in = alert[5]
-                        twitter_screen_name = alert[6]
-                        tweet_id = alert[7]
-                        coin_name = alert[8]
-                        exchange = alert[9]
-                        new_price = alert[10]
-                        
-                        if alert_type == "tweet":
-                            self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"939148245250510848'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
-                        #if alert_type == "p_incr":
-#                            self.message = ""
-                        
-                        self.db.delete_alert(self.chatId, alert_id)
-                        self.sendTelegramMessage()
+                    if not self.is_empty(alerts):
+                        for alert in alerts:
+                            alert_id = alert[0]
+                            self.chatId = alert[1]
+                            alert_type = alert[2]
+                            coin_symbol = alert[3]
+                            alert_price = alert[4]
+                            price_in = alert[5]
+                            twitter_screen_name = alert[6]
+                            tweet_id = alert[7]
+                            coin_name = alert[8]
+                            exchange = alert[9]
+                            new_price = alert[10]
+                            
+                            if alert_type == "tweet":
+                                self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"939148245250510848'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
+                            #if alert_type == "p_incr":
+    #                            self.message = ""
+                            
+                            self.db.delete_alert(self.chatId, alert_id)
+                            self.sendTelegramMessage()
 
                 newMarkets=""
                 allUsers=""
