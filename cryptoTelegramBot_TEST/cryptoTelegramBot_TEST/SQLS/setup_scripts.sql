@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS coinmarketcap_t1 AS SELECT id,fetchTime from coinmark
 
 CREATE TABLE IF NOT EXISTS bittrex_compressed AS SELECT  * FROM bittrex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bittrex_BKP AS SELECT  * FROM bittrex LIMIT 0;
-CREATE TABLE IF NOT EXISTS bittrex_t1 AS SELECT marketname,fetchTime from coinmarketcap LIMIT 0;
+CREATE TABLE IF NOT EXISTS bittrex_t1 AS SELECT marketname,fetchTime from bittrex LIMIT 0;
 
 CREATE TABLE IF NOT EXISTS bitfinex_compressed AS SELECT  * FROM bitfinex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bitfinex_BKP AS SELECT  * FROM bitfinex LIMIT 0;
-CREATE TABLE IF NOT EXISTS bitfinex_t1 AS SELECT marketname,fetchTime from coinmarketcap LIMIT 0;
+CREATE TABLE IF NOT EXISTS bitfinex_t1 AS SELECT marketname,fetchTime from bitfinex LIMIT 0;
 
 CREATE TABLE IF NOT EXISTS  price_denorm_BKP ( rank int(11), id text, symbol text, name text, twitter_screen_name text,tweet_id text,  tweet_fetchTime int , exchange text, marketname text, exchange_last_price decimal(18,9),exchange_last_price_in text, cmc_price_usd decimal(18,9) , cmc_price_btc decimal(18,9), cmc_24h_volume_usd decimal(38,9),cmc_market_cap_usd decimal(38,9),cmc_percent_change_1h decimal(18,9), cmc_percent_change_24h decimal(18,9), cmc_percent_change_7d decimal(18,9),is_new_market text, created_at int ) ;
 CREATE TABLE IF NOT EXISTS  price_denorm_t1 ( rank int(11), id text, symbol text, name text, twitter_screen_name text,tweet_id text,  tweet_fetchTime int , exchange text, marketname text, exchange_last_price decimal(18,9),exchange_last_price_in text, cmc_price_usd decimal(18,9) , cmc_price_btc decimal(18,9), cmc_24h_volume_usd decimal(38,9),cmc_market_cap_usd decimal(38,9),cmc_percent_change_1h decimal(18,9), cmc_percent_change_24h decimal(18,9), cmc_percent_change_7d decimal(18,9),is_new_market text, created_at int ) ;
