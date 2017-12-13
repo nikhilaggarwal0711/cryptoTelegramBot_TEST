@@ -225,10 +225,9 @@ RENAME TABLE price_denorm_md TO price_denorm_ld;
 
 INSERT INTO alerts_subscription_BKP SELECT * FROM alerts_subscription;
 INSERT INTO alerts_subscription_compressed select * from alerts_subscription;
-DELETE FROM alerts_subscription WHERE (id,fetchTime) IN ( SELECT id,fetchTime from alerts_subscription_compressed group by id,fetchTime);
+DELETE FROM alerts_subscription WHERE (id,alert_fetchTime) IN ( SELECT id,alert_fetchTime from alerts_subscription_compressed group by id,alert_fetchTime);
 
 
-id ,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first ,alert_price ,price_in ,twitter_screen_name_or_coin_id ,tweet_id_or_exchange , coin_name 
 
 INSERT INTO send_alerts
 (
