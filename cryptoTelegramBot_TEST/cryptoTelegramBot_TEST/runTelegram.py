@@ -190,8 +190,8 @@ class RunTelegram:
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
-                print "New Markets --> " + newMarkets
-                print "Length of New Markets --> " + len(newMarkets)
+                print "New Markets --> " + str(newMarkets)
+                print "Length of New Markets --> " + str(len(str(newMarkets)))
                 if newMarkets is not None:
                     self.message = "New Market Added"
                     for market in newMarkets:
