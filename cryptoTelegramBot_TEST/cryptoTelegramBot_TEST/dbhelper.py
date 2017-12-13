@@ -6,13 +6,16 @@ from config import SQL_Scripts
 class DBHelper:
 
     def __init__(self):
-        ##print "Inside DBHelper constructor"
-        self.conn = MySQLdb.connect(host = MYSQL.HOST, user = MYSQL.USER, passwd = MYSQL.PASSWORD, db = MYSQL.DBNAME)
-        self.conn.autocommit(True)
+        print "Inside DBHelper constructor"
+        try:
+            self.conn = MySQLdb.connect(host = MYSQL.HOST, user = MYSQL.USER, passwd = MYSQL.PASSWORD, db = MYSQL.DBNAME)
+            print "After setting connectino with DB"
+            self.conn.autocommit(True)
+            print "Setting cursor now"
+            self.DB = self.conn.cursor()
+        except Exception as e: 
+            print(e) 
         
-        ##print "Setting cursor now"
-        self.DB = self.conn.cursor()
-
     def setup(self):
         setup_script=SQL_Scripts.setup_script_path
         self.executeScriptsFromFile(setup_script)

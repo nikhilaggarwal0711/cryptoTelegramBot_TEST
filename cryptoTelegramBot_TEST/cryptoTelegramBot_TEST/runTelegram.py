@@ -57,10 +57,13 @@ class RunTelegram:
     def handleUpdate(self):
         #print "Inside handleUpdate -- Telegram"
         print "TEXT - " + self.text
-        print "SPLIT - " + self.text.split()
+        print "SPLIT - " 
+        print self.text.split()
         self.textArray = self.text.split()
-        print "Array - " + self.textArray
-        print "with index -  " + self.textArray[0]
+        print "Array - " 
+        print self.textArray
+        print "with index -  " 
+        print self.textArray[0]
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
