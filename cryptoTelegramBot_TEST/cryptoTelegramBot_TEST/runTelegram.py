@@ -144,16 +144,19 @@ class RunTelegram:
                 self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/my_alerts":
             try:
+                self.message=""
                 alerts = self.db.my_alerts(self.chatId)
                 #id,chatId,alert_type,coin_symbol,alert_price,price_in
-                for alert in alerts:
-                    if alert[2] == "tweet":
-                        self.message = self.message + "Tweet alert : "+ alert[3] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
-                    elif alert[2] == "p_incr":
-                        self.message = self.message + "Price Increase alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
-                    elif alert[2] == "p_decr":
-                        self.message = self.message + "Price Decrease alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
-                        
+                if not self.is_empty(alerts):
+                    for alert in alerts:
+                        if alert[2] == "tweet":
+                            self.message = self.message + "Tweet alert : "+ alert[3] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
+                        elif alert[2] == "p_incr":
+                            self.message = self.message + "Price Increase alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
+                        elif alert[2] == "p_decr":
+                            self.message = self.message + "Price Decrease alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
+                else:
+                    self.message = "There are no alerts set for you."
             except Exception as e: 
                 print(e)  
         elif  self.textArray[0].split("__")[0] == "/del_alert":  
@@ -241,7 +244,7 @@ class RunTelegram:
                             new_price = alert[10]
                             
                             if alert_type == "tweet":
-                                self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"939148245250510848'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
+                                self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
                             #if alert_type == "p_incr":
     #                            self.message = ""
                             
