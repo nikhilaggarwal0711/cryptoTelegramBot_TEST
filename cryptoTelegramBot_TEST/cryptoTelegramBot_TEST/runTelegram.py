@@ -89,11 +89,11 @@ class RunTelegram:
                     self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
                 else:
                     for price in prices:
-                        name=price[0]
-                        exchange=price[1]
-                        exchange_price=price[2]
-                        exchange_price_in = price[3]
-                        cmc_price_usd = price[4]
+                        name=str(price[0])
+                        exchange=str(price[1])
+                        exchange_price=str(price[2])
+                        exchange_price_in = str(price[3])
+                        cmc_price_usd = str(price[4])
                         self.message = "Price of " + currencySymbol + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
