@@ -152,7 +152,7 @@ class DBHelper:
 
     def fetchPrice(self,currencySymbol):
         try:
-            self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) ",[currencySymbol])
+            self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
             prices = self.DB.fetchall()
             return prices       
         except Exception as e: 
