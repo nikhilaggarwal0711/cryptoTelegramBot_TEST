@@ -67,7 +67,7 @@ class RunTelegram:
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
-            if self.is_empty(self.textArray[1]):
+            if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_tweet ETH" 
             else:
                 currencySymbol = self.textArray[1]
@@ -85,10 +85,10 @@ class RunTelegram:
                         else:
                             self.message = "<a href='https://twitter.com/tweet[1]/status/939148245250510848'>"+currencySymbol +"("+tweet[0]+") tweeted : </a>"
         elif self.textArray[0] == "/check_price":
-            currencySymbol = self.textArray[1]
-            if currencySymbol is None:
+            if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
             else:
+                currencySymbol = self.textArray[1]
                 prices = self.db.fetchPrice(currencySymbol)
                 #name,exchange,exchange_price,exchange_price_in,cmc_price_usd
                 if prices is None :
