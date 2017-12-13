@@ -11,7 +11,7 @@ class RunTelegram:
         self.TOKEN = TELEGRAM.token
         self.TelegramBot = telepot.Bot(self.TOKEN)
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
         self.category = "g"
 
     def setup_pythonAnyWhere(self):

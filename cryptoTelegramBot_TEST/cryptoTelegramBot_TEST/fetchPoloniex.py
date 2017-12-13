@@ -9,7 +9,7 @@ class FetchPoloniex:
         print "inside Poloniex constructor"
         self.link1 = "https://poloniex.com/public?command=returnCurrencies"
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
 
     def setFetchTime(self):
         print "setFetchTime -- Poloniex"

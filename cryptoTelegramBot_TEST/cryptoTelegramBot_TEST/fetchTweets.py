@@ -15,7 +15,7 @@ class FetchTweets:
     def __init__(self):
         #print "inside Twitter constructor"
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
     
     def setFetchTime(self):
         self.fetchTime = int(time.time())
@@ -72,7 +72,7 @@ class StdOutListener(StreamListener):
                 try:
                     fetchTime = int(time.time())
                     db = DBHelper()
-                    db.setup()
+                    #db.setup()
                     config = json.loads(data)
                     tweet_id=str(config["id"]).encode('utf-8')
                     screen_name = config["user"]["screen_name"].encode('utf-8')

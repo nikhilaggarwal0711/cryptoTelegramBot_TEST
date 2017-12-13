@@ -9,7 +9,7 @@ class FetchBittrex:
         #print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
         
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"

@@ -11,7 +11,7 @@ class FetchCoinMarketCap:
         #print "Inside fetchCoinmarketcap constructor"
         self.link1 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
     
     def setFetchTime(self):
         #print "setFetchTime"

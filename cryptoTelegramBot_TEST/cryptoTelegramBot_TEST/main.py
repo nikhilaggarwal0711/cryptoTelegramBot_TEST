@@ -1,8 +1,11 @@
 from myThread import MyThread
+from dbhelper import  DBHelper
 
 def main():
     #print "inside main "
-
+    db = DBHelper()
+    db.setup()
+    db.closeConnection()
 #    last_update_id = None
     print "Starting Thread"
     thread1 = MyThread("coinMarketCap",43200)

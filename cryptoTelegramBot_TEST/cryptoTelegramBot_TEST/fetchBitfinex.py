@@ -11,7 +11,7 @@ class FetchBitfinex:
         self.symbolDetails_link = "https://api.bitfinex.com/v1/pubticker/"
         
         self.db = DBHelper()
-        self.db.setup()
+        #self.db.setup()
         
     def setFetchTime(self):
         #print "setFetchTime -- Bitfinex"
