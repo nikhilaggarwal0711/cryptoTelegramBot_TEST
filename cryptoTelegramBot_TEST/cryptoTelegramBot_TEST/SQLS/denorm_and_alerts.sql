@@ -211,7 +211,8 @@ WHERE MKTS.marketname NOT IN ( SELECT marketname FROM price_denorm_t1 WHERE mark
 
 DELETE FROM price_denorm_ld;
 
-INSERT INTO price_denorm_ld(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at)
+INSERT INTO price_denorm_ld
+(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at)
 SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t1
 UNION
 SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t2
@@ -252,7 +253,7 @@ JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
-AND   AL.twitter_screen_name_or_coin_id = P_DN.id
+AND   AL.coin_symbol = P_DN.symbol
 AND   AL.is_first = "yes"
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
@@ -262,7 +263,7 @@ JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
-AND   AL.twitter_screen_name_or_coin_id = P_DN.id
+AND   AL.coin_symbol = P_DN.symbol
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
 UNION ALL
@@ -272,7 +273,7 @@ JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
-AND   AL.twitter_screen_name_or_coin_id = P_DN.id
+AND   AL.coin_symbol = P_DN.symbol
 AND   AL.is_first = "yes"
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
@@ -282,7 +283,7 @@ JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
-AND   AL.twitter_screen_name_or_coin_id = P_DN.id
+AND   AL.coin_symbol = P_DN.symbol
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
 ) COM
