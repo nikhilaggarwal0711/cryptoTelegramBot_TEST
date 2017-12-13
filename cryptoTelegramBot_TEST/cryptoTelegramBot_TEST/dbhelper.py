@@ -208,6 +208,7 @@ class DBHelper:
         # all SQL commands (split on ';')
         sqlCommands = sqlFile.split(';')
 
+
         # Execute every command from the input file
         for command in sqlCommands:
             print "Running commnad --> " + command
