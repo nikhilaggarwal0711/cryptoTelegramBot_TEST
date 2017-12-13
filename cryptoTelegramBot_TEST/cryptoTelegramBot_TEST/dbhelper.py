@@ -152,7 +152,7 @@ class DBHelper:
 
     def fetchPrice(self,currencySymbol):
         try:
-            self.DB.execute("SELECT name,exchange,exchange_price,exchange_price_in,cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) limit 2",[currencySymbol])
+            self.DB.execute("SELECT name,exchange,exchange_last_price,exchange_price_in,cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) limit 2",[currencySymbol])
             prices = self.DB.fetchall()
             return prices       
         except Exception as e: 
