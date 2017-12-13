@@ -74,8 +74,10 @@ class FetchCoinMarketCap:
                     self.deleteFromDB_BKPonFetchTime()
                 except Exception as e: 
                     print(e)
-                    #print "exception caught in while loop"
+                    self.sleepTime = 2 + self.sleepTime
+                    #print "exception caught in while loop"            
                 sleep(self.sleepTime)
+
         except Exception as e: 
             print(e)
             #print "Exception caught in start function"

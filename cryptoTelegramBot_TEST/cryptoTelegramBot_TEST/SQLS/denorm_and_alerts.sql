@@ -111,7 +111,8 @@ FROM
  percent_change_1h,
  percent_change_24h,
  percent_change_7d
- FROM coinmarketcap_compressed 
+ FROM coinmarketcap_compressed
+ WHERE (id,fetchTime) IN ( SELECT id,max(fetchTime) from coinmarketcap_compressed group by id)
 ) CM
 LEFT OUTER JOIN
 twitterMapping TW
@@ -136,6 +137,7 @@ LEFT OUTER JOIN
   last AS exchange_last_price,
   lower(substring_index(marketname,'-',1)) AS exchange_last_price_in
   FROM bittrex_compressed 
+  WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bittrex_compressed group by marketname)
 ) BX
 UNION ALL
 SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_last_price_in FROM
@@ -153,7 +155,8 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
   last_price AS exchange_last_price,
   lower(substring(marketname,4,6)) AS exchange_last_price_in
   FROM bitfinex_compressed
-  WHERE lower(substring(marketname,1,3)) <> "rrt"
+  WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bitfinex_compressed group by marketname)
+  AND lower(substring(marketname,1,3)) <> "rrt"
   AND lower(substring(marketname,1,3)) <> "bcu"  
 ) BF
 ) COM
@@ -198,11 +201,13 @@ FROM
 (
 SELECT "Bittrex" AS exchange, marketname,last       AS exchange_last_price,lower(substring_index(marketname,'-',1)) AS exchange_last_price_in 
 FROM bittrex_compressed
+WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bittrex_compressed group by marketname)
 UNION ALL
 SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower(substring(marketname,4,6)) AS exchange_last_price_in 
 FROM bitfinex_compressed
 WHERE   lower(substring(marketname,1,3)) <> "bcu"
 AND     lower(substring(marketname,1,3)) <> "rrt"
+AND (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bitfinex_compressed group by marketname)
 ) MKTS
 WHERE MKTS.marketname NOT IN ( SELECT marketname FROM price_denorm_t1 WHERE marketname IS NOT NULL GROUP BY marketname)
 ;

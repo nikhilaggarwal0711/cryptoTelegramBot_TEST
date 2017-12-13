@@ -72,15 +72,15 @@ class FetchBittrex:
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print(e)
-                    self.sleepTime = 2 * self.sleepTime
+                    self.sleepTime = 2 *  self.sleepTime
                     #print "exception caught in while loop -- Bittrex"
-                    
+
                 #Creaete DENORM AND ALERT Tables
                 try:
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
                     print(e)
-
+                    
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)
