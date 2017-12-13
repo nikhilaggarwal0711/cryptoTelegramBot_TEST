@@ -67,14 +67,16 @@ class RunTelegram:
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
-            currencySymbol = self.textArray[1]
-            if currencySymbol is None:
-                self.message="Please provide information in following format : \n/check_tweet ETH"
+            if self.is_empty(self.textArray[0]):
+                self.message="Please provide information in following format : \n/check_tweet ETH" 
             else:
+                currencySymbol = self.textArray[1]
                 tweets = self.db.fetchTweet(currencySymbol)
-                if tweets is None :
+                #name,id,tweet_id
+                if self.is_empty(tweets):
                     self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
                 else:
+                    print tweets
                     for tweet in tweets:
                         if tweet[2] is None:
                             self.message = "We havn't captured any tweet for this coin. Please try again after some time."
