@@ -211,7 +211,7 @@ class DBHelper:
         # Execute every command from the input file
         for command in sqlCommands:
             print "Running commnad --> " + command
-            if command is None : 
+            if command is None | len(command) < 2: 
                 continue
             # This will skip and report errors
             # For example, if the tables do not yet exist, this will skip over
