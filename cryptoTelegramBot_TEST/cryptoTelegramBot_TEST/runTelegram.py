@@ -72,9 +72,9 @@ class RunTelegram:
                 else:
                     print tweets
                     for tweet in tweets:
-                        if tweet[2] is None:
+                        if self.is_empty(tweet[2]):
                             self.message = "We havn't captured any tweet for this coin. Please try again after some time."
-                        if tweet[1] is None:
+                        if self.is_empty(tweet[1]):
                             self.message = "We don't have Official Twitter Handler for this currency."                        
                         else:
                             self.message = "<a href='https://twitter.com/tweet[1]/status/939148245250510848'>"+currencySymbol +"("+tweet[0]+") tweeted : </a>"
