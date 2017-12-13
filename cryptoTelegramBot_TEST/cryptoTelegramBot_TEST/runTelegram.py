@@ -189,7 +189,7 @@ class RunTelegram:
         while True:
             try:
 #               Send New Market Notification
-                newMarkets = self.db.getNewListings()
+                newMarkets = self.db.get_newMarketListings()
                 self.message = "New Market Added"
                 for market in newMarkets:
                     rank = market[0]
