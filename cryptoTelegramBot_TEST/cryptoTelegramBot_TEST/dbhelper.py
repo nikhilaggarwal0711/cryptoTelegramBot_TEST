@@ -144,7 +144,7 @@ class DBHelper:
     
     def fetchTweet(self,currencySymbol):
         try:
-            self.DB.execute("SELECT name,id,tweet_id FROM price_denorm WHERE symbol = %s group by name,id,tweet_id limit 2",[currencySymbol])
+            self.DB.execute("SELECT name,twitter_screen_name,tweet_id FROM price_denorm WHERE symbol = %s group by name,id,tweet_id limit 2",[currencySymbol])
             tweets = self.DB.fetchall()
         except Exception as e: 
             print(e) 
