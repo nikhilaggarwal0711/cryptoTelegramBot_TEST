@@ -71,13 +71,14 @@ class RunTelegram:
                     self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
                 else:
                     print tweets
+                    #name,twitter_screen_name,tweet_id
                     for tweet in tweets:
                         if self.is_empty(tweet[1]):
                             self.message = "We don't have Official Twitter Handler for this currency."                        
-                        elif str(tweet[2]) == "":
+                        elif self.is_empty(tweet[2]):
                             self.message = "We havn't captured any tweet for this coin. Please try again after some time."
                         else:
-                            self.message = "<a href='https://twitter.com/"+tweet[1]+"/status/939148245250510848'>"+currencySymbol +"("+tweet[0]+") tweeted : </a>"
+                            self.message = "<a href='https://twitter.com/"+tweet[1]+"/status/"+tweet[2]+"'>"+ str(currencySymbol).upper() +"("+tweet[0]+") tweeted : </a>"
         elif self.textArray[0] == "/check_price":
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
