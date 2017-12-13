@@ -33,4 +33,3 @@ CREATE TABLE IF NOT EXISTS  alerts_subscription_compressed (id int,chatId text ,
 CREATE TABLE IF NOT EXISTS  alerts_subscription_t1 (id int, alert_fetchTime int);
 
 CREATE TABLE IF NOT EXISTS  send_alerts (alert_number int NOT NULL AUTO_INCREMENT,id int,chatId text , alert_type text, new_alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text,twitter_screen_name text,tweet_id text,coin_id text, coin_name text,exchange text,new_price decimal(18,9), PRIMARY KEY (alert_number));
-
