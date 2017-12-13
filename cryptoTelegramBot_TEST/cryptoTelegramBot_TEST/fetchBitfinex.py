@@ -85,6 +85,7 @@ class FetchBitfinex:
         try:
             while True:
                 try:
+                    print "inserting again."
                     self.setFetchTime()
                     self.fetchData()
                     self.deleteFromDB_oldData()
