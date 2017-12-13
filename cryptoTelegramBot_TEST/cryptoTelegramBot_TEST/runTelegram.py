@@ -94,7 +94,7 @@ class RunTelegram:
                         exchange_price=str(price[2])
                         exchange_price_in = str(price[3])
                         cmc_price_usd = str(price[4])
-                        self.message = "Price of " + currencySymbol + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd
+                        self.message = self.message + "Price of " + currencySymbol + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
