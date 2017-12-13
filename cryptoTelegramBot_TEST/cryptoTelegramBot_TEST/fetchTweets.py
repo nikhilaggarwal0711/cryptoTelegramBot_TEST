@@ -74,7 +74,7 @@ class StdOutListener(StreamListener):
                     db = DBHelper()
                     db.setup()
                     config = json.loads(data)
-                    tweet_id=config["id"].encode('utf-8')
+                    tweet_id=str(config["id"]).encode('utf-8')
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
                     tweet = config["text"].encode('utf-8')
