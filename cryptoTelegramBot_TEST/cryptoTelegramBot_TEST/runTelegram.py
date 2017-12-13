@@ -202,6 +202,8 @@ class RunTelegram:
                 print "New Markets --> " + str(newMarkets)
                 print "Length of New Markets --> " + str(len(str(newMarkets)))
                 
+                allUsers = self.db.getAllUsers()
+
                 if not self.is_empty(newMarkets) :
                     self.message = "New Market Added"
                     for market in newMarkets:
@@ -214,8 +216,7 @@ class RunTelegram:
                         cmc_price_usd = market[6]
     
                         self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
-    
-                    allUsers = self.db.getAllUsers()
+
                     for user in allUsers:
                         self.chatId = user[0]
                         self.sendTelegramMessage()
