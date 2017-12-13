@@ -310,6 +310,3 @@ delete from alerts_subscription_t1;
 INSERT INTO alerts_subscription_t1 (id,alert_fetchTime)  select id , max(alert_fetchTime) as alert_fetchTime from alerts_subscription_compressed group by id;
 delete from alerts_subscription_compressed where alert_fetchTime NOT IN ( select alert_fetchTime from alerts_subscription_t1 group by alert_fetchTime);
 delete from alerts_subscription_compressed where (id,alert_fetchTime) NOT IN ( select id , alert_fetchTime from alerts_subscription_t1);
-
-
-
