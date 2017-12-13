@@ -79,7 +79,8 @@ class DBHelper:
         try:
             self.DB.execute("""INSERT INTO coinmarketcap VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(idd,name,symbol,int(rank),float(price_usd),float(price_btc),float(h24_volume_usd),float(market_cap_usd),float(available_supply),float(total_supply),float(percent_change_1h),float(percent_change_24h),float(percent_change_7d),last_updated,fetchTime))
             self.conn.commit()
-        except Exception as e: 
+        except Exception as e:
+            print(self.conn._last_executed) 
             print(e) 
 
     def insertIntoTweets(self, tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
