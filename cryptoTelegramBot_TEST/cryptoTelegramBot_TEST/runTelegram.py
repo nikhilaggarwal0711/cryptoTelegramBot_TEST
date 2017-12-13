@@ -145,7 +145,7 @@ class RunTelegram:
         elif self.textArray[0] == "/my_alerts":
             try:
                 self.message=""
-                alerts = self.db.my_alerts(self.chatId)
+                alerts = self.db.my_alerts(str(self.chatId))
                 #id,chatId,alert_type,coin_symbol,alert_price,price_in
                 if not self.is_empty(alerts):
                     for alert in alerts:
