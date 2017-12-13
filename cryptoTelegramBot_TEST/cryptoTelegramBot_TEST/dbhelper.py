@@ -105,11 +105,11 @@ class DBHelper:
         try:
             self.DB.execute("""INSERT INTO """+  tablename + """_BKP SELECT * FROM """ + tablename)
             self.DB.execute("""INSERT INTO """+  tablename + """_compressed select * from """ + tablename)
-            self.DB.execute("""delete from """+  tablename + """_t1""")
+            self.DB.execute("""DELETE FROM """+  tablename + """_t1""")
             self.DB.execute("""INSERT INTO """+  tablename + """_t1 select """ + col1 + """ , max(fetchTime) as fetchTime from """ + tablename +"""_compressed group by """+ col1)
-            self.DB.execute("""delete from """+  tablename + """_compressed where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime""")
-            self.DB.execute("""delete from """+  tablename + """_compressed where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1""")
-            self.DB.execute("""delete from """+  tablename )
+            self.DB.execute("""DELETE FROM """+  tablename + """_compressed where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime)""")
+            self.DB.execute("""DELETE FROM """+  tablename + """_compressed where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1 group by """+ col1 + """, fetchTime)""")
+            self.DB.execute("""DELETE FROM """+  tablename )
             #self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
             self.conn.commit()
         except Exception as e: 

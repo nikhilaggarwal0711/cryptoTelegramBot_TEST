@@ -47,21 +47,6 @@ class FetchCoinMarketCap:
             self.percent_change_7d = self.jsonList[x]["percent_change_7d"]
             self.last_updated = self.jsonList[x]["last_updated"]
 
-            print self.id 
-            print self.name 
-            print self.symbol 
-            print self.rank 
-            print self.price_usd 
-            print self.price_btc 
-            print self.h24_volume_usd 
-            print self.market_cap_usd 
-            print self.available_supply 
-            print self.total_supply 
-            print self.percent_change_1h 
-            print self.percent_change_24h
-            print self.percent_change_7d 
-            print self.last_updated 
-
             self.saveIntoDB()
 
             
