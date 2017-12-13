@@ -67,7 +67,7 @@ class RunTelegram:
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
-            if self.is_empty(self.textArray[0]):
+            if self.is_empty(self.textArray[1]):
                 self.message="Please provide information in following format : \n/check_tweet ETH" 
             else:
                 currencySymbol = self.textArray[1]
