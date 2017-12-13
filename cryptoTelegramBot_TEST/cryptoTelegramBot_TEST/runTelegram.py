@@ -190,7 +190,7 @@ class RunTelegram:
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
-                print "Data type --> " + type(newMarkets)
+                print "Data type --> " + str(type(newMarkets))
                 print "New Markets --> " + str(newMarkets)
                 print "Length of New Markets --> " + str(len(str(newMarkets)))
                 if not newMarkets :
