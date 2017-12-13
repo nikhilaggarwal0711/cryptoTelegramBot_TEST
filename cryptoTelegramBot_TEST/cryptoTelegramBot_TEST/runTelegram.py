@@ -56,7 +56,10 @@ class RunTelegram:
         
     def handleUpdate(self):
         #print "Inside handleUpdate -- Telegram"
+        print self.text
+        print self.text.split()
         self.textArray = self.text.split()
+        print self.textArray
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
             self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
@@ -198,9 +201,6 @@ class RunTelegram:
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
-                print "Data type --> " + str(type(newMarkets))
-                print "New Markets --> " + str(newMarkets)
-                print "Length of New Markets --> " + str(len(str(newMarkets)))
                 
                 allUsers = self.db.getAllUsers()
 
