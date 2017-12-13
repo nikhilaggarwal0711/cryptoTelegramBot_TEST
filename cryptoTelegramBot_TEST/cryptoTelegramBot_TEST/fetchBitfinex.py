@@ -71,10 +71,14 @@ class FetchBitfinex:
         #print "saveIntoDB -- Bitfinex"           
         self.db.addBitfinex(self.marketname,self.mid,self.bid,self.ask,self.last_price,self.low,self.high,self.volume,self.timestamp,self.fetchTime)
 
-    def deleteFromDB_fetchTime(self):
+
+    def deleteFromDB_BKPonFetchTime(self):
         #print "deleteFromDB_fetchTime -- Bitfinex"
-        self.db.deleteFromDB_fetchTime("bitfinex",self.delTillFetchTime)
+        self.db.deleteFromDB_BKPonFetchTime("bitfinex",self.delTillFetchTime)
     
+    def deleteFromDB_oldData(self):
+        self.db.deleteFromDB_oldData("bitfinex")
+
     def start(self,sleepTime):
         #print "Start method -- Bitfinex"
         self.sleepTime = sleepTime
@@ -83,8 +87,9 @@ class FetchBitfinex:
                 try:
                     self.setFetchTime()
                     self.fetchData()
+                    self.deleteFromDB_oldData()
                     self.setDelTillFetchTime()
-                    self.deleteFromDB_fetchTime()
+                    self.deleteFromDB_BKPonFetchTime()
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print(e)

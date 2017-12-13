@@ -1,6 +1,7 @@
 #import sqlite3
 import MySQLdb
 from config import MYSQL
+from config import SQL_Scripts
 
 class DBHelper:
 
@@ -13,43 +14,30 @@ class DBHelper:
         self.DB = self.conn.cursor()
 
     def setup(self):
-        tblstmt1 = "CREATE TABLE IF NOT EXISTS botMessages ( chatId text,firstName text , category text,offsetId text,fetchTime int(11), message text)"
-        self.DB.execute(tblstmt1)
-        self.conn.commit()
- 
-        tblstmt2 = "CREATE TABLE IF NOT EXISTS bittrex ( marketname text,high decimal(18,8) ,low decimal(18,8) ,volume decimal(18,8) ,last decimal(18,8) ,basevolume decimal(18,8) ,timestampp text,bid decimal(18,8) ,ask decimal(18,8) ,openbuyorders int(11) ,opensellorders int(11) ,prevday decimal(18,8) ,created text,fetchTime int(11) )"
-        self.DB.execute(tblstmt2)
-        self.conn.commit()
-        
-        tblstmt3 = "CREATE TABLE IF NOT EXISTS coinmarketcap ( id text,name text,symbol text,rank int(11) ,price_usd decimal(18,2) ,price_btc decimal(38,6) ,24h_volume_usd decimal(38,8) ,market_cap_usd decimal(38,8) ,available_supply decimal(38,8) ,total_supply decimal(38,8) ,percent_change_1h decimal(38,8) ,percent_change_24h decimal(38,8) ,percent_change_7d decimal(38,8) ,last_updated text,fetchTime int(11) )"
-        self.DB.execute(tblstmt3)
-        self.conn.commit()
-        
-        tblstmt4 = "CREATE TABLE IF NOT EXISTS free_coins (coin_name text,coin_symbol text,shorten_link text,complete_link text,official_website text,free_dollars int,free_coins int,added_time int,expiry_time int,last_fetchTime_notified int)"
-        self.DB.execute(tblstmt4)
-        self.conn.commit()
+        setup_script=SQL_Scripts.setup_script_path
+        self.executeScriptsFromFile(setup_script)
 
-        tblstmt5 = "CREATE TABLE IF NOT EXISTS bitfinex (marketname text,mid decimal(18,9),bid decimal(18,9),ask decimal(18,9),last_price decimal(18,9),low decimal(18,9),high decimal(18,9),volume decimal(18,9), timestampp text,fetchTime int)"
-        self.DB.execute(tblstmt5)
-        self.conn.commit()
-
-        tblstmt6 = "CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen int,fetchTime int)"
-        self.DB.execute(tblstmt6)
-        self.conn.commit()
-
-        tblstmt7 = "CREATE TABLE IF NOT EXISTS tweets (screen_name text, created_at text, tweet text, inReplyToScreenName text, fetchTime int)"
-        self.DB.execute(tblstmt7)
-        self.conn.commit()
+    def create_denorm_and_alerts(self):
+        setup_script=SQL_Scripts.denorm_and_alerts_script_path
+        self.executeScriptsFromFile(setup_script)
 
     def checkUser(self, chatId):
-        rowsCount = self.DB.execute("""SELECT chatId from botMessages where chatId=%s""",[chatId])
+        rowsCount = 0
+        try:
+            rowsCount = self.DB.execute("""SELECT chatId from botMessages where chatId=%s""",[chatId])
+        except Exception as e: 
+            print(e) 
         if ( rowsCount > 0 ):
             return 'old'
         else:
             return 'new'
 
     def getLastOffset(self):
-        self.DB.execute("""SELECT MAX(offsetId) from botMessages""")
+        try:
+            self.DB.execute("""SELECT MAX(offsetId) from botMessages""")
+        except Exception as e: 
+            print(e) 
+
         lastOffsets = self.DB.fetchall()
         for lastOffset in lastOffsets:
             if lastOffset[0] is None:
@@ -67,26 +55,176 @@ class DBHelper:
             print(e)
 
     def addBittrex(self,MarketName,High,Low,Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime):
-        self.DB.execute("""INSERT INTO bittrex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(MarketName,float(High),float(Low),Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime))
-        self.conn.commit()
-  
+        try:
+            self.DB.execute("""INSERT INTO bittrex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(MarketName,float(High),float(Low),Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addPoloniex(self,currencySymbol,idd,name,disabled,delisted,frozen,fetchTime):
-        self.DB.execute("""INSERT INTO poloniex VALUES (%s,%s,%s,%s,%s,%s,%s)""",(currencySymbol,idd,name,disabled,delisted,frozen,fetchTime))
-        self.conn.commit()
-  
+        try:
+            self.DB.execute("""INSERT INTO poloniex VALUES (%s,%s,%s,%s,%s,%s,%s)""",(currencySymbol,idd,name,disabled,delisted,frozen,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addBitfinex(self,marketName,mid,bid,ask,last_price,low,high,volume,timestamp,fetchTime):
-        self.DB.execute("""INSERT INTO bitfinex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(marketName,float(mid),float(bid),float(ask),float(last_price),float(low),float(high),float(volume),timestamp,fetchTime))
-        self.conn.commit()
-    
+        try:
+            self.DB.execute("""INSERT INTO bitfinex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(marketName,float(mid),float(bid),float(ask),float(last_price),float(low),float(high),float(volume),timestamp,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addCoinMarketCap(self,idd,name,symbol,rank,price_usd,price_btc,h24_volume_usd,market_cap_usd,available_supply,total_supply,percent_change_1h,percent_change_24h,percent_change_7d,last_updated,fetchTime):
-        self.DB.execute("""INSERT INTO coinmarketcap VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(idd,name,symbol,int(rank),float(price_usd),float(price_btc),float(h24_volume_usd),float(market_cap_usd),float(available_supply),float(total_supply),float(percent_change_1h),float(percent_change_24h),float(percent_change_7d),last_updated,fetchTime))
-        self.conn.commit()
+        try:
+            self.DB.execute("""INSERT INTO coinmarketcap VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(idd,name,symbol,int(rank),float(price_usd),float(price_btc),float(h24_volume_usd),float(market_cap_usd),float(available_supply),float(total_supply),float(percent_change_1h),float(percent_change_24h),float(percent_change_7d),last_updated,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
 
-    def deleteFromDB_fetchTime(self,tablename , delTillFetchTime):
-        self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
-        self.conn.commit()
+    def insertIntoTweets(self, tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO tweets (tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s,%s)""",(tweet_id,screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
 
-    def getNewListingsBittrex(self):
+    def deleteFromDB_BKPonFetchTime(self,tablename , delTillFetchTime):
+        try:
+            self.DB.execute("""Delete from """+ tablename + """_BKP where fetchTime <= %s""", [delTillFetchTime] )
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def deleteFromDB_oldData(self,tablename):
+        if tablename == "coinmarketcap":
+            col1 = "id"
+        else:
+            col1 = "marketname"
+        try:
+            self.DB.execute("""INSERT INTO """+  tablename + """_BKP SELECT * FROM """ + tablename)
+            self.DB.execute("""INSERT INTO """+  tablename + """_compressed select * from """ + tablename)
+            self.DB.execute("""delete from """+  tablename + """_t1""")
+            self.DB.execute("""INSERT INTO """+  tablename + """_t1 select """ + col1 + """ , max(fetchTime) as fetchTime from """ + tablename +"""_compressed group by """+ col1)
+            self.DB.execute("""delete from """+  tablename + """_compressed where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime""")
+            self.DB.execute("""delete from """+  tablename + """_compressed where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1""")
+            self.DB.execute("""delete from """+  tablename )
+            #self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+    def getAllUsers(self):
+        try:
+            self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
+            chatIds = self.DB.fetchall()
+        except Exception as e: 
+            print(e) 
+        return chatIds
+    def getAlerts(self):
+        try:
+            self.DB.execute("SELECT alert_number,chatId,alert_type,coin_symbol,alert_price,price_in,twitter_screen_name,tweet_id,coin_name,exchange,new_price FROM send_alerts")
+            alerts = self.DB.fetchall()
+            return alerts
+        except Exception as e: 
+            print(e) 
+                
+    def fetchCurrencyName(self,currencySymbol):
+        try:
+            self.DB.execute("select name from coinmarketcap where symbol=%s group by name",[currencySymbol])
+            currencyNames = self.DB.fetchall()
+        except Exception as e: 
+            print(e) 
+        return currencyNames
+    
+    def fetchTweet(self,currencySymbol):
+        try:
+            self.DB.execute("SELECT name,id,tweet_id FROM price_dn WHERE symbol = %s group by tweet_id limit 2",[currencySymbol])
+            tweets = self.DB.fetchall()
+        except Exception as e: 
+            print(e) 
+        return tweets    
+
+    def fetchPrice(self,currencySymbol):
+        try:
+            self.DB.execute("SELECT name,exchange,exchange_price,exchange_price_in,cmc_price_usd FROM price_dn WHERE symbol = %s group by tweet_id limit 2",[currencySymbol])
+            prices = self.DB.fetchall()
+            return prices       
+        except Exception as e: 
+            print(e) 
+    
+    def add_alert(self,chatId,alert_type,fetchTime,currencySymbol,is_first,alert_price,price_in):
+        try:
+            self.DB.execute("""INSERT INTO alerts_subscription(chatId,alert_type,alert_fetchTime,coin_symbol,is_first,alert_price,price_in) VALUES (%s,%s,%s,%s,%s,%s,%s)""",[chatId,alert_type,fetchTime,currencySymbol,is_first,alert_price,price_in])
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+    
+    def my_alerts(self,chatId):
+        try:
+            self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_compressed WHERE chatId=%s",[chatId] )
+            alerts = self.DB.fetchall()
+            return alerts
+        except Exception as e: 
+            print(e) 
+
+    def delete_alert(self,chatId,alert_id):
+        try:
+            self.DB.execute("""DELETE FROM alerts_subscription WHERE chatId=%s AND id=%s""",[chatId,alert_id])
+            self.DB.execute("""DELETE FROM alerts_subscription_compressed WHERE chatId=%s AND id=%s""",[chatId,alert_id])
+            self.conn.commit()
+        except Exception as e: 
+            print(e)         
+
+    def closeConnection(self):
+        try:
+            self.conn.close()
+        except Exception as e: 
+            print(e) 
+
+    def get_newMarketListings(self):
+        try:
+            self.DB.execute("SELECT rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd FROM price_denorm WHERE market_type = \"new\" GROUP BY rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd")
+            newMarkets = self.DB.fetchall()
+            return newMarkets
+        except Exception as e: 
+            print(e) 
+
+    def update_priceDenorm_marketTypes(self):
+        try:
+            self.DB.execute("UPDATE price_denorm SET market_type = \"old\" WHERE market_type = \"new\"")
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+    def executeScriptsFromFile(self,filename):
+        # Open and read the file as a single buffer
+        fd = open(filename, 'r')
+        sqlFile = fd.read()
+        fd.close()
+
+        # all SQL commands (split on ';')
+        sqlCommands = sqlFile.split(';')
+
+        # Execute every command from the input file
+        for command in sqlCommands:
+            print "Running commnad --> " + command
+            # This will skip and report errors
+            # For example, if the tables do not yet exist, this will skip over
+            # the DROP TABLE commands
+            try:
+                self.DB.execute(command)
+                #chatIds = DB.fetchall()
+                #print chatIds
+                self.conn.commit()
+            except Exception as msg:
+                print "Command skipped: ", msg
+
+
+    
+
+"""    def getNewListingsBittrex(self):
         #print "getNewListings -- DBHelper from Telegram"
         self.DB.execute("SELECT marketname,volume,bid,ask,openbuyorders,opensellorders,fetchTime FROM bittrex group by marketname having count(marketname)=1")
         newMarkets = self.DB.fetchall()
@@ -105,25 +243,14 @@ class DBHelper:
         return newMarkets
     
     def insertIntoBittrex_DuplicateRow(self, marketName , fetchTime):
-        self.DB.execute("""INSERT INTO bittrex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
+        self.DB.execute("INSERT INTO bittrex (marketname, fetchTime) VALUES (%s,%s),(marketName , int(fetchTime)-1 ))
         self.conn.commit()
 
     def insertIntoBitfinex_DuplicateRow(self, marketName , fetchTime):
-        self.DB.execute("""INSERT INTO bitfinex (marketname, fetchTime) VALUES (%s,%s)""",(marketName , int(fetchTime)+1 ))
+        self.DB.execute(INSERT INTO bitfinex (marketname, fetchTime) VALUES (%s,%s),(marketName , int(fetchTime)-1 ))
         self.conn.commit()
 
     def insertIntoPoloniex_DuplicateRow(self, currencySymbol , fetchTime):
-        self.DB.execute("""INSERT INTO poloniex (currencySymbol, fetchTime) VALUES (%s,%s)""",(currencySymbol , int(fetchTime)+1 ))
+        self.DB.execute(INSERT INTO poloniex (currencySymbol, fetchTime) VALUES (%s,%s),(currencySymbol , int(fetchTime)-1 ))
         self.conn.commit()
-
-    def getAllUsers(self):
-        self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
-        chatIds = self.DB.fetchall()
-        return chatIds
-    
-    def insertIntoTweets(self, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
-        self.DB.execute("""INSERT INTO tweets (screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s)""",(screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
-        self.conn.commit()
-
-    def closeConnection(self):
-        self.conn.close()
+"""

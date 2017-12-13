@@ -48,13 +48,16 @@ class FetchBittrex:
             self.saveIntoDB()
 
     def saveIntoDB(self): 
-        ##print "saveIntoDB -- Bittrex"           
+        ##print "saveIntoDB -- Bittrex"   
         self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)
-
-    def deleteFromDB_fetchTime(self):
-        #print "deleteFromDB_fetchTime -- Bittrex"
-        self.db.deleteFromDB_fetchTime("bittrex",self.delTillFetchTime)
     
+    def deleteFromDB_BKPonFetchTime(self):
+        #print "deleteFromDB_fetchTime -- Bittrex"
+        self.db.deleteFromDB_BKPonFetchTime("bittrex",self.delTillFetchTime)
+    
+    def deleteFromDB_oldData(self):
+        self.db.deleteFromDB_oldData("bittrex")
+        
     def start(self,sleepTime):
         #print "Start method -- Bittrex"
         self.sleepTime = sleepTime
@@ -63,13 +66,21 @@ class FetchBittrex:
                 try:
                     self.setFetchTime()
                     self.fetchData()
+                    self.deleteFromDB_oldData()
                     self.setDelTillFetchTime()
-                    self.deleteFromDB_fetchTime()
+                    self.deleteFromDB_BKPonFetchTime()
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print(e)
                     self.sleepTime = 2 * self.sleepTime
                     #print "exception caught in while loop -- Bittrex"
+                    
+                #Creaete DENORM AND ALERT Tables
+                try:
+                    self.db.create_denorm_and_alerts()
+                except Exception as e: 
+                    print(e)
+
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)

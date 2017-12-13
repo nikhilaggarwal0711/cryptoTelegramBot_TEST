@@ -53,12 +53,15 @@ class FetchPoloniex:
             self.saveIntoDB()
 
     def saveIntoDB(self): 
-        print "saveIntoDB -- Poloniex"           
+        print "saveIntoDB -- Poloniex"  
         self.db.addPoloniex(self.currencySymbol,self.id,self.name,self.disabled,self.delisted,self.frozen,self.fetchTime)
 
-    def deleteFromDB_fetchTime(self):
+    def deleteFromDB_BKPonFetchTime(self):
         print "deleteFromDB_fetchTime -- Poloniex"
-        self.db.deleteFromDB_fetchTime("Poloniex",self.delTillFetchTime)
+        self.db.deleteFromDB_BKPonFetchTime("poloniex",self.delTillFetchTime)
+
+    def deleteFromDB_oldData(self):
+        self.db.deleteFromDB_oldData("poloniex")
 
     def start(self,sleepTime):
         print "Start method -- Poloniex"
@@ -68,8 +71,9 @@ class FetchPoloniex:
                 try:
                     self.setFetchTime()
                     self.fetchData()
+                    self.deleteFromDB_oldData()
                     self.setDelTillFetchTime()
-                    self.deleteFromDB_fetchTime()
+                    self.deleteFromDB_BKPonFetchTime()
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print(e)

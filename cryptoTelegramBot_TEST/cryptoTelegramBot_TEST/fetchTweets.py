@@ -74,10 +74,16 @@ class StdOutListener(StreamListener):
                     db = DBHelper()
                     db.setup()
                     config = json.loads(data)
+                    tweet_id=config["id"].encode('utf-8')
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
                     tweet = config["text"].encode('utf-8')
                     inReplyToScreenName = config["in_reply_to_screen_name"]
+                    
+                    #config["retweeted_status"]["full_text"]
+                    #Keeping it as full_text can be mising in text variable above. and can be fetched using this one.
+                    #But this is for retweeted tweet. Need to look into tweet which is big but was not retweeted.
+                    
                     print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
@@ -85,7 +91,7 @@ class StdOutListener(StreamListener):
                         inReplyToScreenName = ""
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
-                    db.insertIntoTweets(screen_name,created_at,tweet,str(inReplyToScreenName),fetchTime)
+                    db.insertIntoTweets(tweet_id,screen_name,created_at,tweet,str(inReplyToScreenName),fetchTime)
                 except Exception, e:
                         print "Error. Inside StdOutListener class.... Error: "
                         print e.__doc__
