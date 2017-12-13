@@ -192,7 +192,7 @@ class RunTelegram:
                 newMarkets = self.db.get_newMarketListings()
                 print "New Markets --> " + str(newMarkets)
                 print "Length of New Markets --> " + str(len(str(newMarkets)))
-                if newMarkets is not None:
+                if not newMarkets :
                     self.message = "New Market Added"
                     for market in newMarkets:
                         rank = market[0]
