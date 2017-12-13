@@ -102,10 +102,10 @@ class RunTelegram:
                         cmc_price_usd = price[4]
                         self.message = "Price of " + currencySymbol + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd
         elif self.textArray[0] == "/set_alert_tweet":
-            currencySymbol = self.textArray[1]
-            if currencySymbol is None:
+            if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
             else:
+                currencySymbol = self.textArray[1]
                 self.db.add_alert(self.chatId,"tweet",self.fetchTime,currencySymbol,"yes",0,"btc")
                 self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/set_alert_price_incr":
