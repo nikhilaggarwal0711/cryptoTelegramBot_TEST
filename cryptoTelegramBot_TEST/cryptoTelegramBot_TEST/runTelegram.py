@@ -182,6 +182,14 @@ class RunTelegram:
             
     def insertIntoPoloniex_DB(self, currencySymbol , fetchTime):
         self.db.insertIntoPoloniex_DuplicateRow(currencySymbol , fetchTime)
+
+    def is_empty(self,any_structure):
+        if any_structure:
+            print('Structure is not empty.')
+            return False
+        else:
+            print('Structure is empty.')
+            return True
     
     def start(self,sleepTime):
         #print "Start method -- Telegram"
@@ -193,7 +201,8 @@ class RunTelegram:
                 print "Data type --> " + str(type(newMarkets))
                 print "New Markets --> " + str(newMarkets)
                 print "Length of New Markets --> " + str(len(str(newMarkets)))
-                if not newMarkets :
+                
+                if not self.is_empty(newMarkets) :
                     self.message = "New Market Added"
                     for market in newMarkets:
                         rank = market[0]
