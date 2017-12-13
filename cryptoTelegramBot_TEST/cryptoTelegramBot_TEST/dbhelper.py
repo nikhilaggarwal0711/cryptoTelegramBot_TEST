@@ -81,6 +81,7 @@ class DBHelper:
             self.conn.commit()
         except Exception as e:
             print(self.conn._last_executed) 
+            print rank
             print(e) 
 
     def insertIntoTweets(self, tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
