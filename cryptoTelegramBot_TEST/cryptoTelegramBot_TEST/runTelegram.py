@@ -190,19 +190,19 @@ class RunTelegram:
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
-                self.message = "New Market Added"
-                for market in newMarkets:
-                    rank = market[0]
-                    symbol = market[1]
-                    name = market[2]
-                    exchange = market[3]
-                    marketname = market[4]
-                    exchange_last_price = market[5]
-                    cmc_price_usd = market[6]
-
-                    self.message = "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
-
                 if newMarkets is not None:
+                    self.message = "New Market Added"
+                    for market in newMarkets:
+                        rank = market[0]
+                        symbol = market[1]
+                        name = market[2]
+                        exchange = market[3]
+                        marketname = market[4]
+                        exchange_last_price = market[5]
+                        cmc_price_usd = market[6]
+    
+                        self.message = "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
+    
                     allUsers = self.db.getAllUsers()
                     for user in allUsers:
                         self.chatId = user[0]
