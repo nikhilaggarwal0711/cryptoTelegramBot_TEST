@@ -72,12 +72,12 @@ class RunTelegram:
                 else:
                     print tweets
                     for tweet in tweets:
-                        if self.is_empty(tweet[2]):
-                            self.message = "We havn't captured any tweet for this coin. Please try again after some time."
-                        elif self.is_empty(tweet[1]):
+                        if self.is_empty(tweet[1]):
                             self.message = "We don't have Official Twitter Handler for this currency."                        
+                        elif self.is_empty(tweet[2]):
+                            self.message = "We havn't captured any tweet for this coin. Please try again after some time."
                         else:
-                            self.message = "<a href='https://twitter.com/tweet[1]/status/939148245250510848'>"+currencySymbol +"("+tweet[0]+") tweeted : </a>"
+                            self.message = "<a href='https://twitter.com/"+tweet[1]+"/status/939148245250510848'>"+currencySymbol +"("+tweet[0]+") tweeted : </a>"
         elif self.textArray[0] == "/check_price":
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
