@@ -88,6 +88,7 @@ class RunTelegram:
                 if prices is None :
                     self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
                 else:
+                    self.message = ""
                     for price in prices:
                         name=str(price[0])
                         exchange=str(price[1])
