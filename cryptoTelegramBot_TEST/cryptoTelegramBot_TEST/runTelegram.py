@@ -105,18 +105,21 @@ class RunTelegram:
                 self.db.add_alert(self.chatId,"tweet",self.fetchTime,currencySymbol,"yes",0,"btc")
                 self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/set_alert_price_incr":
-            currencySymbol = self.textArray[1]
-            price_alert = self.textArray[2]
-            price_in = self.textArray[3]
-            
+            if len(self.textArray) == 1:            
+                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC"
+            else:
+                currencySymbol = str(self.textArray[1]).lower()
+                price_alert = self.textArray[2]
+                price_in = self.textArray[3]
+
             if currencySymbol is None:
-                self.message="Please provide information in following format : \n/check_price ETH 0.0001 BTC"
+                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.0001 BTC"
             elif price_alert is None:
-                self.message="Please provide information in following format : \n/check_price 0.08 BTC"
+                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC"
             elif price_in is None:
-                self.message="Please provide information in following format : \n/check_price 0.08 BTC"
+                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC"
             elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
-                self.message="Please provide information in following format : \n/check_price 0.08 BTC"                
+                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC"                
             else: 
                 if price_in in ("satoshi","stats","sats"):
                     price_alert = price_alert/1000000000
@@ -242,7 +245,7 @@ class RunTelegram:
                             coin_name = alert[8]
                             exchange = alert[9]
                             new_price = alert[10]
-                            
+
                             if alert_type == "tweet":
                                 self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
                             #if alert_type == "p_incr":

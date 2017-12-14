@@ -15,7 +15,7 @@ class DBHelper:
             self.DB = self.conn.cursor()
         except Exception as e: 
             print(e) 
-        
+
     def setup(self):
         setup_script=SQL_Scripts.setup_script_path
         self.executeScriptsFromFile(setup_script)
@@ -108,12 +108,19 @@ class DBHelper:
             col1 = "marketname"
         try:
             self.DB.execute("""INSERT INTO """+  tablename + """_BKP SELECT * FROM """ + tablename)
-            self.DB.execute("""INSERT INTO """+  tablename + """_compressed select * from """ + tablename)
+            self.DB.execute("""INSERT INTO """+  tablename + """_dn_ld select * from """ + tablename)
             self.DB.execute("""DELETE FROM """+  tablename + """_t1""")
-            self.DB.execute("""INSERT INTO """+  tablename + """_t1 select """ + col1 + """ , max(fetchTime) as fetchTime from """ + tablename +"""_compressed group by """+ col1)
-            self.DB.execute("""DELETE FROM """+  tablename + """_compressed where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime)""")
-            self.DB.execute("""DELETE FROM """+  tablename + """_compressed where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1 group by """+ col1 + """, fetchTime)""")
+            self.DB.execute("""INSERT INTO """+  tablename + """_t1 select """ + col1 + """ , max(fetchTime) as fetchTime from """ + tablename +"""_dn_ld group by """+ col1)
+            self.DB.execute("""DELETE FROM """+  tablename + """_dn_ld where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime)""")
+            self.DB.execute("""DELETE FROM """+  tablename + """_dn_ld where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1 group by """+ col1 + """, fetchTime)""")
             self.DB.execute("""DELETE FROM """+  tablename )
+            
+            self.DB.execute("RENAME TABLE "+ tablename +"_dn TO " + tablename + "_dn_md")
+            self.DB.execute("RENAME TABLE "+ tablename +"_dn_ld TO " + tablename + "_dn")
+            self.DB.execute("RENAME TABLE "+ tablename +"_dn_md TO " + tablename + "_dn_ld")
+            self.DB.execute("DELETE FROM "+  tablename +"_dn_ld" )
+            self.DB.execute("INSERT INTO "+  tablename + "_dn_ld SELECT * FROM " + tablename +"_dn" )
+
             #self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
             self.conn.commit()
         except Exception as e: 
@@ -136,21 +143,24 @@ class DBHelper:
                 
     def fetchCurrencyName(self,currencySymbol):
         try:
-            self.DB.execute("select name from coinmarketcap where symbol=%s group by name",[currencySymbol])
+            self.DB.execute("select name from price_denorm where symbol=%s group by name",[currencySymbol])
             currencyNames = self.DB.fetchall()
         except Exception as e: 
             print(e) 
         return currencyNames
     
     def fetchTweet(self,currencySymbol):
+        currencySymbol=str(currencySymbol).lower()
         try:
-            self.DB.execute("SELECT name,twitter_screen_name,tweet_id FROM price_denorm WHERE symbol = %s group by name,twitter_screen_name,tweet_id limit 2",[currencySymbol])
+            self.DB.execute("SELECT name,twitter_screen_name,tweet_id FROM price_denorm WHERE lower(symbol) = %s group by name,twitter_screen_name,tweet_id limit 2",[currencySymbol])
             tweets = self.DB.fetchall()
         except Exception as e: 
             print(e) 
         return tweets    
 
+
     def fetchPrice(self,currencySymbol):
+        currencySymbol = str(currencySymbol).lower()
         try:
             self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
             prices = self.DB.fetchall()
@@ -167,7 +177,7 @@ class DBHelper:
     
     def my_alerts(self,chatId):
         try:
-            self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_compressed WHERE chatId=%s",[chatId] )
+            self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_dn WHERE chatId=%s",[chatId] )
             alerts = self.DB.fetchall()
             return alerts
         except Exception as e: 
@@ -176,7 +186,8 @@ class DBHelper:
     def delete_alert(self,chatId,alert_id):
         try:
             self.DB.execute("""DELETE FROM alerts_subscription WHERE chatId=%s AND id=%s""",[chatId,alert_id])
-            self.DB.execute("""DELETE FROM alerts_subscription_compressed WHERE chatId=%s AND id=%s""",[chatId,alert_id])
+            self.DB.execute("""DELETE FROM alerts_subscription_dn_ld WHERE chatId=%s AND id=%s""",[chatId,alert_id])
+            self.DB.execute("""DELETE FROM alerts_subscription_dn WHERE chatId=%s AND id=%s""",[chatId,alert_id])
             self.conn.commit()
         except Exception as e: 
             print(e)         
@@ -198,6 +209,7 @@ class DBHelper:
     def update_priceDenorm_marketTypes(self):
         try:
             self.DB.execute("UPDATE price_denorm SET is_new_market = \"old\" WHERE is_new_market = \"new\"")
+            self.DB.execute("UPDATE price_denorm_ld SET is_new_market = \"old\" WHERE is_new_market = \"new\"")
             self.conn.commit()
         except Exception as e: 
             print(e) 
