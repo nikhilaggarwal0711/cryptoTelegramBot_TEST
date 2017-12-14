@@ -221,10 +221,10 @@ class RunTelegram:
 
     def is_empty(self,any_structure):
         if any_structure:
-            print('Structure is not empty.')
+            #print('Structure is not empty.')
             return False
         else:
-            print('Structure is empty.')
+            #print('Structure is empty.')
             return True
     
     def start(self,sleepTime):

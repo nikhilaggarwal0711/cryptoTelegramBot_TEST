@@ -59,36 +59,53 @@ TW.twitter_screen_name AS twitter_screen_name,
 TWEETS.tweet_id,
 TWEETS.tweet_fetchTime,
 CASE 
-  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
-  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN "coinmarketcap"
+  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
+  WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "coinmarketcap"
+  WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "coinmarketcap"
   ELSE COALESCE(COM.exchange,"coinmarketcap")
 END AS exchange,
 CASE 
-  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN NULL
-  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN NULL
+  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN NULL
+  WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN NULL
+  WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN NULL
   ELSE COM.marketname
 END AS marketname,
 CASE 
-  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
-  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"  THEN CM.exchange_last_price
+  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
+  WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN CM.exchange_last_price
+  WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN CM.exchange_last_price
   ELSE COALESCE(COM.exchange_last_price,CM.exchange_last_price)
 END AS exchange_last_price,
-COALESCE(COM.exchange_last_price_in,"btc") AS exchange_last_price_in,
+CASE 
+  WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="BTC-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="ETH-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="ETH-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="ETH-RCN"  AND CM.id="rcoin"   AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "btc"
+  WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "btc"
+  WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "btc"
+  ELSE COALESCE(COM.exchange_last_price_in,"btc")
+END AS exchange_last_price_in,
 CM.price_usd,
 CM.price_btc,
 CM.24h_volume_usd,
@@ -186,6 +203,26 @@ cmc_percent_change_7d,
 FROM price_denorm
 WHERE id = "-"
 ) All_Coins
+GROUP BY 
+All_Coins.rank,
+All_Coins.id,
+All_Coins.symbol,
+All_Coins.name,
+All_Coins.twitter_screen_name,
+All_Coins.tweet_id,
+All_Coins.tweet_fetchTime,
+All_Coins.exchange,
+All_Coins.marketname,
+All_Coins.exchange_last_price,
+All_Coins.exchange_last_price_in,
+All_Coins.price_usd,
+All_Coins.price_btc,
+All_Coins.24h_volume_usd,
+All_Coins.market_cap_usd,
+All_Coins.percent_change_1h,
+All_Coins.percent_change_24h,
+All_Coins.percent_change_7d,
+All_Coins.is_new_market
 ;
 
 
