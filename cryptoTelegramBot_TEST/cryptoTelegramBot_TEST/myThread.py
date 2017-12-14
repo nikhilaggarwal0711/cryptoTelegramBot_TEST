@@ -19,7 +19,7 @@ class MyThread(Thread):
             #print "coinmarketcap"
             fcmc = FetchCoinMarketCap()
             fcmc.start(self.sleepTime)
-        elif  ( self.threadName == "bittrex" ):
+        elif  ( self.threadName == "bittrex_and_coinMarketCap_and_denorm" ):
             #print "bittrex"
             fBittrex = FetchBittrex()
             fBittrex.start(self.sleepTime)

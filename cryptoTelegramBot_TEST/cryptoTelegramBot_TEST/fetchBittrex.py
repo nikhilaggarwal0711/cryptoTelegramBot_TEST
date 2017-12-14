@@ -8,21 +8,15 @@ class FetchBittrex:
     def __init__(self):
         #print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
+        self.link2 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
         self.db = DBHelper()
         #self.db.setup()
-        
+
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
 
-    def setDelTillFetchTime(self):
-        #print "delTillFetchTime -- Bittrex"
-        #2days older data.
-        deleteTime = 172800
-#        deleteTime = 1
-        self.delTillFetchTime = self.fetchTime - deleteTime
-
-    def fetchData(self):
+    def fetchData_Bittrex(self):
         #print "fetchData -- Bittrex"
         self.f1 = requests.get(url = self.link1)
         self.data = self.f1.text.replace("null","0")
@@ -45,18 +39,33 @@ class FetchBittrex:
             self.PrevDay = self.jsonList["result"][x]["PrevDay"]
             self.Created = self.jsonList["result"][x]["Created"].encode('utf-8')
                 
-            self.saveIntoDB()
+            self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)    
 
-    def saveIntoDB(self): 
-        ##print "saveIntoDB -- Bittrex"   
-        self.db.addBittrex(self.MarketName,self.High,self.Low,self.Volume,self.Last,self.BaseVolume,self.TimeStamp,self.Bid,self.Ask,self.OpenBuyOrders,self.OpenSellOrders,self.PrevDay,self.Created,self.fetchTime)
-    
-    def deleteFromDB_BKPonFetchTime(self):
-        #print "deleteFromDB_fetchTime -- Bittrex"
-        self.db.deleteFromDB_BKPonFetchTime("bittrex",self.delTillFetchTime)
-    
-    def deleteFromDB_oldData(self):
-        self.db.deleteFromDB_oldData("bittrex")
+    def fetchData_CoinMarketCap(self):
+        #print "fetchData"
+        self.f1 = requests.get(url = self.link2)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+
+        for x in range(0,len(self.jsonList)):
+            ##print "#print data for loop - coinmarketcap" 
+            self.id = self.jsonList[x]["id"]
+            self.name = self.jsonList[x]["name"]
+            self.symbol = self.jsonList[x]["symbol"]
+            self.rank = self.jsonList[x]["rank"]
+            self.price_usd = self.jsonList[x]["price_usd"]
+            self.price_btc = self.jsonList[x]["price_btc"]
+            self.h24_volume_usd = self.jsonList[x]["24h_volume_usd"]
+            self.market_cap_usd = self.jsonList[x]["market_cap_usd"]
+            self.available_supply = self.jsonList[x]["available_supply"]
+            self.total_supply = self.jsonList[x]["total_supply"]
+            self.percent_change_1h = self.jsonList[x]["percent_change_1h"]
+            self.percent_change_24h = self.jsonList[x]["percent_change_24h"]
+            self.percent_change_7d = self.jsonList[x]["percent_change_7d"]
+            self.last_updated = self.jsonList[x]["last_updated"]
+
+            self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
+
         
     def start(self,sleepTime):
         #print "Start method -- Bittrex"
@@ -65,22 +74,36 @@ class FetchBittrex:
             while True:
                 try:
                     self.setFetchTime()
-                    self.fetchData()
-                    self.deleteFromDB_oldData()
-                    self.setDelTillFetchTime()
-                    self.deleteFromDB_BKPonFetchTime()
+                    self.fetchData_Bittrex()
+                    self.db.deleteFromDB_oldData("bittrex")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("bittrex",self.delTillFetchTime)
                     self.sleepTime = sleepTime
-                except Exception as e: 
+                except Exception as e:
                     print(e)
                     self.sleepTime = 2 *  self.sleepTime
                     #print "exception caught in while loop -- Bittrex"
+
+                #Fetch CoinMarketcap data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_CoinMarketCap()
+                    self.db.deleteFromDB_oldData("coinmarketcap")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("coinmarketcap",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print(e)
+                    self.sleepTime = 2 * self.sleepTime
 
                 #Creaete DENORM AND ALERT Tables
                 try:
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
                     print(e)
-                    
+
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)

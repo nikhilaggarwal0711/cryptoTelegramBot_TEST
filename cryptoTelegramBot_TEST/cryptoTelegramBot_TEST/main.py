@@ -8,8 +8,8 @@ def main():
     db.closeConnection()
 #    last_update_id = None
     print "Starting Thread"
-    thread1 = MyThread("coinMarketCap",43200)
-    thread2 = MyThread("bittrex",60)
+#    thread1 = MyThread("coinMarketCap",43200)
+    thread2 = MyThread("bittrex_and_coinMarketCap_and_denorm",60)
     thread3 = MyThread("telegram",0.5)
     thread4 = MyThread("bitfinex",90)
 #    thread5 = MyThread("poloniex",60)
@@ -17,7 +17,7 @@ def main():
 
     #print "Starting Threads"
     #start new Threads
-    thread1.start()
+#    thread1.start()
     thread2.start()
     thread3.start()
     thread4.start()
@@ -25,7 +25,7 @@ def main():
     thread6.start()
 
     #Waiting for Threads to finish
-    thread1.join()
+#    thread1.join()
     thread2.join()
     thread3.join()
     thread4.join()
