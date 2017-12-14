@@ -144,11 +144,11 @@ class RunTelegram:
                         self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
                     elif self.is_empty(price_in):
                         self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
-                    elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
+                    elif price_in not in ("btc","satoshi","stats","sats"):
                         self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"                
                     else: 
                         if price_in.lower() in ("satoshi","stats","sats"):
-                            price_alert = price_alert/1000000000
+                            price_alert = float(price_alert) / 1000000000
                             price_in = "btc"
                             
                         if price_in.lower() != "btc":
