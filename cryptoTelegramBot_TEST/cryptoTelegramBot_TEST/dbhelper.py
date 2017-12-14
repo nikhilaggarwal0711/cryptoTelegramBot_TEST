@@ -218,8 +218,9 @@ class DBHelper:
 
     def update_priceDenorm_marketTypes(self):
         try:
-            self.DB.execute("UPDATE price_denorm SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
+            self.DB.execute("UPDATE price_denorm    SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
             self.DB.execute("UPDATE price_denorm_ld SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
+            self.DB.execute("UPDATE price_denorm_t1 SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
             self.conn.commit()
         except Exception as e: 
             print(e) 

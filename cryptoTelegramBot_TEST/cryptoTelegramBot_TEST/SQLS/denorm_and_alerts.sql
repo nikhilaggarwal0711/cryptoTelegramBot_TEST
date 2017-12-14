@@ -199,7 +199,7 @@ cmc_market_cap_usd,
 cmc_percent_change_1h,
 cmc_percent_change_24h,
 cmc_percent_change_7d,
-"no" AS is_new_market
+is_new_market
 FROM price_denorm
 WHERE id = "-"
 ) All_Coins

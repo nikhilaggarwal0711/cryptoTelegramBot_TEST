@@ -234,7 +234,6 @@ class RunTelegram:
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
-                
                 allUsers = self.db.getAllUsers()
 
                 if not self.is_empty(newMarkets) :
@@ -253,6 +252,8 @@ class RunTelegram:
                     for user in allUsers:
                         self.chatId = user[0]
                         self.sendTelegramMessage()
+                #Update is_new_market to old , so that it wont be fetched again.
+                self.db.update_priceDenorm_marketTypes()
 
 #Send alerts 
                 for user in allUsers:
