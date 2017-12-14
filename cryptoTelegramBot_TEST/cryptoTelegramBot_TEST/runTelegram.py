@@ -63,7 +63,7 @@ class RunTelegram:
 
     def newUser(self):
         #print "Inside newUser -- Telegram"
-        self.message = "I have added you in my notification list. \n\n<b>Features</b> : \n1. Tweet alerts\n2. Price increase alerts\n3. Price decrease alerts\n4. Check last tweet\n5. Check last price\n6. Earn FREE BTC by suggesting 2x coin\n7. FREE coins/ Airdrop alerts\n8. DoubleTrouble -- Game to 100 BTC from 0.1 BTC\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates"
+        self.message = "I have added you in my notification list. \n\n<b>Features</b> : \n1. Tweet alerts\n2. Price increase alerts\n3. Price decrease alerts\n4. Check last tweet\n5. Check last price\n6. Earn FREE BTC by suggesting 2x coin\n7. FREE coins/ Airdrop alerts\n8. DoubleTrouble -- Game to 100 BTC from 0.1 BTC9. New Market Addition alert ( Currently Bittrex and Bitfinex )\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates"
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
@@ -289,7 +289,7 @@ class RunTelegram:
                             twitter_screen_name = str(alert[6])
                             tweet_id = str(alert[7])
                             coin_name = str(alert[8])
-                            exchange = str("%.9f" % Decimal(alert[9]))
+                            exchange = str(alert[9])
                             new_price = str("%.9f" % Decimal(alert[10]))
 
                             if alert_type == "tweet":
