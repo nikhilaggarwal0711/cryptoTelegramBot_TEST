@@ -238,7 +238,7 @@ class RunTelegram:
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
         try:
-            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message)
+            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message,reply_markup='')
         except Exception as e: 
             print(e)
             
