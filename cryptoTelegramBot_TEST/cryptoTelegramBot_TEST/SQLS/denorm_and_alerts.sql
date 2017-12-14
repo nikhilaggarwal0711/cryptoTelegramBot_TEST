@@ -112,7 +112,6 @@ FROM
  percent_change_24h,
  percent_change_7d
  FROM coinmarketcap_dn
- WHERE (id,fetchTime) IN ( SELECT id,max(fetchTime) from coinmarketcap_dn group by id)
 ) CM
 LEFT OUTER JOIN
 twitterMapping TW
@@ -154,7 +153,7 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
   last_price AS exchange_last_price,
   lower(substring(marketname,4,6)) AS exchange_last_price_in
   FROM bitfinex_dn
-  AND lower(substring(marketname,1,3)) <> "rrt"
+  WHERE lower(substring(marketname,1,3)) <> "rrt"
   AND lower(substring(marketname,1,3)) <> "bcu"  
 ) BF
 ) COM
@@ -201,7 +200,7 @@ SELECT "Bittrex" AS exchange, marketname,last       AS exchange_last_price,lower
 FROM bittrex_dn
 UNION ALL
 SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower(substring(marketname,4,6)) AS exchange_last_price_in 
-FROM bitfinex_compressed
+FROM bitfinex_dn
 WHERE   lower(substring(marketname,1,3)) <> "bcu"
 AND     lower(substring(marketname,1,3)) <> "rrt"
 ) MKTS
