@@ -130,6 +130,7 @@ LEFT OUTER JOIN
   CASE 
    WHEN lower(substring_index(marketname,'-',-1)) = "bcc" THEN "bch" 
    WHEN lower(substring_index(marketname,'-',-1)) = "nbt" THEN "usnbt" 
+   WHEN lower(substring_index(marketname,'-',-1)) = "iota" THEN "miota" 
    ELSE lower(substring_index(marketname,'-',-1)) 
   END coin, 
   "Bittrex" exchange,
