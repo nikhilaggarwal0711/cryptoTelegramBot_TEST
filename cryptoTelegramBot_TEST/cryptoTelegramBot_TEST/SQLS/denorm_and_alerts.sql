@@ -111,8 +111,8 @@ FROM
  percent_change_1h,
  percent_change_24h,
  percent_change_7d
- FROM coinmarketcap_compressed
- WHERE (id,fetchTime) IN ( SELECT id,max(fetchTime) from coinmarketcap_compressed group by id)
+ FROM coinmarketcap_dn
+ WHERE (id,fetchTime) IN ( SELECT id,max(fetchTime) from coinmarketcap_dn group by id)
 ) CM
 LEFT OUTER JOIN
 twitterMapping TW
@@ -136,8 +136,7 @@ LEFT OUTER JOIN
   "Bittrex" exchange,
   last AS exchange_last_price,
   lower(substring_index(marketname,'-',1)) AS exchange_last_price_in
-  FROM bittrex_compressed 
-  WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bittrex_compressed group by marketname)
+  FROM bittrex_dn 
 ) BX
 UNION ALL
 SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_last_price_in FROM
@@ -154,8 +153,7 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
   "Bitfinex" exchange,
   last_price AS exchange_last_price,
   lower(substring(marketname,4,6)) AS exchange_last_price_in
-  FROM bitfinex_compressed
-  WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bitfinex_compressed group by marketname)
+  FROM bitfinex_dn
   AND lower(substring(marketname,1,3)) <> "rrt"
   AND lower(substring(marketname,1,3)) <> "bcu"  
 ) BF
@@ -200,14 +198,12 @@ SELECT
 FROM
 (
 SELECT "Bittrex" AS exchange, marketname,last       AS exchange_last_price,lower(substring_index(marketname,'-',1)) AS exchange_last_price_in 
-FROM bittrex_compressed
-WHERE (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bittrex_compressed group by marketname)
+FROM bittrex_dn
 UNION ALL
 SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower(substring(marketname,4,6)) AS exchange_last_price_in 
 FROM bitfinex_compressed
 WHERE   lower(substring(marketname,1,3)) <> "bcu"
 AND     lower(substring(marketname,1,3)) <> "rrt"
-AND (marketname,fetchTime) IN ( select marketname,max(fetchTime) from bitfinex_compressed group by marketname)
 ) MKTS
 WHERE MKTS.marketname NOT IN ( SELECT marketname FROM price_denorm_t1 WHERE marketname IS NOT NULL GROUP BY marketname)
 ;
@@ -226,12 +222,14 @@ SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange
 RENAME TABLE price_denorm TO price_denorm_md;
 RENAME TABLE price_denorm_ld TO price_denorm;
 RENAME TABLE price_denorm_md TO price_denorm_ld;
+DELETE FROM price_denorm_ld ;
+INSERT INTO price_denorm_ld SELECT * FROM price_denorm;
 
 
 
 INSERT INTO alerts_subscription_BKP SELECT * FROM alerts_subscription;
-INSERT INTO alerts_subscription_compressed select * from alerts_subscription;
-DELETE FROM alerts_subscription WHERE (id,alert_fetchTime) IN ( SELECT id,alert_fetchTime from alerts_subscription_compressed group by id,alert_fetchTime);
+INSERT INTO alerts_subscription_dn_ld select * from alerts_subscription;
+DELETE FROM alerts_subscription WHERE (id,alert_fetchTime) IN ( SELECT id,alert_fetchTime from alerts_subscription_dn_ld group by id,alert_fetchTime);
 
 
 
@@ -244,7 +242,7 @@ COM.id,COM.chatId,COM.alert_type,COM.new_alert_fetchTime,COM.coin_symbol,COM.is_
  FROM 
 (
 select AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,P_DN.exchange AS exchange,P_DN.exchange_last_price AS new_price
-FROM alerts_subscription_compressed AL
+FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
 WHERE P_DN.tweet_fetchTime > AL.alert_fetchTime
@@ -253,7 +251,7 @@ AND   AL.coin_symbol = P_DN.symbol
 AND   P_DN.twitter_screen_name IS NOT NULL
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
-FROM alerts_subscription_compressed AL
+FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
@@ -263,7 +261,7 @@ AND   AL.is_first = "yes"
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
-FROM alerts_subscription_compressed AL
+FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
@@ -273,7 +271,7 @@ AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
-FROM alerts_subscription_compressed AL
+FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
@@ -283,7 +281,7 @@ AND   AL.is_first = "yes"
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
-FROM alerts_subscription_compressed AL
+FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
@@ -298,7 +296,7 @@ COM.id,COM.chatId,COM.alert_type,COM.new_alert_fetchTime,COM.coin_symbol,COM.is_
 
 
 
-insert into alerts_subscription_compressed (
+insert into alerts_subscription_dn_ld (
 id,chatId,alert_type,alert_fetchTime,coin_symbol,is_first,alert_price,price_in
 )
 select
@@ -312,6 +310,13 @@ id,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first,alert_price,price_
 
 
 delete from alerts_subscription_t1;
-INSERT INTO alerts_subscription_t1 (id,alert_fetchTime)  select id , max(alert_fetchTime) as alert_fetchTime from alerts_subscription_compressed group by id;
-delete from alerts_subscription_compressed where alert_fetchTime NOT IN ( select alert_fetchTime from alerts_subscription_t1 group by alert_fetchTime);
-delete from alerts_subscription_compressed where (id,alert_fetchTime) NOT IN ( select id , alert_fetchTime from alerts_subscription_t1);
+INSERT INTO alerts_subscription_t1 (id,alert_fetchTime)  select id , max(alert_fetchTime) as alert_fetchTime from alerts_subscription_dn_ld group by id;
+delete from alerts_subscription_dn_ld where alert_fetchTime NOT IN ( select alert_fetchTime from alerts_subscription_t1 group by alert_fetchTime);
+delete from alerts_subscription_dn_ld where (id,alert_fetchTime) NOT IN ( select id , alert_fetchTime from alerts_subscription_t1);
+
+
+RENAME TABLE alerts_subscription_dn TO alerts_subscription_dn_md;
+RENAME TABLE alerts_subscription_dn_ld TO alerts_subscription_dn;
+RENAME TABLE alerts_subscription_dn_md TO alerts_subscription_dn_ld;
+DELETE FROM alerts_subscription_dn_ld ;
+INSERT INTO alerts_subscription_dn_ld SELECT * FROM alerts_subscription_dn;

@@ -9,15 +9,18 @@ CREATE TABLE IF NOT EXISTS tweets (tweet_id text,screen_name text, created_at te
 CREATE TABLE IF NOT EXISTS twitterMapping (coinmarketcap_id text , twitter_screen_name text);
 CREATE TABLE IF NOT EXISTS free_coins (coin_name text,coin_symbol text,shorten_link text,complete_link text,official_website text,free_dollars int,free_coins int,added_time int,expiry_time int,last_fetchTime_notified int);
 
-CREATE TABLE IF NOT EXISTS coinmarketcap_compressed AS SELECT  * FROM coinmarketcap LIMIT 0;
+CREATE TABLE IF NOT EXISTS coinmarketcap_dn_ld AS SELECT  * FROM coinmarketcap LIMIT 0;
+CREATE TABLE IF NOT EXISTS coinmarketcap_dn AS SELECT  * FROM coinmarketcap LIMIT 0;
 CREATE TABLE IF NOT EXISTS coinmarketcap_BKP AS SELECT  * FROM coinmarketcap LIMIT 0;
 CREATE TABLE IF NOT EXISTS coinmarketcap_t1 AS SELECT id,fetchTime from coinmarketcap LIMIT 0;
 
-CREATE TABLE IF NOT EXISTS bittrex_compressed AS SELECT  * FROM bittrex LIMIT 0;
+CREATE TABLE IF NOT EXISTS bittrex_dn_ld AS SELECT  * FROM bittrex LIMIT 0;
+CREATE TABLE IF NOT EXISTS bittrex_dn AS SELECT  * FROM bittrex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bittrex_BKP AS SELECT  * FROM bittrex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bittrex_t1 AS SELECT marketname,fetchTime from bittrex LIMIT 0;
 
-CREATE TABLE IF NOT EXISTS bitfinex_compressed AS SELECT  * FROM bitfinex LIMIT 0;
+CREATE TABLE IF NOT EXISTS bitfinex_dn_ld AS SELECT  * FROM bitfinex LIMIT 0;
+CREATE TABLE IF NOT EXISTS bitfinex_dn AS SELECT  * FROM bitfinex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bitfinex_BKP AS SELECT  * FROM bitfinex LIMIT 0;
 CREATE TABLE IF NOT EXISTS bitfinex_t1 AS SELECT marketname,fetchTime from bitfinex LIMIT 0;
 
@@ -29,7 +32,8 @@ CREATE TABLE IF NOT EXISTS  price_denorm    ( rank int(11), id text, symbol text
 
 CREATE TABLE IF NOT EXISTS  alerts_subscription (id int NOT NULL AUTO_INCREMENT,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text, PRIMARY KEY (ID));
 CREATE TABLE IF NOT EXISTS  alerts_subscription_BKP (id int ,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
-CREATE TABLE IF NOT EXISTS  alerts_subscription_compressed (id int,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
+CREATE TABLE IF NOT EXISTS  alerts_subscription_dn (id int,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
+CREATE TABLE IF NOT EXISTS  alerts_subscription_dn_ld (id int,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
 CREATE TABLE IF NOT EXISTS  alerts_subscription_t1 (id int, alert_fetchTime int);
 
 CREATE TABLE IF NOT EXISTS  send_alerts (alert_number int NOT NULL AUTO_INCREMENT,id int,chatId text , alert_type text, new_alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text,twitter_screen_name text,tweet_id text,coin_id text, coin_name text,exchange text,new_price decimal(18,9), PRIMARY KEY (alert_number));
