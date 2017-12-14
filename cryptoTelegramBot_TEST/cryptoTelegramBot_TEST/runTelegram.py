@@ -239,14 +239,14 @@ class RunTelegram:
                 if not self.is_empty(newMarkets) :
                     self.message = "New Market Added"
                     for market in newMarkets:
-                        rank = market[0]
-                        symbol = market[1]
-                        name = market[2]
-                        exchange = market[3]
-                        marketname = market[4]
-                        exchange_last_price = market[5]
-                        cmc_price_usd = market[6]
-    
+                        rank = str(market[0])
+                        symbol = str(market[1]).upper()
+                        name = str(market[2]).upper()
+                        exchange = str(market[3]).upper()
+                        marketname = str(market[4]).upper()
+                        exchange_last_price = str(market[5]).upper()
+                        cmc_price_usd = str(market[6]).upper()
+
                         self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
 
                     for user in allUsers:
