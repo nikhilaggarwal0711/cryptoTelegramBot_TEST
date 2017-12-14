@@ -5,6 +5,8 @@ from dbhelper import  DBHelper
 from time import sleep
 import time
 from decimal import Decimal
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+
 
 class RunTelegram:
     def __init__(self):
@@ -14,6 +16,18 @@ class RunTelegram:
         self.db = DBHelper()
         #self.db.setup()
         self.category = "g"
+        self.keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="FREE Coins",callback_data='freeCoins'),
+                                                  InlineKeyboardButton(text="MyCoins Alerts",callback_data='myCoinsAlerts'),
+                                                  InlineKeyboardButton(text="New Alert",callback_data='newAlert'),
+                                                  ],
+                                                 [InlineKeyboardButton(text="Check Price",callback_data='checkPrice'),
+                                                  InlineKeyboardButton(text="Last Tweet",callback_data='lastTweet'),
+                                                  InlineKeyboardButton(text="Info",callback_data='info'),
+                                                  ],
+                                                 [InlineKeyboardButton(text="DoubleTrouble - Game for 100 BTC",callback_data='doubleTrouble'),
+                                                  InlineKeyboardButton(text="Feedback/Report Issues",callback_data='feedbackAndReportIssues'),
+                                                  ],
+                                                 ])
 
     def setup_pythonAnyWhere(self):
         #print "Inside setup method -- Telegram" 
@@ -206,7 +220,7 @@ class RunTelegram:
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
         try:
-            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message)
+            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message,reply_markup=self.keyboard)
         except Exception as e: 
             print(e)
             
