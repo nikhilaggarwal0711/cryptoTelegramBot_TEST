@@ -210,7 +210,7 @@ class DBHelper:
 
     def get_newMarketListings(self):
         try:
-            self.DB.execute("SELECT rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd FROM price_denorm WHERE is_new_market = \"new\" GROUP BY rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd")
+            self.DB.execute("SELECT rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd FROM price_denorm WHERE is_new_market = \"yes\" GROUP BY rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd")
             newMarkets = self.DB.fetchall()
             return newMarkets
         except Exception as e: 
@@ -218,8 +218,8 @@ class DBHelper:
 
     def update_priceDenorm_marketTypes(self):
         try:
-            self.DB.execute("UPDATE price_denorm SET is_new_market = \"old\" WHERE is_new_market = \"new\"")
-            self.DB.execute("UPDATE price_denorm_ld SET is_new_market = \"old\" WHERE is_new_market = \"new\"")
+            self.DB.execute("UPDATE price_denorm SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
+            self.DB.execute("UPDATE price_denorm_ld SET is_new_market = \"no\" WHERE is_new_market = \"yes\"")
             self.conn.commit()
         except Exception as e: 
             print(e) 
