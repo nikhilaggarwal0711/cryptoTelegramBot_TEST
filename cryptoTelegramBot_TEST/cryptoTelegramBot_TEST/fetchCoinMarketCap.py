@@ -5,7 +5,7 @@ import json
 from dbhelper import DBHelper
 
 
-    
+
 class FetchCoinMarketCap:
     def __init__(self):
         #print "Inside fetchCoinmarketcap constructor"
@@ -49,7 +49,7 @@ class FetchCoinMarketCap:
 
             self.saveIntoDB()
 
-            
+
     def saveIntoDB(self):   
         ##print "SaveIntoDB -- coinmarketcap"         
         self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)

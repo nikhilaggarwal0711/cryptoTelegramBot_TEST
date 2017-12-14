@@ -9,7 +9,7 @@ class DBHelper:
         print "Inside DBHelper constructor"
         try:
             self.conn = MySQLdb.connect(host = MYSQL.HOST, user = MYSQL.USER, passwd = MYSQL.PASSWORD, db = MYSQL.DBNAME)
-            print "After setting connectino with DB"
+            print "After setting connection with DB"
             self.conn.autocommit(True)
             print "Setting cursor now"
             self.DB = self.conn.cursor()
@@ -205,6 +205,7 @@ class DBHelper:
     def closeConnection(self):
         try:
             self.conn.close()
+            self.DB.close()
         except Exception as e: 
             print "ERROR FOUND DURING CLOSING CONNECTION"
             print(e) 
