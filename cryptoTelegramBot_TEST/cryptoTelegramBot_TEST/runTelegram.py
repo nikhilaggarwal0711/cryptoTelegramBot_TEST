@@ -273,11 +273,11 @@ class RunTelegram:
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
                             elif alert_type == "p_incr":
-                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) increases to " + new_price + "on " + exchange + " exchange."
+                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
                             elif alert_type == "p_decr":
-                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) decreases to " + new_price + "on " + exchange + " exchange."
+                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
 
