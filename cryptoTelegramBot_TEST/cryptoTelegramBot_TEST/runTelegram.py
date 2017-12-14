@@ -63,7 +63,7 @@ class RunTelegram:
 
     def newUser(self):
         #print "Inside newUser -- Telegram"
-        self.message = "I have added you in my notification list. \nFuture Upgrades : \n1. More Exchanges \n2. Provide Rank of newly added market \n3. Price Alerts \n4. Portfolio Tracker\n5. FREE Money/Coins alerts\n6. Real time price\n7.DoubleTrouble Game - To 100 BTC from 0.1 BTC"
+        self.message = "I have added you in my notification list. \n\n<b>Features</b> : \n1. Tweet alerts\n2. Price increase alerts\n3. Price decrease alerts\n4. Check last tweet\n5. Check last price\n6. Earn FREE BTC by suggesting 2x coin\n7. FREE coins/ Airdrop alerts\n8. DoubleTrouble -- Game to 100 BTC from 0.1 BTC\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates"
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
@@ -74,16 +74,16 @@ class RunTelegram:
         self.textArray = self.text.split()
 
         if self.textArray[0] == "/start" or self.textArray[0] == "start":
-            self.message="I know its too long since any new market is added, but I am tracking and will keep you posted. Thanks for poking :) "
+            self.message="I remember you and will keep you posted with any new update/alert. Thanks for poking :) "
         elif self.textArray[0] == "/check_tweet":
             if len(self.textArray) != 2 :
-                self.message="Please provide information in following format : \n/check_tweet ETH" 
+                self.message="Please provide information in following format : \n/check_tweet CURRENCY_SYMBOL" 
             else:
                 currencySymbol = self.textArray[1]
                 tweets = self.db.fetchTweet(currencySymbol)
                 #name,id,tweet_id
                 if self.is_empty(tweets):
-                    self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
+                    self.message = "No currency with symbol - " + str(currencySymbol).upper() + " found. Please provide correct currency symbol."
                 else:
                     print tweets
                     #name,twitter_screen_name,tweet_id
@@ -91,12 +91,12 @@ class RunTelegram:
                         if self.is_empty(tweet[1]):
                             self.message = "We don't have Official Twitter Handler for this currency."                        
                         elif self.is_empty(tweet[2]):
-                            self.message = "We havn't captured any tweet for this coin. Please try again after some time."
+                            self.message = "We havn't captured any tweet for this coin. As soon as team will post anything we will capture it. Please try again after some time."
                         else:
                             self.message = "<a href='https://twitter.com/"+tweet[1]+"/status/"+tweet[2]+"'>"+ str(currencySymbol).upper() +"("+tweet[0]+") tweeted : </a>"
         elif self.textArray[0] == "/check_price":
             if len(self.textArray) != 2 :
-                self.message="Please provide information in following format : \n/check_price ETH"
+                self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"
             else:
                 currencySymbol = self.textArray[1]
                 prices = self.db.fetchPrice(currencySymbol)
@@ -114,27 +114,27 @@ class RunTelegram:
                         self.message = self.message + "Price of " + str(currencySymbol).upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
-                self.message="Please provide information in following format : \n/check_price ETH"
+                self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"
             else:
                 currencySymbol = self.textArray[1]
                 self.db.add_alert(self.chatId,"tweet",self.fetchTime,currencySymbol,"yes",0,"btc")
-                self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
+                self.message = "We will ping you for any new tweet."
         elif self.textArray[0] == "/set_alert_price_incr":
             if len(self.textArray) != 4:
-                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
+                self.message="Please provide information in following format : \n/set_alert_price_incr CURRENCY_SYMBOL PRICE BTC/satoshi"
             else:
                 currencySymbol = str(self.textArray[1]).lower()
                 price_alert = self.textArray[2]
                 price_in = str(self.textArray[3]).lower()
 
                 if self.is_empty(currencySymbol):
-                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.0001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr CURRENCY_SYMBOL PRICE BTC/satoshi"
                 elif self.is_empty(price_alert):
-                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr CURRENCY_SYMBOL PRICE BTC/satoshi"
                 elif self.is_empty(price_in):
-                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr CURRENCY_SYMBOL PRICE BTC/satoshi"
                 elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
-                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"                
+                    self.message="Please provide information in following format : \n/set_alert_price_incr CURRENCY_SYMBOL PRICE BTC/satoshi"                
                 else: 
                     if price_in.lower() in ("satoshi","stats","sats"):
                         price_alert = Decimal( Decimal(price_alert) / Decimal(1000000000.0) )
@@ -144,23 +144,23 @@ class RunTelegram:
                         self.message = "Price supported only in BTC/satoshi"
                     else:
                         self.db.add_alert(self.chatId,"p_incr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
-                        self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
+                        self.message = "We have captured your alert and will keep you posted."
         elif self.textArray[0] == "/set_alert_price_decr":
                 if len(self.textArray) != 4:            
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"
                 else:
                     currencySymbol = str(self.textArray[1]).lower()
                     price_alert = self.textArray[2]
                     price_in = str(self.textArray[3]).lower()
     
                     if self.is_empty(currencySymbol):
-                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.0001 BTC/satoshi"
+                        self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"
                     elif self.is_empty(price_alert):
-                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                        self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"
                     elif self.is_empty(price_in):
-                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                        self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"
                     elif price_in not in ("btc","satoshi","stats","sats"):
-                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"                
+                        self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"                
                     else: 
                         if price_in.lower() in ("satoshi","stats","sats"):
                             price_alert = Decimal( Decimal(price_alert) / Decimal(1000000000.0) )
@@ -170,7 +170,7 @@ class RunTelegram:
                             self.message = "Price supported only in BTC/satoshi"
                         else:
                             self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
-                            self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
+                            self.message = "We have captured your alert and will keep you posted."
         elif self.textArray[0] == "/my_alerts":
             try:
                 self.message=""
@@ -208,19 +208,25 @@ class RunTelegram:
                 except Exception as e: 
                     print(e)
         elif self.textArray[0] == "/feedback":
-            self.message = "Every feedback is important for us. Thank you for taking your time and writing to us."
+            self.message = "Every feedback is important for us. Thank you for taking your time and writing."
+        elif self.textArray[0] == "/report":
+            self.message = "Thank you for letting us know. We will look into this."            
         elif self.textArray[0] == "/suggest_2x_coin":
             #coin = self.textArray[1]
             #explanation = self.textArray[2]
 #            self.db.add_2xCoin_suggestion(self.chatId,self.fetchTime,coin,explanation)
-            self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your share for sharing this coin."
+            self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your commission for sharing this coin. \nWe will ask for your BTC address after success."
+        elif self.textArray[0] == "/suggest_free_coin":
+            self.message = "We will look into your suggestion. If selected, your referral link will be shared with 70% of our members and we will notify you."
+        elif self.textArray[0] == "/help":
+            self.message = "I can help you managing your crypto currency world and earn a lot of BTC.\n\n<b>Commands Usage Example :</b>\n\n/check_tweet ETH\n/check_price ETH\n/set_alert_tweet ETH\n/set_alert_price_incr ETH 0.06 BTC\n/set_alert_price_decr ETH 0.03 BTC\n/suggest_2x_coin XEM Catapult Update, WeChat update, Easy 2x in a week Buy: Under 3000 satoshi StopLoss: 2500 satoshi \n/suggest_free_coin SPHERE YOUR_REFERRAL_LINK \n/feedback We LOVE your project. Keep Sharing.\n/report ISSUE_DESCRIPTION\n\n<b>Earning Model : </b>\n1. Suggest 2x coin\nIf you were the first one with proper justification of 2x coin and it works like that in a month, then you will earn 5% of total profit from admin for sure and 30% from all donations we will receive.\nCommission : 5% on profit + 30% on donation\n\n2. Suggest Free coins / Airdrops : \nSuggest free coin and we will share your referral link with 70% of our members. You will get huge referrals by letting us know.\n\n3. Free coins / Airdrops : \nCollect all Airdrops signals and you will have plenty of amount after a year. Slow but steady.\n\n\n<b>What is DoubleTrouble Game ?</b>\nYou just need 10 signals which can go 2x and only these 10 signals will increase your portfolio by 1000 times. Yes, you read that correct 1000 TIMES (1024 to be precise).\n\nWe are starting with 0.1 BTC and will take it to 100 BTC within a year.\nInstead of providing you 100 coins, we will provide you only 2 coins for a month. \nOne coin from top 50 and other below 150 rank. Keep 80 percent in first coin and 20 percent in second coin but only 50% of your portfolio.\n\nConsider you have 1 BTC then distribute it as : \nTotal Holding : 1 BTC\nFirst coin : 0.4\nSecond coin : 0.1\nRest 0.5 BTC should not be touched.\n\nWithin a year, I am expecting many millionaires in this group.\n\n<b>Donate : </b>\nBTC - 16YhanuEHv4UguTfTrD71383xxtwfaf4Hk\nETH - 0x50ca788af6cb75f48fc20feb324a6f02865ef3ff"
         else : 
-            self.message = "Please select proper command (starts from / )."
+            self.message = "Are you looking for some help ? \nPlease try /help command for detailed usage"
 
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
         try:
-            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message,reply_markup=self.keyboard)
+            self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message)
         except Exception as e: 
             print(e)
             
