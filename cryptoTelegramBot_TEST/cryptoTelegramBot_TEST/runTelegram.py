@@ -176,7 +176,7 @@ class RunTelegram:
                 self.message=""
                 alerts = self.db.my_alerts(str(self.chatId))
                 #id,chatId,alert_type,coin_symbol,alert_price,price_in
-                print "Going inside if check condition -- MY ALERTS"
+                #print "Going inside if check condition -- MY ALERTS"
                 if not self.is_empty(alerts):
                     for alert in alerts:
                         alert_id=str(alert[0])
@@ -208,16 +208,28 @@ class RunTelegram:
                 except Exception as e: 
                     print(e)
         elif self.textArray[0] == "/feedback":
-            self.message = "Every feedback is important for us. Thank you for taking your time and writing."
+            if len(self.textArray) == 1:            
+                    self.message="Looks like you missed typing your feedback."
+            else :
+                self.message = "Every feedback is important for us. Thank you for taking your time and writing."
         elif self.textArray[0] == "/report":
-            self.message = "Thank you for letting us know. We will look into this."            
+            if len(self.textArray) == 1:            
+                self.message="Did you really saw that BUG ? \nPlease report with some description."
+            else:
+                self.message = "Thank you for letting us know. We will look into this."            
         elif self.textArray[0] == "/suggest_2x_coin":
+            if len(self.textArray) == 1:            
+                self.message="Please provide information in following format : \n/suggest_2x_coin CURRENCY_SYMBOL DESCRIPTION"
             #coin = self.textArray[1]
             #explanation = self.textArray[2]
 #            self.db.add_2xCoin_suggestion(self.chatId,self.fetchTime,coin,explanation)
-            self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your commission for sharing this coin. \nWe will ask for your BTC address after success."
+            else:
+                self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your commission for sharing this coin. \nWe will ask for your BTC address after success."
         elif self.textArray[0] == "/suggest_free_coin":
-            self.message = "We will look into your suggestion. If selected, your referral link will be shared with 70% of our members and we will notify you."
+            if len(self.textArray) == 1:            
+                self.message="Please provide information in following format : \n/suggest_free_coin CURRENCY_SYMBOL YOUR_REFERRAL_LINK"
+            else:
+                self.message = "We will look into your suggestion. If selected, your referral link will be shared with 70% of our members and we will notify you."
         elif self.textArray[0] == "/help":
             self.message = "I can help you managing your crypto currency world and earn a lot of BTC.\n\n<b>Commands Usage Example :</b>\n\n/check_tweet ETH\n/check_price ETH\n/set_alert_tweet ETH\n/set_alert_price_incr ETH 0.06 BTC\n/set_alert_price_decr ETH 0.03 BTC\n/suggest_2x_coin XEM Catapult Update, WeChat update, Easy 2x in a week Buy: Under 3000 satoshi StopLoss: 2500 satoshi \n/suggest_free_coin SPHERE YOUR_REFERRAL_LINK \n/feedback We LOVE your project. Keep Sharing.\n/report ISSUE_DESCRIPTION\n\n<b>Features</b> : \n1. New Market Addition on Exchange alert ( Bittrex and Bitfinex )\n2. Tweet alerts\n3. Price increase alerts\n4. Price decrease alerts\n5. Check last tweet\n6. Check last price\n7. Earn FREE BTC by suggesting 2x coin\n8. FREE coins/ Airdrop alerts\n9. DoubleTrouble -- Game to 100 BTC from 0.1 BTC9. New Market Addition alert ( Currently Bittrex and Bitfinex )\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates\n\n<b>Earning Model : </b>\n1. Suggest 2x coin\nIf you were the first one with proper justification of 2x coin and it works like that in a month, then you will earn 5% of total profit from admin for sure and 30% from all donations we will receive.\nCommission : 5% on profit + 30% on donation\n\n2. Suggest Free coins / Airdrops : \nSuggest free coin and we will share your referral link with 70% of our members. You will get huge referrals by letting us know.\n\n3. Free coins / Airdrops : \nCollect all Airdrops signals and you will have plenty of amount after a year. Slow but steady.\n\n\n<b>What is DoubleTrouble Game ?</b>\nYou just need 10 signals which can go 2x and only these 10 signals will increase your portfolio by 1000 times. Yes, you read that correct 1000 TIMES (1024 to be precise).\n\nWe are starting with 0.1 BTC and will take it to 100 BTC within a year.\nInstead of providing you 100 coins, we will provide you only 2 coins for a month. \nOne coin from top 50 and other below 150 rank. Keep 80 percent in first coin and 20 percent in second coin but only 50% of your portfolio.\n\nConsider you have 1 BTC then distribute it as : \nTotal Holding : 1 BTC\nFirst coin : 0.4\nSecond coin : 0.1\nRest 0.5 BTC should not be touched.\n\nWithin a year, I am expecting many millionaires in this group.\n\n<b>Donate : </b>\nBTC - 16YhanuEHv4UguTfTrD71383xxtwfaf4Hk\nETH - 0x50ca788af6cb75f48fc20feb324a6f02865ef3ff"
         else : 

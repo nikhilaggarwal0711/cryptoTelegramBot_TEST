@@ -177,9 +177,9 @@ class DBHelper:
     
     def my_alerts(self,chatId):
         try:
-            print "fetching data"
+            #print "fetching data"
             self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_dn WHERE chatId=%s",[chatId] )
-            print "DATA FETCHED........"
+            #print "DATA FETCHED........"
             alerts = self.DB.fetchall()
             return alerts
         except Exception as e: 
