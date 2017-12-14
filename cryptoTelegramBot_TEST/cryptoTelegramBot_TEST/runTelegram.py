@@ -174,7 +174,8 @@ class RunTelegram:
         elif  self.textArray[0].split("__")[0] == "/del_alert":  
             alert_id = self.textArray[0].split("__")[1]
             try:
-                self.db.delete_alert(self.chatId,alert_id)     
+                self.db.delete_alert(self.chatId,alert_id) 
+                self.message = "Alert Deleted"    
             except Exception as e: 
                 print(e)
         elif self.textArray[0] == "/feedback":
