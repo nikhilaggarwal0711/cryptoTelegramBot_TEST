@@ -45,8 +45,8 @@ T1.percent_change_1h,
 T1.percent_change_24h,
 T1.percent_change_7d,
 CASE
-  WHEN T1.exchange <> "coinmarketcap" AND P_DN.marketname IS NOT NULL AND P_DN.marketname <> "yes" THEN "no"
-  WHEN P_DN.marketname = "yes" THEN "yes"
+  WHEN T1.exchange <> "coinmarketcap" AND P_DN.marketname IS NOT NULL AND P_DN.is_new_market <> "yes" THEN "no"
+  WHEN P_DN.is_new_market = "yes" THEN "yes"
   WHEN T1.exchange <> "coinmarketcap" AND P_DN.marketname IS NULL     THEN "yes"
   ELSE NULL
 END AS is_new_market
@@ -178,7 +178,7 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
 ) COM
 ON lower(CM.symbol) = COM.coin) T1
 LEFT OUTER JOIN
-(SELECT distinct(marketname) from price_denorm WHERE exchange IS NOT NULL) P_DN
+(SELECT marketname,is_new_market from price_denorm WHERE exchange IS NOT NULL GROUP BY marketname,is_new_market) P_DN
 ON T1.marketname = P_DN.marketname
 UNION ALL
 SELECT 
