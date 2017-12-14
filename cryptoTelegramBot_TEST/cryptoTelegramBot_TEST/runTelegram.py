@@ -256,17 +256,17 @@ class RunTelegram:
                     alerts = self.db.getAlerts()
                     if not self.is_empty(alerts):
                         for alert in alerts:
-                            alert_id = alert[0]
-                            self.chatId = alert[1]
-                            alert_type = alert[2]
-                            coin_symbol = alert[3]
-                            alert_price = alert[4]
-                            price_in = alert[5]
-                            twitter_screen_name = alert[6]
-                            tweet_id = alert[7]
-                            coin_name = alert[8]
-                            exchange = alert[9]
-                            new_price = alert[10]
+                            alert_id = str(alert[0])
+                            self.chatId = str(alert[1])
+                            alert_type = str(alert[2])
+                            coin_symbol = str(alert[3])
+                            alert_price = str(alert[4])
+                            price_in = str(alert[5])
+                            twitter_screen_name = str(alert[6])
+                            tweet_id = str(alert[7])
+                            coin_name = str(alert[8])
+                            exchange = str(alert[9])
+                            new_price = str(alert[10])
 
                             if alert_type == "tweet":
                                 self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
