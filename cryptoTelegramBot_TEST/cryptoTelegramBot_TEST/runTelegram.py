@@ -94,9 +94,9 @@ class RunTelegram:
                     for price in prices:
                         name=str(price[0])
                         exchange=str(price[1])
-                        exchange_price=str(price[2])
+                        exchange_price=str("%.9f" % Decimal(price[2]))
                         exchange_price_in = str(price[3])
-                        cmc_price_usd = str(price[4])
+                        cmc_price_usd = str("%.9f" % Decimal(price[4]))
                         self.message = self.message + "Price of " + str(currencySymbol).upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
@@ -170,8 +170,8 @@ class RunTelegram:
                         alert_type=str(alert[2])
                         coin_symbol=str(alert[3])
                         alert_price=str("%.9f" % Decimal(alert[4]))
-                        price_in=str(alert[5])
-                        
+                        price_in=str(alert[5]).upper()
+
                         if alert_type == "tweet":
                             print "Inside TWEET CONDITION CHECK "
                             self.message = self.message + "Tweet alert : "+ coin_symbol + "\n To delete --> /del_alert__" + alert_id + "\n\n"
@@ -244,8 +244,8 @@ class RunTelegram:
                         name = str(market[2]).upper()
                         exchange = str(market[3]).upper()
                         marketname = str(market[4]).upper()
-                        exchange_last_price = str(market[5]).upper()
-                        cmc_price_usd = str(market[6]).upper()
+                        exchange_last_price = str("%.9f" % Decimal(market[5]))
+                        cmc_price_usd = str("%.9f" % Decimal(market[6]))
 
                         self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
 
@@ -264,13 +264,13 @@ class RunTelegram:
                             self.chatId = str(alert[1])
                             alert_type = str(alert[2])
                             coin_symbol = str(alert[3])
-                            alert_price = str(alert[4])
+                            alert_price = str("%.9f" % Decimal(alert[4]))
                             price_in = str(alert[5])
                             twitter_screen_name = str(alert[6])
                             tweet_id = str(alert[7])
                             coin_name = str(alert[8])
-                            exchange = str(alert[9])
-                            new_price = str(alert[10])
+                            exchange = str("%.9f" % Decimal(alert[9]))
+                            new_price = str("%.9f" % Decimal(alert[10]))
 
                             if alert_type == "tweet":
                                 self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
