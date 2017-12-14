@@ -270,11 +270,17 @@ class RunTelegram:
 
                             if alert_type == "tweet":
                                 self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
-                            #if alert_type == "p_incr":
-    #                            self.message = ""
-                            
-                            self.db.delete_alert(self.chatId, alert_id)
-                            self.sendTelegramMessage()
+                                self.db.delete_send_alert(self.chatId, alert_id)
+                                self.sendTelegramMessage()
+                            elif alert_type == "p_incr":
+                                self.message = "Price increases"
+                                self.db.delete_send_alert(self.chatId, alert_id)
+                                self.sendTelegramMessage()
+                            elif alert_type == "p_decr":
+                                self.db.delete_send_alert(self.chatId, alert_id)
+                                self.sendTelegramMessage()
+                                self.message = "Price Decreases"
+
 
                 newMarkets=""
                 allUsers=""

@@ -194,6 +194,14 @@ class DBHelper:
         except Exception as e: 
             print(e)         
 
+    def delete_send_alert(self,chatId,alert_id):
+        try:
+            self.DB.execute("""DELETE FROM send_alerts WHERE chatId=%s AND alert_number=%s""",[chatId,alert_id])
+            self.conn.commit()
+        except Exception as e: 
+            print(e)         
+
+
     def closeConnection(self):
         try:
             self.conn.close()
