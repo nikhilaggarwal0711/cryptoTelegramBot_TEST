@@ -4,6 +4,7 @@ from config import TELEGRAM
 from dbhelper import  DBHelper
 from time import sleep
 import time
+from decimal import Decimal
 
 class RunTelegram:
     def __init__(self):
@@ -122,8 +123,8 @@ class RunTelegram:
                     self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"                
                 else: 
                     if price_in.lower() in ("satoshi","stats","sats"):
-                            price_alert = int(price_alert) / 1000000000.0
-                            price_in = "btc"
+                        price_alert = Decimal( Decimal(price_alert) / 1000000000.0 )
+                        price_in = "btc"
                             
                     if price_in.lower() != "btc":
                         self.message = "Price supported only in BTC/satoshi"
@@ -148,8 +149,8 @@ class RunTelegram:
                         self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"                
                     else: 
                         if price_in.lower() in ("satoshi","stats","sats"):
-                                price_alert = int(price_alert) / 1000000000.0
-                                price_in = "btc"
+                            price_alert = Decimal( Decimal(price_alert) / 1000000000.0 )
+                            price_in = "btc"
                                 
                         if price_in.lower() != "btc":
                             self.message = "Price supported only in BTC/satoshi"
