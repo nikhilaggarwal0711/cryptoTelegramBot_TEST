@@ -169,7 +169,7 @@ class RunTelegram:
                         chatId=str(alert[1])
                         alert_type=str(alert[2])
                         coin_symbol=str(alert[3])
-                        alert_price=str(alert[4])
+                        alert_price=str("%.9f" % Decimal(alert[4]))
                         price_in=str(alert[5])
                         
                         if alert_type == "tweet":
@@ -273,11 +273,11 @@ class RunTelegram:
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
                             elif alert_type == "p_incr":
-                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
                             elif alert_type == "p_decr":
-                                self.message = "Price of " + coin_symbol + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
                                 self.sendTelegramMessage()
 
