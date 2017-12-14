@@ -110,7 +110,7 @@ class RunTelegram:
             else:
                 currencySymbol = str(self.textArray[1]).lower()
                 price_alert = self.textArray[2]
-                price_in = self.textArray[3]
+                price_in = str(self.textArray[3]).lower()
 
             if self.is_empty(currencySymbol):
                 self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.0001 BTC/satoshi"
@@ -136,7 +136,7 @@ class RunTelegram:
                 else:
                     currencySymbol = str(self.textArray[1]).lower()
                     price_alert = self.textArray[2]
-                    price_in = self.textArray[3]
+                    price_in = str(self.textArray[3]).lower()
     
                 if self.is_empty(currencySymbol):
                     self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.0001 BTC/satoshi"
