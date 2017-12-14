@@ -152,16 +152,21 @@ class RunTelegram:
                 #id,chatId,alert_type,coin_symbol,alert_price,price_in
                 print "Going inside if check condition -- MY ALERTS"
                 if not self.is_empty(alerts):
-                    print "INSIDE CHECK CONSITION - MY ALERTS"
                     for alert in alerts:
-                        print "INSIDE FOR LOOP -- MY ALERTS"
-                        if alert[2] == "tweet":
+                        alert_id=str(alert[0])
+                        chatId=str(alert[1])
+                        alert_type=str(alert[2])
+                        coin_symbol=str(alert[3])
+                        alert_price=str(alert[4])
+                        price_in=str(alert[5])
+                        
+                        if alert_type == "tweet":
                             print "Inside TWEET CONDITION CHECK "
-                            self.message = self.message + "Tweet alert : "+ alert[3] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
-                        elif alert[2] == "p_incr":
-                            self.message = self.message + "Price Increase alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
-                        elif alert[2] == "p_decr":
-                            self.message = self.message + "Price Decrease alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
+                            self.message = self.message + "Tweet alert : "+ coin_symbol + "\n To delete --> /del_alert__" + alert_id + "\n\n"
+                        elif alert_type == "p_incr":
+                            self.message = self.message + "Price Increase alert : "+ coin_symbol + " " + alert_price + " " + price_in.upper() + "\n To delete --> /del_alert__" + alert_id + "\n\n"
+                        elif alert_type == "p_decr":
+                            self.message = self.message + "Price Decrease alert : "+ coin_symbol + " " + alert_price + " " + price_in.upper() + "\n To delete --> /del_alert__" + alert_id + "\n\n"
                 else:
                     self.message = "There are no alerts set for you."
             except Exception as e: 
