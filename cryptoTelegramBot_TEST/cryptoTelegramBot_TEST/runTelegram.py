@@ -150,9 +150,13 @@ class RunTelegram:
                 self.message=""
                 alerts = self.db.my_alerts(str(self.chatId))
                 #id,chatId,alert_type,coin_symbol,alert_price,price_in
+                print "Going inside if check condition -- MY ALERTS"
                 if not self.is_empty(alerts):
+                    print "INSIDE CHECK CONSITION - MY ALERTS"
                     for alert in alerts:
+                        print "INSIDE FOR LOOP -- MY ALERTS"
                         if alert[2] == "tweet":
+                            print "Inside TWEET CONDITION CHECK "
                             self.message = self.message + "Tweet alert : "+ alert[3] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
                         elif alert[2] == "p_incr":
                             self.message = self.message + "Price Increase alert : "+ alert[3] + " " + alert[4] + " " + alert[5] + "\n To delete --> /del_alert__" + alert[0] + "\n\n"
