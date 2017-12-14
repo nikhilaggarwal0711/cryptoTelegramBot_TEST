@@ -88,7 +88,7 @@ class RunTelegram:
                 prices = self.db.fetchPrice(currencySymbol)
                 #name,exchange,exchange_price,exchange_price_in,cmc_price_usd
                 if prices is None :
-                    self.message = "No currency with symbol - " + currencySymbol + " found. Please provide correct currency symbol."
+                    self.message = "No currency with symbol - " + str(currencySymbol).upper() + " found. Please provide correct currency symbol."
                 else:
                     self.message = ""
                     for price in prices:
@@ -97,7 +97,7 @@ class RunTelegram:
                         exchange_price=str(price[2])
                         exchange_price_in = str(price[3])
                         cmc_price_usd = str(price[4])
-                        self.message = self.message + "Price of " + currencySymbol + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
+                        self.message = self.message + "Price of " + str(currencySymbol).upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price ETH"
@@ -184,17 +184,20 @@ class RunTelegram:
             except Exception as e: 
                 print(e)  
         elif  self.textArray[0].split("__")[0] == "/del_alert":  
-            alert_id = self.textArray[0].split("__")[1]
-            try:
-                self.db.delete_alert(self.chatId,alert_id) 
-                self.message = "Alert Deleted"    
-            except Exception as e: 
-                print(e)
+            if len(self.textArray[0].split("__")) != 2:   
+                self.message = "Something is wrong with this delete tag"         
+            else:
+                alert_id = self.textArray[0].split("__")[1]
+                try:
+                    self.db.delete_alert(self.chatId,alert_id) 
+                    self.message = "Alert Deleted"    
+                except Exception as e: 
+                    print(e)
         elif self.textArray[0] == "/feedback":
             self.message = "Every feedback is important for us. Thank you for taking your time and writing to us."
         elif self.textArray[0] == "/suggest_2x_coin":
-            coin = self.textArray[1]
-            explanation = self.textArray[2]
+            #coin = self.textArray[1]
+            #explanation = self.textArray[2]
 #            self.db.add_2xCoin_suggestion(self.chatId,self.fetchTime,coin,explanation)
             self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your share for sharing this coin."
         else : 
