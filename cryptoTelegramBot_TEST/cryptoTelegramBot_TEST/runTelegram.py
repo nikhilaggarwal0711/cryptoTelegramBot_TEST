@@ -121,14 +121,16 @@ class RunTelegram:
                 elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
                     self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"                
                 else: 
-                    if price_in.lower() in ("satoshi","stats","sats"):
-                        price_alert = price_alert/1000000000
-                        price_in = "btc"
-                        
                     if price_in.lower() != "btc":
                         self.message = "Price supported only in BTC/satoshi"
                     else:
-                        self.db.add_alert(self.chatId,"p_incr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
+                        if price_in.lower() in ("satoshi","stats","sats"):
+                            print "Division started -------"
+                            price_alert = float(price_alert) / 1000000000.0
+                            print "Division completed.........."
+                            price_in = "btc"
+                        
+                        self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
                         self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/set_alert_price_decr":
                 if len(self.textArray) != 4:            
