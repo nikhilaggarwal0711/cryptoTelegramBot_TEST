@@ -206,6 +206,7 @@ class DBHelper:
         try:
             self.conn.close()
         except Exception as e: 
+            print "ERROR FOUND DURING CLOSING CONNECTION"
             print(e) 
 
     def get_newMarketListings(self):
