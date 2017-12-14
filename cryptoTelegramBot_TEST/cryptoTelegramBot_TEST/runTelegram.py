@@ -105,47 +105,21 @@ class RunTelegram:
                 self.db.add_alert(self.chatId,"tweet",self.fetchTime,currencySymbol,"yes",0,"btc")
                 self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/set_alert_price_incr":
-            if len(self.textArray) != 4:            
+            if len(self.textArray) != 4:
                 self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
             else:
                 currencySymbol = str(self.textArray[1]).lower()
                 price_alert = self.textArray[2]
                 price_in = str(self.textArray[3]).lower()
 
-            if self.is_empty(currencySymbol):
-                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.0001 BTC/satoshi"
-            elif self.is_empty(price_alert):
-                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
-            elif self.is_empty(price_in):
-                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
-            elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
-                self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"                
-            else: 
-                if price_in.lower() in ("satoshi","stats","sats"):
-                    price_alert = price_alert/1000000000
-                    price_in = "btc"
-                    
-                if price_in.lower() != "btc":
-                    self.message = "Price supported only in BTC/satoshi"
-                else:
-                    self.db.add_alert(self.chatId,"p_incr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
-                    self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
-        elif self.textArray[0] == "/set_alert_price_decr":
-                if len(self.textArray) != 4:            
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
-                else:
-                    currencySymbol = str(self.textArray[1]).lower()
-                    price_alert = self.textArray[2]
-                    price_in = str(self.textArray[3]).lower()
-    
                 if self.is_empty(currencySymbol):
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.0001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.0001 BTC/satoshi"
                 elif self.is_empty(price_alert):
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
                 elif self.is_empty(price_in):
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"
                 elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
-                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"                
+                    self.message="Please provide information in following format : \n/set_alert_price_incr ETH 0.001 BTC/satoshi"                
                 else: 
                     if price_in.lower() in ("satoshi","stats","sats"):
                         price_alert = price_alert/1000000000
@@ -154,8 +128,34 @@ class RunTelegram:
                     if price_in.lower() != "btc":
                         self.message = "Price supported only in BTC/satoshi"
                     else:
-                        self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
+                        self.db.add_alert(self.chatId,"p_incr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
                         self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
+        elif self.textArray[0] == "/set_alert_price_decr":
+                if len(self.textArray) != 4:            
+                    self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                else:
+                    currencySymbol = str(self.textArray[1]).lower()
+                    price_alert = self.textArray[2]
+                    price_in = str(self.textArray[3]).lower()
+    
+                    if self.is_empty(currencySymbol):
+                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.0001 BTC/satoshi"
+                    elif self.is_empty(price_alert):
+                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                    elif self.is_empty(price_in):
+                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"
+                    elif price_in not in ("btc","usd","eth","satoshi","stats","sats"):
+                        self.message="Please provide information in following format : \n/set_alert_price_decr ETH 0.001 BTC/satoshi"                
+                    else: 
+                        if price_in.lower() in ("satoshi","stats","sats"):
+                            price_alert = price_alert/1000000000
+                            price_in = "btc"
+                            
+                        if price_in.lower() != "btc":
+                            self.message = "Price supported only in BTC/satoshi"
+                        else:
+                            self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
+                            self.message = "We have taken your interest if you provided correct input, you can find your Alerts in 'MyAlerts'"
         elif self.textArray[0] == "/my_alerts":
             try:
                 self.message=""
