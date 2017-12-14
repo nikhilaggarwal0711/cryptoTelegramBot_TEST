@@ -151,7 +151,9 @@ class RunTelegram:
                             self.message = "Price supported only in BTC/satoshi"
                         else:
                             if price_in.lower() in ("satoshi","stats","sats"):
+                                print "Division started -------"
                                 price_alert = float(price_alert) / 1000000000.0
+                                print "Division completed.........."
                                 price_in = "btc"
                             
                             self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
