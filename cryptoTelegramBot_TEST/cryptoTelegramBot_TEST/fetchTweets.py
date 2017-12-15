@@ -91,7 +91,7 @@ class StdOutListener(StreamListener):
                         inReplyToScreenName = ""
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
-                    db.insertIntoTweets(tweet_id,screen_name,created_at,tweet,str(inReplyToScreenName),fetchTime)
+                    db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
                 except Exception, e:
                         print "Error. Inside StdOutListener class.... Error: "
                         print e.__doc__

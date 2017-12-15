@@ -86,9 +86,9 @@ class DBHelper:
             print rank
             print(e) 
 
-    def insertIntoTweets(self, tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime):
+    def insertIntoTweets(self, tweet_id, screen_name, created_at, inReplyToScreenName, fetchTime):
         try:
-            self.DB.execute("""INSERT INTO tweets (tweet_id, screen_name, created_at, tweet, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s,%s)""",(tweet_id,screen_name, created_at, tweet, inReplyToScreenName, int(fetchTime) ))
+            self.DB.execute("""INSERT INTO tweets (tweet_id, screen_name, created_at, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s)""",(tweet_id,screen_name, created_at, inReplyToScreenName, int(fetchTime) ))
             self.conn.commit()
         except Exception as e: 
             print(e) 
