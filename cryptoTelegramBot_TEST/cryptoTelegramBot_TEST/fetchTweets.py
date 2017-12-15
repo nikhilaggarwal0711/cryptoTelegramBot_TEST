@@ -77,7 +77,7 @@ class StdOutListener(StreamListener):
                     tweet_id=str(config["id"]).encode('utf-8')
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
-                    tweet = config["text"].encode('utf-8')
+                    #tweet = config["text"].encode('utf-8')
                     inReplyToScreenName = config["in_reply_to_screen_name"]
                     
                     #config["retweeted_status"]["full_text"]
