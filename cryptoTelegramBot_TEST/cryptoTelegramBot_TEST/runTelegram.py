@@ -63,7 +63,7 @@ class RunTelegram:
 
     def newUser(self):
         #print "Inside newUser -- Telegram"
-        self.message = "I have added you in my notification list. \n\n<b>Features</b> : \n\n1. New Market Addition on Exchange alert ( Bittrex and Bitfinex )\n\n2. Tweet alerts\n\n3. Price increase alerts\n\n4. Price decrease alerts\n\n5. Check last tweet\n\n6. Check last price\n\n7. Earn FREE BTC by suggesting 2x coin\n\n8. FREE coins/ Airdrop alerts\n\n9. DoubleTrouble -- Game to 100 BTC from 0.1 BTC9. New Market Addition alert ( Currently Bittrex and Bitfinex )\n\n\n\n<b>Future Upgrades</b> : \n\n1. More Exchanges \n\n2. Portfolio Tracker\n\n3. DoubleTrouble Game - More Updates\n\n4. Better UI\n\n5. Upcoming Coin updates"
+        self.message = "I have added you in my notification list. \n\n<b>Features</b> : \n\n1. New Market Addition on Exchange alert ( Bittrex and Bitfinex )\n\n2. Tweet alerts\n\n3. Price increase alerts\n\n4. Price decrease alerts\n\n5. Check last tweet\n\n6. Check last price\n\n7. Earn FREE BTC by suggesting 2x coin\n\n8. FREE coins/ Airdrop alerts\n\n9. DoubleTrouble -- Game to 100 BTC from 0.1 BTC\n\n\n<b>Future Upgrades</b> : \n\n1. More Exchanges \n\n2. Portfolio Tracker\n\n3. DoubleTrouble Game - More Updates\n\n4. Better UI\n\n5. Upcoming Coin updates"
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
@@ -98,10 +98,10 @@ class RunTelegram:
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"
             else:
-                currencySymbol = self.textArray[1]
+                currencySymbol = str(self.textArray[1]).lower()
                 prices = self.db.fetchPrice(currencySymbol)
                 #name,exchange,exchange_price,exchange_price_in,cmc_price_usd
-                if prices is None :
+                if self.is_empty(prices) :
                     self.message = "No currency with symbol - " + str(currencySymbol).upper() + " found. Please provide correct currency symbol."
                 else:
                     self.message = ""
@@ -111,7 +111,10 @@ class RunTelegram:
                         exchange_price=str("%.9f" % Decimal(price[2]))
                         exchange_price_in = str(price[3])
                         cmc_price_usd = str("%.9f" % Decimal(price[4]))
-                        self.message = self.message + "Price of " + str(currencySymbol).upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
+                        if currencySymbol == "btc":
+                            self.message = self.message + "Price of " + currencySymbol.upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : $" + cmc_price_usd + "\n\n"
+                        else:
+                            self.message = self.message + "Price of " + currencySymbol.upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) != 2 :
                 self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"

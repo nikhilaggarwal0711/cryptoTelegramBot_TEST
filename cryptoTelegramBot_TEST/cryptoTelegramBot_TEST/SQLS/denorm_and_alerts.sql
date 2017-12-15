@@ -252,9 +252,38 @@ DELETE FROM price_denorm_ld;
 
 INSERT INTO price_denorm_ld
 (rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at)
-SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t1
-UNION
+SELECT
+COM.rank,COM.id,COM.symbol,COM.name,COM.twitter_screen_name,COM.tweet_id,COM.tweet_fetchTime,COM.exchange,COM.marketname,COM.exchange_last_price,COM.exchange_last_price_in,COM.cmc_price_usd,COM.cmc_price_btc,COM.cmc_24h_volume_usd,COM.cmc_market_cap_usd,COM.cmc_percent_change_1h,COM.cmc_percent_change_24h,COM.cmc_percent_change_7d,COM.is_new_market,COM.created_at
+FROM
+(
+SELECT 
+rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t1
+UNION ALL
 SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t2
+UNION ALL
+SELECT rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,"Coinmarketcap" as exchange,NULL AS marketname,1.0 AS exchange_last_price,"btc" AS exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,"no" AS is_new_market,created_at FROM price_denorm_t1 WHERE lower(symbol) = "btc"
+)COM
+GROUP BY 
+COM.rank,
+COM.id,
+COM.symbol,
+COM.name,
+COM.twitter_screen_name,
+COM.tweet_id,
+COM.tweet_fetchTime,
+COM.exchange,
+COM.marketname,
+COM.exchange_last_price,
+COM.exchange_last_price_in,
+COM.cmc_price_usd,
+COM.cmc_price_btc,
+COM.cmc_24h_volume_usd,
+COM.cmc_market_cap_usd,
+COM.cmc_percent_change_1h,
+COM.cmc_percent_change_24h,
+COM.cmc_percent_change_7d,
+COM.is_new_market,
+COM.created_at
 ;
 
 RENAME TABLE price_denorm TO price_denorm_md;
@@ -279,7 +308,8 @@ SELECT
 COM.id,COM.chatId,COM.alert_type,COM.new_alert_fetchTime,COM.coin_symbol,COM.is_first,COM.alert_price,COM.price_in,COM.twitter_screen_name,COM.tweet_id,COM.coin_id,COM.coin_name,COM.exchange,COM.new_price
  FROM 
 (
-select AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,P_DN.exchange AS exchange,P_DN.exchange_last_price AS new_price
+select 
+AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,0.0 AS alert_price,"btc" AS price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,"Coinmarketcap" AS exchange,0.0 AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
 price_denorm P_DN
