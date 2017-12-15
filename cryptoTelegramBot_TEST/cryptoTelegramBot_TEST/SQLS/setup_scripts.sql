@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS coinmarketcap ( id text,name text,symbol text,rank in
 CREATE TABLE IF NOT EXISTS bittrex ( marketname text,high decimal(18,9) ,low decimal(18,9) ,volume decimal(38,9) ,last decimal(18,9) ,basevolume decimal(38,9) ,timestampp text,bid decimal(18,9) ,ask decimal(18,9) ,openbuyorders int(11) ,opensellorders int(11) ,prevday decimal(18,9) ,created text,fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS bitfinex (marketname text,mid decimal(18,9),bid decimal(18,9),ask decimal(18,9),last_price decimal(18,9),low decimal(18,9),high decimal(18,9),volume decimal(38,9), timestampp text,fetchTime int);
 CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen int,fetchTime int);
-CREATE TABLE IF NOT EXISTS tweets (tweet_id text,screen_name text, created_at text, tweet text, inReplyToScreenName text,fetchTime int);
+CREATE TABLE IF NOT EXISTS tweets (tweet_id text,screen_name text, created_at text, inReplyToScreenName text,fetchTime int);
 CREATE TABLE IF NOT EXISTS twitterMapping (coinmarketcap_id text , twitter_screen_name text);
 CREATE TABLE IF NOT EXISTS free_coins (coin_name text,coin_symbol text,shorten_link text,complete_link text,official_website text,free_dollars int,free_coins int,added_time int,expiry_time int,last_fetchTime_notified int);
 
