@@ -108,6 +108,7 @@ class RunTelegram:
                 #self.message="Please provide information in following format : \n/check_tweet CURRENCY_SYMBOL"
                 self.set_last_command_map("/check_tweet")
                 self.message="Please provide CURRENCY_SYMBOL like :\nETH"
+                self.keyboard=''
             else:
                 currencySymbol = self.textArray[1]
                 tweets = self.db.fetchTweet(currencySymbol)
@@ -124,12 +125,14 @@ class RunTelegram:
                             self.message = "We havn't captured any tweet for this coin. As soon as team will post anything we will capture it. Please try again after some time."
                         else:
                             self.message = "<a href='https://twitter.com/"+tweet[1]+"/status/"+tweet[2]+"'>"+ str(currencySymbol).upper() +"("+tweet[0]+") tweeted : </a>"
+                self.back_to_menu_keyboard()
                 self.del_last_command_map(self.chatId)
         elif self.textArray[0] == "/check_price":
             if len(self.textArray) == 1 :
                 #self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"
                 self.set_last_command_map("/check_price")
                 self.message="Please provide CURRENCY_SYMBOL like :\nETH"
+                self.keyboard=''
             else:
                 currencySymbol = str(self.textArray[1]).lower()
                 prices = self.db.fetchPrice(currencySymbol)
@@ -148,6 +151,7 @@ class RunTelegram:
                             self.message = self.message + "Price of " + currencySymbol.upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : $" + cmc_price_usd + "\n\n"
                         else:
                             self.message = self.message + "Price of " + currencySymbol.upper() + "( " + name + " ) :\nExchange : " + exchange +"\n  Price : " + exchange_price + " " + exchange_price_in + " or $" + cmc_price_usd + "\n\n"
+                self.back_to_menu_keyboard()
                 self.del_last_command_map(self.chatId)
         elif self.textArray[0] == "/set_alert_tweet":
             if len(self.textArray) == 1 :
@@ -367,10 +371,10 @@ class RunTelegram:
             self.text = "/check_price"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            self.keyboard=''
-            self.sendTelegramMessage()
+            #self.keyboard=''
+            #self.sendTelegramMessage()
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Check price of any coin using below command : \n"+
             #                        "/check_price COIN_SYMBOL\n"+
@@ -383,10 +387,10 @@ class RunTelegram:
             self.text = "/check_tweet"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            self.keyboard=''
-            self.sendTelegramMessage()            
+            #self.keyboard=''
+            #self.sendTelegramMessage()            
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Check last tweet from official Twitter handler of any coin using below command : \n"+
             #                        "/check_tweet COIN_SYMBOL\n"+
