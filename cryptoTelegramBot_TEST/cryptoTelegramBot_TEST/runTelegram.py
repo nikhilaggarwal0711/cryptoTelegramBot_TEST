@@ -397,7 +397,7 @@ class RunTelegram:
             #                        "For Example : \n"+
             #                        "/check_tweet ETH\n"+
             #                        "/cancel")
-        elif query_data == "doubleTrouble":
+        elif query_data == "doubleTrouble": 
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             self.message = "Details Coming Sooon....\n"
             self.back_to_menu_keyboard()
