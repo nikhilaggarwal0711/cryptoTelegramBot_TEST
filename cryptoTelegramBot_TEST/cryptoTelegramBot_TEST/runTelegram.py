@@ -435,11 +435,11 @@ class RunTelegram:
             self.set_last_command_map("/set_alert_price_incr")
             self.text = "/set_alert_price_incr"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
+            #self.back_to_menu_keyboard()
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            self.keyboard=''
-            self.sendTelegramMessage()        
+            #self.keyboard=''
+            #self.sendTelegramMessage()        
         elif query_data == "priceDecreaseAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Set price decrease alert using below command : \n"+
@@ -451,9 +451,9 @@ class RunTelegram:
             self.set_last_command_map("/set_alert_price_decr")
             self.text = "/set_alert_price_decr"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
+            #self.back_to_menu_keyboard()
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
+            #self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
         elif query_data == "info":
             self.message = ""
             self.set_last_command_map("/help")
