@@ -6,6 +6,7 @@ from time import sleep
 import time
 from decimal import Decimal
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+from telepot.loop import MessageLoop
 
 
 class RunTelegram:
@@ -19,7 +20,8 @@ class RunTelegram:
         self.LAST_COMMAND_MAP = {}
         self.main_keyboard()
         self.sendMessage = "Please choose any of the following."
-    
+        MessageLoop(self.TelegramBot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
+
     def main_keyboard(self):
         self.keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="FREE Coins",callback_data='freeCoins'),
                                                           InlineKeyboardButton(text="My Alerts",callback_data='myAlerts'),
@@ -524,32 +526,22 @@ class RunTelegram:
                 allUsers=""
 
                 self.setFetchTime()
-                self.getLastOffset()
-                self.getUpdates()
 
-                for update in self.updates:
-                    print "update : \n" + str(update)
-                    print "Offset : " + str(self.lastOffset)
-                    print telepot.flavor(str(update))
-                    if telepot.flavor(str(update)) == 'chat':
-                        try:
-                            self.fetchData(update)
-                            print "Offset : " + str(self.lastOffset)
-                            self.handleUpdate()
-                            self.addBotMessageInDB()
-                            self.sendTelegramMessage()
-                        except Exception as e:
-                            print "Error while processing chat message"
-                            print(e)
-                    elif telepot.flavor(str(update)) == 'callback_query':
-                        try:
-                            self.on_callback_query(update)
-                        except Exception as e: 
-                            print "Error while processing callback_query"
-                            print(e)
             except Exception as e: 
                 #print "Error while processing chat message"                            
                 print(e)
                 #print "Exception Caught"
             #sleep(self.sleepTime)
             sleep(0.5)
+
+    def on_chat_message(self,msg):
+        try:
+            self.setFetchTime()
+            self.fetchData(msg)
+            print "Offset : " + str(self.lastOffset)
+            self.handleUpdate()
+            self.addBotMessageInDB()
+            self.sendTelegramMessage()
+        except Exception as e:
+            print "Error while processing chat message"
+            print(e)        
