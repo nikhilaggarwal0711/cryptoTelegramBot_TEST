@@ -325,7 +325,8 @@ class RunTelegram:
 
     def on_callback_query(self,msg):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-
+        print "MESSAGE"
+        print msg
         self.text = ""
         self.chat_id =  msg['message']['chat']['id']    
         msg_id = msg['message']['message_id']
