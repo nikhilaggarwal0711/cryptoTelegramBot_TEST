@@ -512,6 +512,7 @@ class RunTelegram:
                 self.getUpdates()
                 
                 for update in self.updates:
+                    print update
                     if telepot.flavor(str(update)) == 'chat':
                         try:
                             self.fetchData(update)
@@ -524,6 +525,7 @@ class RunTelegram:
                         try:
                             self.on_callback_query(update)
                         except Exception as e: 
+                            print "Error while processing callback_query"
                             print(e)
             except Exception as e: 
                 print(e)
