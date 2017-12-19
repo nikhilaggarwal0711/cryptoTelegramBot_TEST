@@ -292,6 +292,7 @@ class RunTelegram:
                 self.del_last_command_map(self.chatId)
                 self.handleUpdate()
             else:
+                self.main_keyboard()
                 self.message = "Please choose from below menu"
 
     def sendTelegramMessage(self):
