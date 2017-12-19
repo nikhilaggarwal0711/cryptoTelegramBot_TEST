@@ -374,7 +374,7 @@ class RunTelegram:
             self.text = "/check_tweet"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,' ',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
