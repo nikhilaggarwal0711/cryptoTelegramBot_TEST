@@ -81,13 +81,13 @@ class RunTelegram:
 
     def set_last_command_map(self,command):
         if self.chatId in self.LAST_COMMAND_MAP:
-            self.del_last_command_map(self.chatId)
-        else:
-            self.LAST_COMMAND_MAP[self.chatId] = command
+            del self.LAST_COMMAND_MAP[self.chatId]
+        
+        self.LAST_COMMAND_MAP[self.chatId] = command
 
     def del_last_command_map(self,command):
         if self.chatId in self.LAST_COMMAND_MAP:
-            self.del_last_command_map(self.chatId)
+            del self.LAST_COMMAND_MAP[self.chatId]
 
 
     def handleUpdate(self):
