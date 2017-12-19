@@ -283,6 +283,9 @@ class RunTelegram:
         else : 
             if self.chatId in self.LAST_COMMAND_MAP:
                 self.text = self.LAST_COMMAND_MAP[self.chatId] + " " + self.text
+                print "New text" 
+                print self.text
+                self.del_last_command_map(self.chatId)
                 self.handleUpdate()
             else:
                 self.message = "Please choose from below menu"
