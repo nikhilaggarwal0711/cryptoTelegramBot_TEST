@@ -358,7 +358,7 @@ class RunTelegram:
             self.text = "/check_price"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()
@@ -394,7 +394,7 @@ class RunTelegram:
             self.text = "/feedback"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()        
@@ -410,7 +410,7 @@ class RunTelegram:
             self.text = "/set_alert_tweet"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()        
@@ -426,7 +426,7 @@ class RunTelegram:
             self.text = "/set_alert_price_incr"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()        
@@ -442,7 +442,7 @@ class RunTelegram:
             self.text = "/set_alert_price_decr"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
         elif query_data == "info":
             self.message = ""
@@ -450,12 +450,15 @@ class RunTelegram:
             self.text = "/help"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()        
-        else:
-            print "Wrong Input"
+        elif query_data == "backToMenu":
+            self.main_keyboard()
+            self.message = "Please choose from below option"
+            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+
             #keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="BUTTON1",callback_data='press1')],[InlineKeyboardButton(text="Back",callback_data='press2')],])
             #TelegramBot.sendMessage(from_id, "Below is your button. Use it as per your will.", reply_markup=keyboard)
 
