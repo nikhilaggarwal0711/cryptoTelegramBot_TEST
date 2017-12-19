@@ -280,7 +280,7 @@ class RunTelegram:
                 self.text = self.LAST_COMMAND_MAP[self.chatId] + " " + self.text
                 self.handleUpdate()
             else:
-                self.message = "Are you looking for some help ? \nPlease try /help command for detailed usage"
+                self.message = "Please choose from below menu"
 
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
@@ -513,7 +513,7 @@ class RunTelegram:
                 self.setFetchTime()
                 self.getLastOffset()
                 self.getUpdates()
-                
+
                 for update in self.updates:
                     print update
                     print telepot.flavor(str(update))
@@ -523,8 +523,8 @@ class RunTelegram:
                             self.handleUpdate()
                             self.addBotMessageInDB()
                             self.sendTelegramMessage()
-                        except Exception as e: 
-                            print "Error while processing chat message"                            
+                        except Exception as e:
+                            print "Error while processing chat message"
                             print(e)
                     elif telepot.flavor(str(update)) == 'callback_query':
                         try:
