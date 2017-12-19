@@ -537,7 +537,7 @@ class RunTelegram:
                 print(e)
                 #print "Exception Caught"
             #sleep(self.sleepTime)
-            sleep(0.5)
+            sleep(10)
 
     def on_chat_message(self,msg):
         try:
