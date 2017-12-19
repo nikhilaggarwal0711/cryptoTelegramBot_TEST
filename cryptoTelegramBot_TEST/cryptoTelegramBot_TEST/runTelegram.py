@@ -525,7 +525,7 @@ class RunTelegram:
                 newMarkets=""
                 allUsers=""
 
-                self.setFetchTime()
+                self.setFetchTime() 
 
             except Exception as e: 
                 #print "Error while processing chat message"                            
