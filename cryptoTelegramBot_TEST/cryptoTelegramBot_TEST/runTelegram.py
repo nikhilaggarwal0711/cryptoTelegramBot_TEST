@@ -465,7 +465,7 @@ class RunTelegram:
             self.text = "/help"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(parse_mode='HTML',tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()        
