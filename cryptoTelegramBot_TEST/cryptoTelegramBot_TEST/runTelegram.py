@@ -287,9 +287,6 @@ class RunTelegram:
             if len(self.textArray) == 1:            
                 self.set_last_command_map("/suggest_2x_coin")
                 self.message="Please provide information in following format : \nCURRENCY_SYMBOL DESCRIPTION"
-            #coin = self.textArray[1]
-            #explanation = self.textArray[2]
-#            self.db.add_2xCoin_suggestion(self.chatId,self.fetchTime,coin,explanation)
             else:
                 self.message = "We will look into your suggestion. If selected and gave 2x return within a month, you will get your commission for sharing this coin. \nWe will ask for your BTC address after success."
                 self.del_last_command_map(self.chatId)                
@@ -373,35 +370,14 @@ class RunTelegram:
             self.set_last_command_map("/check_price")
             self.text = "/check_price"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
-            #TelegramBot.sendMessage(from_id, "Check price of any coin using below command : \n"+
-            #                        "/check_price COIN_SYMBOL\n"+
-            #                        "For Example : \n"+
-            #                        "/check_price ETH\n"+
-            #                        "/cancel")
         elif query_data == "lastTweet":
             self.message = ""
             self.set_last_command_map("/check_tweet")
             self.text = "/check_tweet"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()            
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
-            #TelegramBot.sendMessage(from_id, "Check last tweet from official Twitter handler of any coin using below command : \n"+
-            #                        "/check_tweet COIN_SYMBOL\n"+
-            #                        "For Example : \n"+
-            #                        "/check_tweet ETH\n"+
-            #                        "/cancel")
         elif query_data == "doubleTrouble": 
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             self.message = "Details Coming Sooon....\n"
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.message,parse_mode='HTML',reply_markup=self.keyboard)
@@ -410,76 +386,35 @@ class RunTelegram:
             self.set_last_command_map("/feedback")
             self.text = "/feedback"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()        
+            self.TelegramBot.editMessageText(tup,self.text,parse_mode='HTML',reply_markup=self.keyboard)      
         elif query_data == "tweetAlert":
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
-            #sent = TelegramBot.sendMessage(from_id, "Set new Tweet alert using below command : \n"+
-            #                        "/setalert_tweet COIN_SYMBOL\n"+
-            #                        "For Example : \n"+
-            #                        "/setalert_tweet ETH\n"+
-            #                        "/cancel")
             self.message = ""
             self.set_last_command_map("/set_alert_tweet")
             self.text = "/set_alert_tweet"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()        
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)     
         elif query_data == "priceIncreaseAlert":
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
-            #TelegramBot.sendMessage(from_id, "Set price increase alert using below command : \n"+
-            #                        "/setalert_price_increase COIN_SYMBOL PRICE(in BTC or USD)\n"+
-            #                        "For Example : \n"+
-            #                        "/setalert_price_increase ETH 0.0001BTC\n"+
-            #                        "/cancel")
             self.message = ""
             self.set_last_command_map("/set_alert_price_incr")
             self.text = "/set_alert_price_incr"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()        
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)      
         elif query_data == "priceDecreaseAlert":
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
-            #TelegramBot.sendMessage(from_id, "Set price decrease alert using below command : \n"+
-            #                        "/setalert_price_decrease COIN_SYMBOL PRICE(in BTC or USD)\n"+
-            #                        "For Example : \n"+
-            #                        "/setalert_price_decrease ETH 0.0001BTC\n"+
-            #                        "/cancel")
             self.message = ""
             self.set_last_command_map("/set_alert_price_decr")
             self.text = "/set_alert_price_decr"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
         elif query_data == "info":
             self.message = ""
             self.set_last_command_map("/help")
             self.text = "/help"
             self.handleUpdate()
-            #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
-            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            #self.keyboard=''
-            #self.sendTelegramMessage()        
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)     
         elif query_data == "backToMenu":
             self.main_keyboard()
             self.message = "Please choose from below option"
             self.TelegramBot.editMessageReplyMarkup(tup,reply_markup=self.keyboard)
-
-            #keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="BUTTON1",callback_data='press1')],[InlineKeyboardButton(text="Back",callback_data='press2')],])
-            #TelegramBot.sendMessage(from_id, "Below is your button. Use it as per your will.", reply_markup=keyboard)
-
-
 
 
     def start(self,sleepTime):
