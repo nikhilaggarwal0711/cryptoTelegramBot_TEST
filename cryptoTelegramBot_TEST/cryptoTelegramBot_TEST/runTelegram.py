@@ -539,7 +539,7 @@ class RunTelegram:
         try:
             self.setFetchTime()
             self.fetchData(msg)
-            print "Offset : " + str(self.lastOffset)
+            #print "Offset : " + str(self.lastOffset)
             self.handleUpdate()
             self.addBotMessageInDB()
             self.sendTelegramMessage()
