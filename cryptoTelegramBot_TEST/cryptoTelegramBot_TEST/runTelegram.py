@@ -377,7 +377,8 @@ class RunTelegram:
             self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
-            self.sendTelegramMessage()            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
+            self.sendTelegramMessage()            
+            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Check last tweet from official Twitter handler of any coin using below command : \n"+
             #                        "/check_tweet COIN_SYMBOL\n"+
             #                        "For Example : \n"+
@@ -410,10 +411,10 @@ class RunTelegram:
             self.text = "/set_alert_tweet"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            self.keyboard=''
-            self.sendTelegramMessage()        
+            #self.keyboard=''
+            #self.sendTelegramMessage()        
         elif query_data == "priceIncreaseAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Set price increase alert using below command : \n"+
