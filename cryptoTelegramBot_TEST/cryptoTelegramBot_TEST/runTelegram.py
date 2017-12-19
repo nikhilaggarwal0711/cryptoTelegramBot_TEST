@@ -444,6 +444,7 @@ class RunTelegram:
 
                     for user in allUsers:
                         self.chatId = user[0]
+                        self.main_keyboard()
                         self.sendTelegramMessage()
                 #Update is_new_market to NO , so that it wont be fetched again.
                 self.db.update_priceDenorm_marketTypes()
@@ -468,17 +469,17 @@ class RunTelegram:
                             if alert_type == "tweet":
                                 self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
                                 self.db.delete_send_alert(self.chatId, alert_id)
-                                self.keyboard=''
+                                self.main_keyboard()
                                 self.sendTelegramMessage()
                             elif alert_type == "p_incr":
                                 self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
-                                self.keyboard=''
+                                self.main_keyboard()
                                 self.sendTelegramMessage()
                             elif alert_type == "p_decr":
                                 self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                 self.db.delete_send_alert(self.chatId, alert_id)
-                                self.keyboard=''
+                                self.main_keyboard()
                                 self.sendTelegramMessage()
 
 
