@@ -342,7 +342,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Check price of any coin using below command : \n"+
             #                        "/check_price COIN_SYMBOL\n"+
@@ -356,8 +358,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
-            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()            #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Check last tweet from official Twitter handler of any coin using below command : \n"+
             #                        "/check_tweet COIN_SYMBOL\n"+
             #                        "For Example : \n"+
@@ -375,7 +378,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()        
         elif query_data == "tweetAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #sent = TelegramBot.sendMessage(from_id, "Set new Tweet alert using below command : \n"+
@@ -389,7 +394,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()        
         elif query_data == "priceIncreaseAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Set price increase alert using below command : \n"+
@@ -403,7 +410,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()        
         elif query_data == "priceDecreaseAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #TelegramBot.sendMessage(from_id, "Set price decrease alert using below command : \n"+
@@ -425,7 +434,9 @@ class RunTelegram:
             self.handleUpdate()
             self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,'',reply_markup=self.keyboard)
-            self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')        
+            #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
+            self.keyboard=''
+            self.sendTelegramMessage()        
         else:
             print "Wrong Input"
             #keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="BUTTON1",callback_data='press1')],[InlineKeyboardButton(text="Back",callback_data='press2')],])
