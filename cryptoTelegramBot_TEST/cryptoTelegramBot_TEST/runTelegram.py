@@ -411,7 +411,7 @@ class RunTelegram:
             self.text = "/set_alert_tweet"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()        
