@@ -521,6 +521,7 @@ class RunTelegram:
                     if telepot.flavor(str(update)) == 'chat':
                         try:
                             self.fetchData(update)
+                            print "Offset : " + str(self.lastOffset)
                             self.handleUpdate()
                             self.addBotMessageInDB()
                             self.sendTelegramMessage()
