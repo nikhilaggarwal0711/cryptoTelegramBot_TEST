@@ -370,7 +370,7 @@ class RunTelegram:
             self.set_last_command_map("/check_price")
             self.text = "/check_price"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
+            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
@@ -386,7 +386,7 @@ class RunTelegram:
             self.set_last_command_map("/check_tweet")
             self.text = "/check_tweet"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
+            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
