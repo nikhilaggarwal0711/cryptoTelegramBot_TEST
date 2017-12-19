@@ -349,14 +349,14 @@ class RunTelegram:
         if query_data == "freeCoins":
             self.message = "Details Coming Sooon....\n"
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.message,parse_mode='HTML',reply_markup=self.keyboard)
         elif query_data == "myAlerts":
             self.message = ""
             self.set_last_command_map("/my_alerts")
             self.text = "/my_alerts"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.message,parse_mode='HTML',reply_markup=self.keyboard)
         elif query_data == "newAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             self.message = "Select alert type : "
@@ -365,14 +365,14 @@ class RunTelegram:
                                                             [InlineKeyboardButton(text="Price Increase Alert",callback_data='priceIncreaseAlert')],
                                                             [InlineKeyboardButton(text="Price Decrease Alert",callback_data='priceDecreaseAlert')],
                                                              ])
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.message,parse_mode='HTML',reply_markup=self.keyboard)
         elif query_data == "checkPrice":
             self.message = ""
             self.set_last_command_map("/check_price")
             self.text = "/check_price"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()
@@ -388,7 +388,7 @@ class RunTelegram:
             self.text = "/check_tweet"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text+"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()            
@@ -402,14 +402,14 @@ class RunTelegram:
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             self.message = "Details Coming Sooon....\n"
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.message,parse_mode='HTML',reply_markup=self.keyboard)
         elif query_data == "feedbackAndReportIssues":
             self.message = ""
             self.set_last_command_map("/feedback")
             self.text = "/feedback"
             self.handleUpdate()
             self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             self.keyboard=''
             self.sendTelegramMessage()        
@@ -425,7 +425,7 @@ class RunTelegram:
             self.text = "/set_alert_tweet"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()        
@@ -441,7 +441,7 @@ class RunTelegram:
             self.text = "/set_alert_price_incr"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
             #self.sendTelegramMessage()        
@@ -457,7 +457,7 @@ class RunTelegram:
             self.text = "/set_alert_price_decr"
             self.handleUpdate()
             #self.back_to_menu_keyboard()
-            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(self.chat_id,self.message,reply_markup='')
         elif query_data == "info":
             self.message = ""
