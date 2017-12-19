@@ -167,9 +167,11 @@ class RunTelegram:
                 print "when len = 1"
                 self.set_last_command_map("/set_alert_price_incr")
                 self.message="Please provide following information : \nCURRENCY_SYMBOL PRICE BTC/satoshi \n For Example: \n DGB 0.00000195 btc"
+                self.keyboard=''
             elif len(self.textArray) != 4:
                 print "when len not equal to 4"
                 self.message="Please provide information in correct format : \nCURRENCY_SYMBOL PRICE BTC/satoshi \n For Example: \n DGB 0.00000195 btc"
+                self.back_to_menu_keyboard()
             else:
                 print "inside else part"
                 currencySymbol = str(self.textArray[1]).lower()
@@ -194,13 +196,16 @@ class RunTelegram:
                     else:
                         self.db.add_alert(self.chatId,"p_incr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
                         self.message = "We have captured your alert and will keep you posted."
+                self.back_to_menu_keyboard()
                 self.del_last_command_map(self.chatId)            
         elif self.textArray[0] == "/set_alert_price_decr":
             if len(self.textArray) == 1:
                 self.set_last_command_map("/set_alert_price_decr")
                 self.message="Please provide following information : \nCURRENCY_SYMBOL PRICE BTC/satoshi \n For Example: \n DGB 0.00000195 btc"
+                self.keyboard=''
             elif len(self.textArray) != 4:            
                 self.message="Please provide information in following format : \n/set_alert_price_decr CURRENCY_SYMBOL PRICE BTC/satoshi"
+                self.back_to_menu_keyboard()
             else:
                 currencySymbol = str(self.textArray[1]).lower()
                 price_alert = self.textArray[2]
@@ -221,9 +226,11 @@ class RunTelegram:
                             
                     if price_in.lower() != "btc":
                         self.message = "Price supported only in BTC/satoshi"
+                        self.back_to_menu_keyboard()
                     else:
                         self.db.add_alert(self.chatId,"p_decr",self.fetchTime,currencySymbol,"yes",price_alert,price_in)
                         self.message = "We have captured your alert and will keep you posted."
+                self.back_to_menu_keyboard()
                 self.del_last_command_map(self.chatId)
         elif self.textArray[0] == "/my_alerts":
             self.del_last_command_map(self.chatId)
