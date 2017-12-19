@@ -157,12 +157,16 @@ class RunTelegram:
                 self.message = "We will ping you for any new tweet."
                 self.del_last_command_map(self.chatId)            
         elif self.textArray[0] == "/set_alert_price_incr":
+            print "inside price inc function"
             if len(self.textArray) == 1:
+                print "when len = 1"
                 self.set_last_command_map("/set_alert_price_incr")
                 self.message="Please provide following information : \nCURRENCY_SYMBOL PRICE BTC/satoshi \n For Example: \n DGB 0.00000195 btc"
             elif len(self.textArray) != 4:
+                print "when len not equal to 4"
                 self.message="Please provide information in correct format : \nCURRENCY_SYMBOL PRICE BTC/satoshi \n For Example: \n DGB 0.00000195 btc"
             else:
+                print "inside else part"
                 currencySymbol = str(self.textArray[1]).lower()
                 price_alert = self.textArray[2]
                 price_in = str(self.textArray[3]).lower()
