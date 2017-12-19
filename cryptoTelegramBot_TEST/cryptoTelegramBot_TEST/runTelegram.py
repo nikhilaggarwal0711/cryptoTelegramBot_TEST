@@ -471,7 +471,7 @@ class RunTelegram:
         elif query_data == "backToMenu":
             self.main_keyboard()
             self.message = "Please choose from below option"
-            self.TelegramBot.editMessageText(tup,self.message,reply_markup=self.keyboard)
+            self.TelegramBot.editMessageReplyMarkup(tup,self.message,reply_markup=self.keyboard)
 
             #keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="BUTTON1",callback_data='press1')],[InlineKeyboardButton(text="Back",callback_data='press2')],])
             #TelegramBot.sendMessage(from_id, "Below is your button. Use it as per your will.", reply_markup=keyboard)
