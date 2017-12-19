@@ -515,8 +515,8 @@ class RunTelegram:
                 self.getUpdates()
 
                 for update in self.updates:
-                    print "update : \n" + update
-                    print "Offset : " + self.lastOffset
+                    print "update : \n" + str(update)
+                    print "Offset : " + str(self.lastOffset)
                     print telepot.flavor(str(update))
                     if telepot.flavor(str(update)) == 'chat':
                         try:
