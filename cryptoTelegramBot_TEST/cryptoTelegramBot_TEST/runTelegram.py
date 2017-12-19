@@ -154,11 +154,13 @@ class RunTelegram:
 #                self.message="Please provide information in following format : \n/check_price CURRENCY_SYMBOL"
                 self.set_last_command_map("/set_alert_tweet")
                 self.message="Please provide CURRENCY_SYMBOL like :\nETH"
+                self.keyboard=''
             else:
                 currencySymbol = self.textArray[1]
                 self.db.add_alert(self.chatId,"tweet",self.fetchTime,currencySymbol,"yes",0,"btc")
                 self.message = "We will ping you for any new tweet."
-                self.del_last_command_map(self.chatId)            
+                self.del_last_command_map(self.chatId)    
+                self.back_to_menu_keyboard()
         elif self.textArray[0] == "/set_alert_price_incr":
             print "inside price inc function"
             if len(self.textArray) == 1:
@@ -410,7 +412,7 @@ class RunTelegram:
             self.set_last_command_map("/set_alert_tweet")
             self.text = "/set_alert_tweet"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
+            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text +"\n"+self.message,reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
             #self.keyboard=''
