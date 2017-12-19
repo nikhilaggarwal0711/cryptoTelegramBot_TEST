@@ -61,7 +61,8 @@ class RunTelegram:
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,update):
-        #print "Inside fetchData -- Telegram"
+        print "Inside fetchData -- Telegram -- Printing message......."
+        print update
         self.text = update["message"]["text"]
         self.chatId = update["message"]["from"]["id"]
         self.offsetId = update["update_id"]
