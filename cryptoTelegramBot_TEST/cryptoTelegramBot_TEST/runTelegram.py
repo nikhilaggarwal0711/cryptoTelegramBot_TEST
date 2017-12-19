@@ -60,13 +60,13 @@ class RunTelegram:
         #print "Inside getUpdates -- Telegram"
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
-    def fetchData(self,update):
+    def fetchData(self,message):
         print "Inside fetchData -- Telegram -- Printing message......."
-        print update
-        self.text = update["message"]["text"]
-        self.chatId = update["message"]["from"]["id"]
-        self.offsetId = update["update_id"]
-        self.firstName = update["message"]["from"]["first_name"]
+        print message
+        self.text = message["text"]
+        self.chatId = message["from"]["id"]
+        self.offsetId = message["date"]
+        self.firstName = message["from"]["first_name"]
 
     #Following function will return either new or old
     def checkUser(self):
