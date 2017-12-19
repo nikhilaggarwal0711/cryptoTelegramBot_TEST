@@ -23,7 +23,7 @@ class RunTelegram:
         MessageLoop(self.TelegramBot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
 
     def main_keyboard(self):
-        self.keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="FREE Coins",callback_data='freeCoins'),
+        self.keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Updating..",callback_data='freeCoins'),
                                                           InlineKeyboardButton(text="My Alerts",callback_data='myAlerts'),
                                                           InlineKeyboardButton(text="New Alert",callback_data='newAlert'),
                                                           ],
@@ -279,8 +279,10 @@ class RunTelegram:
                 #self.message="Looks like you missed typing your feedback."
                 self.set_last_command_map("/feedback")
                 self.message="Please provide your feedback : "
+                self.keyboard=''
             else :
                 self.message = "Every feedback is important for us. Thank you for taking your time and writing."          
+                self.back_to_menu_keyboard()
         elif self.textArray[0] == "/suggest_2x_coin":
             if len(self.textArray) == 1:            
                 self.set_last_command_map("/suggest_2x_coin")
@@ -408,11 +410,11 @@ class RunTelegram:
             self.set_last_command_map("/feedback")
             self.text = "/feedback"
             self.handleUpdate()
-            self.back_to_menu_keyboard()
+            #self.back_to_menu_keyboard()
             self.TelegramBot.editMessageText(tup,self.text,parse_mode='HTML',reply_markup=self.keyboard)
             #self.TelegramBot.sendMessage(chat_id=self.chat_id,self.message,reply_markup='')
-            self.keyboard=''
-            self.sendTelegramMessage()        
+            #self.keyboard=''
+            #self.sendTelegramMessage()        
         elif query_data == "tweetAlert":
             #TelegramBot.answerCallbackQuery(query_id, text="Flash Message on top")
             #sent = TelegramBot.sendMessage(from_id, "Set new Tweet alert using below command : \n"+
