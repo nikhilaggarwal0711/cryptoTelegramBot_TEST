@@ -178,7 +178,7 @@ class DBHelper:
     def my_alerts(self,chatId):
         try:
             #print "fetching data"
-            self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_dn WHERE chatId=%s",[chatId] )
+            self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_dn WHERE chatId=%s order by chatId,alert_type,id,coin_symbol,alert_price,price_in",[chatId] )
             #print "DATA FETCHED........"
             alerts = self.DB.fetchall()
             return alerts

@@ -84,7 +84,7 @@ class StdOutListener(StreamListener):
                     #Keeping it as full_text can be mising in text variable above. and can be fetched using this one.
                     #But this is for retweeted tweet. Need to look into tweet which is big but was not retweeted.
                     
-                    print "inReplyToScreenName --> " + str(inReplyToScreenName)
+                    #print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
                     else:
@@ -92,11 +92,17 @@ class StdOutListener(StreamListener):
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
                     db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
+                    self.db.closeConnection()
                 except Exception, e:
                         print "Error. Inside StdOutListener class.... Error: "
                         print e.__doc__
                         print e.message
-                        #self.db.closeConnection()
+                        self.db.closeConnection()
+                        with open(Twitter.tweetErrorFileLocation + Twitter.tweetErrorFileName,'a+') as f:
+                            f.write("\n\nTwitter Write to DB Error : ")
+                            f.write(data)
+                            f.write(e.__doc__)
+                            f.write(e.message)
 
                 #Writing tweets in file as well, incase miss any in database because of any formating issue
                 try:
