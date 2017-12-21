@@ -9,7 +9,7 @@ def main():
 #    last_update_id = None
     print "Starting Thread"
 #    thread1 = MyThread("coinMarketCap",43200)
-    thread2 = MyThread("bittrex_and_coinMarketCap_and_denorm",60)
+    thread2 = MyThread("bittrex_and_coinMarketCap_and_denorm",70)
     thread3 = MyThread("telegram",0.5)
     thread4 = MyThread("bitfinex",90)
 #    thread5 = MyThread("poloniex",60)
