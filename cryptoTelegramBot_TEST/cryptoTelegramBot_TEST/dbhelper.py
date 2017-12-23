@@ -78,15 +78,21 @@ class DBHelper:
             self.DB.execute("""INSERT INTO bitfinex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(marketName,float(mid),float(bid),float(ask),float(last_price),float(low),float(high),float(volume),timestamp,fetchTime))
             self.conn.commit()
         except Exception as e: 
+            print "Exception caught while inserting data -- Bitfinex"
             print(e) 
+            print e.message
+            print marketName,mid,bid,ask,last_price,low,high,volume,timestamp,fetchTime
 
     def addCoinMarketCap(self,idd,name,symbol,rank,price_usd,price_btc,h24_volume_usd,market_cap_usd,available_supply,total_supply,percent_change_1h,percent_change_24h,percent_change_7d,last_updated,fetchTime):
         try:
             self.DB.execute("""INSERT INTO coinmarketcap VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(idd,name,symbol,int(rank),float(price_usd),float(price_btc),float(h24_volume_usd),float(market_cap_usd),float(available_supply),float(total_supply),float(percent_change_1h),float(percent_change_24h),float(percent_change_7d),last_updated,fetchTime))
             self.conn.commit()
         except Exception as e:
-            print rank
+            print "Exception caught while inserting data -- coinmarketcap"
+            print "RANK --" + str(rank)
             print(e) 
+            print e.message
+            print idd,name,symbol,rank,price_usd,price_btc,h24_volume_usd,market_cap_usd,available_supply,total_supply,percent_change_1h,percent_change_24h,percent_change_7d,last_updated,fetchTime
 
     def insertIntoTweets(self, tweet_id, screen_name, created_at, inReplyToScreenName, fetchTime):
         try:
