@@ -1,13 +1,12 @@
 import telepot
 import urllib3
-from config import TELEGRAM
+from config import TELEGRAM,COMMON
 from dbhelper import  DBHelper
 from time import sleep
 import time
 from decimal import Decimal
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
-from cryptoTelegramBot_TEST.config import COMMON
 
 class RunTelegram:
     def __init__(self):

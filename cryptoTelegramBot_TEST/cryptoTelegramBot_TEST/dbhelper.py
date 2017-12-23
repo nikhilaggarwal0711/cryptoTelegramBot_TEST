@@ -125,6 +125,10 @@ class DBHelper:
             self.conn.commit()
         except Exception as e: 
             print(e) 
+            with open(COMMON.errorDir + COMMON.errorFileName,'a+') as f:
+                f.write("\n\nError : ")
+                f.write(e.__doc__)
+                f.write(e.message)
 
     def getAllUsers(self):
         try:
