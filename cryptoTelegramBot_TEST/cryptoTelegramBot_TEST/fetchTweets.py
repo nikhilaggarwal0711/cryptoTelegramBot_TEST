@@ -87,9 +87,9 @@ class StdOutListener(StreamListener):
                     #print "inReplyToScreenName --> " + str(inReplyToScreenName)
                     if inReplyToScreenName is not None:
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
-                        db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
                     else:
                         inReplyToScreenName = ""
+                        db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
                     db.deleteFromDB_oldData("tweets")
