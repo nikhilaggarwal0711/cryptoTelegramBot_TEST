@@ -150,6 +150,7 @@ class FetchBittrex:
 
                 #Populate tweets to final denorm
                 try:
+                    print "Insert denorm -- Tweets"
                     self.db.deleteFromDB_oldData("tweets")
                 except Exception as e: 
                     print "exception caught in while loop -- tweet denorm"
@@ -163,6 +164,7 @@ class FetchBittrex:
                                         
                 #Creaete DENORM AND ALERT Tables
                 try:
+                    print "Creating denorm"
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
                     print "exception caught in while loop -- denorms"
