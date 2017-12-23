@@ -119,19 +119,28 @@ class DBHelper:
     def deleteFromDB_oldData(self,tablename):
         if tablename == "coinmarketcap":
             col1 = "id"
+            col2 = "fetchTime"
         elif tablename == "tweets":
             col1 = "screen_name"
+            col2 = "tweet_id"
         else:
             col1 = "marketname"
+            col2 = "fetchTime"
         try:
-            self.DB.execute("""INSERT INTO """+  tablename + """_BKP SELECT * FROM """ + tablename)
-            self.DB.execute("""INSERT INTO """+  tablename + """_dn_ld select * from """ + tablename)
-            self.DB.execute("""DELETE FROM """+  tablename + """_t1""")
-            self.DB.execute("""INSERT INTO """+  tablename + """_t1 select """ + col1 + """ , max(fetchTime) as fetchTime from """ + tablename +"""_dn_ld group by """+ col1)
-            self.DB.execute("""DELETE FROM """+  tablename + """_dn_ld where fetchTime NOT IN ( select fetchTime from """ + tablename +"""_t1 group by fetchTime)""")
-            self.DB.execute("""DELETE FROM """+  tablename + """_dn_ld where (""" + col1 + """,fetchTime) NOT IN ( select """ + col1 + """ , fetchTime from """ + tablename +"""_t1 group by """+ col1 + """, fetchTime)""")
-            self.DB.execute("""DELETE FROM """+  tablename )
-            
+            self.DB.execute("DELETE FROM "+  tablename + "_t1")
+            self.DB.execute("INSERT INTO "+  tablename + "_t1 SELECT * FROM " + tablename)
+            self.DB.execute("DELETE FROM "+  tablename )
+            self.DB.execute("INSERT INTO "+  tablename + "_BKP SELECT * FROM " + tablename + "_t1")
+
+            self.DB.execute("DELETE FROM "+  tablename + "_dn_ld WHERE " + col1 +" IN (select " + col1 +"  FROM " + tablename + "_t1 GROUP BY " + col1 +")")
+            self.DB.execute("INSERT INTO "+  tablename + "_dn_ld SELECT * FROM " + tablename + "_t1 WHERE (" + col1 + "," + col2 + ") IN ( SELECT " + col1 + ",MAX(" + col2 + ") AS " + col2 + " FROM " + tablename + "_t1 GROUP BY " + col1 + ")")
+
+            #self.DB.execute("INSERT INTO "+  tablename + "_dn_ld select * FROM " + col1 + "_t1 , max(" + col2 + ") as " + col2 + " from " + tablename +"_dn_ld group by "+ col1)
+
+            #self.DB.execute("DELETE FROM "+  tablename + "_dn_ld where " + col2 + " NOT IN ( select " + col2 + " from " + tablename +"_t1 group by " + col2 + ")")
+            #self.DB.execute("DELETE FROM "+  tablename + "_dn_ld where (" + col1 + "," + col2 + ") NOT IN ( select " + col1 + " , " + col2 + " from " + tablename +"_t1 group by "+ col1 + ", " + col2 + ")")
+            #self.DB.execute("DELETE FROM "+  tablename )
+
             self.DB.execute("RENAME TABLE "+ tablename +"_dn TO " + tablename + "_dn_md")
             self.DB.execute("RENAME TABLE "+ tablename +"_dn_ld TO " + tablename + "_dn")
             self.DB.execute("RENAME TABLE "+ tablename +"_dn_md TO " + tablename + "_dn_ld")
@@ -140,7 +149,9 @@ class DBHelper:
 
             #self.DB.execute("""Delete from """+ tablename + """ where fetchTime <= %s""", [delTillFetchTime] )
             self.conn.commit()
-        except Exception as e: 
+        except Exception as e:
+            print "Exception from REFRESH DENORM method" 
+            print e.message
             print(e) 
             with open(COMMON.errorDir + COMMON.errorFileName,'a+') as f:
                 f.write("\n\nError : ")

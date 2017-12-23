@@ -3,7 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
-from config import Bittrex,Coinmarketcap,Denorms,COMMON, Binance
+from config import Bittrex,Coinmarketcap,Denorms,COMMON,Binance,Twitter
 
 class FetchBittrex:
     def __init__(self):
@@ -109,25 +109,6 @@ class FetchBittrex:
                         f.write(e.__doc__)
                         f.write(e.message)
 
-                #Fetch CoinMarketcap data.
-                try:
-                    self.setFetchTime()
-                    self.fetchData_CoinMarketCap()
-                    self.db.deleteFromDB_oldData("coinmarketcap")
-                    deleteTime = 172800
-                    self.delTillFetchTime = self.fetchTime - deleteTime
-                    self.db.deleteFromDB_BKPonFetchTime("coinmarketcap",self.delTillFetchTime)
-                    self.sleepTime = sleepTime
-                except Exception as e: 
-                    print "exception caught in while loop -- coinmarketcap"
-                    print(e)
-                    print(e.message)
-                    self.sleepTime = 2 * self.sleepTime
-                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
-                        f.write("\n\nError : ")
-                        f.write(e.__doc__)
-                        f.write(e.message)
-
                 #Fetch Binance data.
                 try:
                     self.setFetchTime()
@@ -147,6 +128,39 @@ class FetchBittrex:
                         f.write(e.__doc__)
                         f.write(e.message)
 
+                #Fetch CoinMarketcap data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_CoinMarketCap()
+                    self.db.deleteFromDB_oldData("coinmarketcap")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("coinmarketcap",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- coinmarketcap"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Populate tweets to final denorm
+                try:
+                    self.db.deleteFromDB_oldData("tweets")
+                except Exception as e: 
+                    print "exception caught in while loop -- tweet denorm"
+                    print(e)
+                    print(e.message)
+                    with open(COMMON.errorDir + Twitter.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+                        
+                                        
                 #Creaete DENORM AND ALERT Tables
                 try:
                     self.db.create_denorm_and_alerts()
