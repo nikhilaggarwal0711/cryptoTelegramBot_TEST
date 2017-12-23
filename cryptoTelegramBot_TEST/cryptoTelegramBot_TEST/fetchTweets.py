@@ -96,12 +96,12 @@ class StdOutListener(StreamListener):
                         try:
                             db = DBHelper()
                             db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
-                            db.closeConnection()
+                            #db.closeConnection()
                         except Exception, e:
                             print "Error. Inside StdOutListener class.... Error: "
                             print e.__doc__
                             print e.message
-                            db.closeConnection()
+                            #db.closeConnection()
                             with open(COMMON.errorDir + Twitter.errorFileName,'a+') as f:
                                 f.write("\n\nTwitter Write to DB Error : ")
                                 f.write(data)
