@@ -115,6 +115,7 @@ class RunTelegram:
                 #name,id,tweet_id
                 if self.is_empty(tweets):
                     self.message = "No currency with symbol - " + str(currencySymbol).upper() + " found. Please provide correct currency symbol."
+                    #print "message set"
                 else:
                     #print tweets
                     #name,twitter_screen_name,tweet_id
@@ -135,10 +136,13 @@ class RunTelegram:
                 self.keyboard=''
             else:
                 currencySymbol = str(self.textArray[1]).lower()
+                print "curr = " + str(currencySymbol)
                 prices = self.db.fetchPrice(currencySymbol)
+                print "prices = " + str(prices)
                 #name,exchange,exchange_price,exchange_price_in,cmc_price_usd
                 if self.is_empty(prices) :
                     self.message = "No currency with symbol - " + str(currencySymbol).upper() + " found. Please provide correct currency symbol."
+                    print "Set last message of no currency"
                 else:
                     self.message = ""
                     for price in prices:
@@ -513,3 +517,4 @@ class RunTelegram:
                 f.write("\n\nError : ")
                 f.write(e.__doc__)
                 f.write(e.message)  
+                f.write(self.message)
