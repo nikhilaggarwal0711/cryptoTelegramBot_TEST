@@ -144,9 +144,10 @@ class DBHelper:
         try:
             self.DB.execute("SELECT chatId from botMessages where category=\"g\" GROUP BY chatId")
             chatIds = self.DB.fetchall()
+            return chatIds
         except Exception as e: 
             print(e) 
-        return chatIds
+
     def getAlerts(self):
         try:
             self.DB.execute("SELECT alert_number,chatId,alert_type,coin_symbol,alert_price,price_in,twitter_screen_name,tweet_id,coin_name,exchange,new_price FROM send_alerts")
@@ -159,18 +160,18 @@ class DBHelper:
         try:
             self.DB.execute("select name from price_denorm where symbol=%s group by name",[currencySymbol])
             currencyNames = self.DB.fetchall()
+            return currencyNames
         except Exception as e: 
             print(e) 
-        return currencyNames
     
     def fetchTweet(self,currencySymbol):
         currencySymbol=str(currencySymbol).lower()
         try:
             self.DB.execute("SELECT name,twitter_screen_name,tweet_id FROM price_denorm WHERE lower(symbol) = %s group by name,twitter_screen_name,tweet_id limit 2",[currencySymbol])
             tweets = self.DB.fetchall()
+            return tweets    
         except Exception as e: 
             print(e) 
-        return tweets    
 
 
     def fetchPrice(self,currencySymbol):
