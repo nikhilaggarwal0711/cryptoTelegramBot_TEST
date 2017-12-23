@@ -194,10 +194,13 @@ class DBHelper:
 
     def fetchPrice(self,currencySymbol):
         currencySymbol = str(currencySymbol).lower()
+        print "Inside fetchPrice method" + str(currencySymbol)
         try:
             self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
+            print "Inside try block : After executing query"
             prices = self.DB.fetchall()
-            return prices       
+            print "fetched result" + str(prices)
+            return prices
         except Exception as e: 
             print(e) 
     
