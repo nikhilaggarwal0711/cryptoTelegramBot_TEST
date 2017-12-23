@@ -3,19 +3,37 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
-from config import Bittrex,Coinmarketcap,Denorms,COMMON
+from config import Bittrex,Coinmarketcap,Denorms,COMMON, Binance
 
 class FetchBittrex:
     def __init__(self):
         #print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
         self.link2 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
+        self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
         self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
+
+    def fetchData_Binance(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link3)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        length = len(json.loads(self.data))
+
+        for x in range(0,length):
+            ##print "Add data for loop  -- Binance"
+            print self.jsonList[x]["symbol"].encode('utf-8')
+            self.MarketName = self.jsonList[x]["symbol"].encode('utf-8')
+            print self.jsonList[x]["price"]
+            self.Price = self.jsonList[x]["price"]
+
+            self.db.addBinance(self.MarketName,self.Price,self.fetchTime)    
+
 
     def fetchData_Bittrex(self):
         #print "fetchData -- Bittrex"
@@ -106,6 +124,25 @@ class FetchBittrex:
                     print(e.message)
                     self.sleepTime = 2 * self.sleepTime
                     with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+                #Fetch Binance data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Binance()
+                    self.db.deleteFromDB_oldData("binance")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("binance",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e:
+                    print "exception caught in while loop -- Binance"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Binance.errorFileName,'a+') as f:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
                         f.write(e.message)

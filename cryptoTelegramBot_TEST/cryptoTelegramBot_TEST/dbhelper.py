@@ -66,6 +66,13 @@ class DBHelper:
         except Exception as e: 
             print(e) 
 
+    def addBinance(self,MarketName,Price,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO binance VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addPoloniex(self,currencySymbol,idd,name,disabled,delisted,frozen,fetchTime):
         try:
             self.DB.execute("""INSERT INTO poloniex VALUES (%s,%s,%s,%s,%s,%s,%s)""",(currencySymbol,idd,name,disabled,delisted,frozen,fetchTime))
