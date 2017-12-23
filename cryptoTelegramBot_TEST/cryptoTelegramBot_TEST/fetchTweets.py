@@ -6,7 +6,7 @@ import time
 from time import sleep
 from dbhelper import  DBHelper
 import json
-from config import Twitter
+from config import Twitter,COMMON
 #Variables that contains the user credentials to access Twitter API 
 
 
@@ -98,7 +98,7 @@ class StdOutListener(StreamListener):
                         print e.__doc__
                         print e.message
                         db.closeConnection()
-                        with open(Twitter.tweetErrorFileLocation + Twitter.tweetErrorFileName,'a+') as f:
+                        with open(COMMON.errorDir + Twitter.errorFileName,'a+') as f:
                             f.write("\n\nTwitter Write to DB Error : ")
                             f.write(data)
                             f.write(e.__doc__)
@@ -106,10 +106,10 @@ class StdOutListener(StreamListener):
 
                 #Writing tweets in file as well, incase miss any in database because of any formating issue
                 try:
-                    with open(Twitter.tweetFileLocation + Twitter.tweetFileName,'a+') as f:
+                    with open(COMMON.tweetDir + Twitter.tweetFileName,'a+') as f:
                         f.write(data)
                 except Exception, e:
-                    print "Error. While writing Tweets in file.... File location: " + Twitter.tweetFileLocation + Twitter.tweetFileName
+                    print "Error. While writing Tweets in file.... File location: " + COMMON.tweetDir + Twitter.tweetFileName
                     print e.__doc__
                     print e.message 
 

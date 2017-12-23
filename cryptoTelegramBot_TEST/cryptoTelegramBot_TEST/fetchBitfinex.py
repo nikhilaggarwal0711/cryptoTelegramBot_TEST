@@ -3,6 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
+from config import Bitfinex,COMMON
 
 class FetchBitfinex:
     def __init__(self):
@@ -63,9 +64,8 @@ class FetchBitfinex:
                 #Added delay of 1 second so as to avoid crossing ErrorLimit 
                 sleep(2)
             except Exception as e: 
-                    print(e)
-                    #print "mid --> " + self.jsonList2["mid"]
-                
+                print(e)
+                #print "mid --> " + self.jsonList2["mid"]
 
     def saveIntoDB(self): 
         #print "saveIntoDB -- Bitfinex"           
@@ -96,6 +96,10 @@ class FetchBitfinex:
                     print(e)
                     self.sleepTime = 2 * self.sleepTime
                     #print "exception caught in while loop -- Bitfinex"
+                    with open(COMMON.errorDir + Bitfinex.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)

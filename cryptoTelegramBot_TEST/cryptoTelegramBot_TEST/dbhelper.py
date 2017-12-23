@@ -1,6 +1,6 @@
 #import sqlite3
 import MySQLdb
-from config import MYSQL
+from config import MYSQL,COMMON
 from config import SQL_Scripts
 
 class DBHelper:
@@ -17,11 +17,11 @@ class DBHelper:
             print(e) 
 
     def setup(self):
-        setup_script=SQL_Scripts.setup_script_path
+        setup_script = COMMON.sqlDir + SQL_Scripts.setup_script
         self.executeScriptsFromFile(setup_script)
 
     def create_denorm_and_alerts(self):
-        setup_script=SQL_Scripts.denorm_and_alerts_script_path
+        setup_script = COMMON.sqlDir + SQL_Scripts.denorm_and_alerts_script
         self.executeScriptsFromFile(setup_script)
 
     def checkUser(self, chatId):

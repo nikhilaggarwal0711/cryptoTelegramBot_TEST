@@ -7,7 +7,7 @@ import time
 from decimal import Decimal
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
-
+from cryptoTelegramBot_TEST.config import COMMON
 
 class RunTelegram:
     def __init__(self):
@@ -491,6 +491,10 @@ class RunTelegram:
             except Exception as e: 
                 #print "Error while processing chat message"                            
                 print(e)
+                with open(COMMON.errorDir + TELEGRAM.errorFileName,'a+') as f:
+                    f.write("\n\nError : ")
+                    f.write(e.__doc__)
+                    f.write(e.message)
                 #print "Exception Caught"
             #sleep(self.sleepTime)
             sleep(30)
@@ -505,4 +509,8 @@ class RunTelegram:
             self.sendTelegramMessage()
         except Exception as e:
             print "Error while processing chat message"
-            print(e)        
+            print(e)      
+            with open(COMMON.errorDir + TELEGRAM.errorFileName,'a+') as f:
+                f.write("\n\nError : ")
+                f.write(e.__doc__)
+                f.write(e.message)  

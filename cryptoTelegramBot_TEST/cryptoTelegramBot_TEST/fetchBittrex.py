@@ -3,6 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
+from config import Bittrex,Coinmarketcap,Denorms,COMMON
 
 class FetchBittrex:
     def __init__(self):
@@ -84,6 +85,10 @@ class FetchBittrex:
                     print(e)
                     self.sleepTime = 2 *  self.sleepTime
                     #print "exception caught in while loop -- Bittrex"
+                    with open(COMMON.errorDir + Bittrex.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
 
                 #Fetch CoinMarketcap data.
                 try:
@@ -97,12 +102,20 @@ class FetchBittrex:
                 except Exception as e: 
                     print(e)
                     self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
 
                 #Creaete DENORM AND ALERT Tables
                 try:
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
                     print(e)
+                    with open(COMMON.errorDir + Denorms.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
 
                 sleep(self.sleepTime)
         except Exception as e: 
