@@ -96,7 +96,7 @@ CASE
   WHEN (COM.marketname="KNCBTC" OR COM.marketname="KNCBTC")                             AND CM.id="kingn-coin"    AND COM.exchange = "Binance"   THEN NULL
   WHEN (COM.marketname="RCNBNB" OR COM.marketname="RCNBTC" OR COM.marketname="RCNETH")  AND CM.id="rcoin"         AND COM.exchange = "Binance"   THEN NULL
   ELSE COM.marketname
-END AS marketname,
+END AS marketname, 
 CASE 
   WHEN COM.marketname="BTC-BAT"  AND CM.id="batcoin" AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
   WHEN COM.marketname="BTC-BTG"  AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
