@@ -280,6 +280,12 @@ SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower
 FROM bitfinex_dn
 WHERE   lower(substring(marketname,1,3)) <> "bcu"
 AND     lower(substring(marketname,1,3)) <> "rrt"
+UNION ALL
+SELECT 
+"Binance" AS exchange,marketname,price AS exchange_last_price,
+replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in
+FROM binance_dn
+WHERE   marketname not in ("123456" , "ETC")
 ) MKTS
 WHERE MKTS.marketname NOT IN ( SELECT marketname FROM price_denorm_t1 WHERE marketname IS NOT NULL GROUP BY marketname)
 ;
