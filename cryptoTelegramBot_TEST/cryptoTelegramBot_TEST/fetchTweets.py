@@ -91,7 +91,7 @@ class StdOutListener(StreamListener):
                         inReplyToScreenName = inReplyToScreenName.encode('utf-8') 
                     else:
                         print "insert tweet data"
-                        print data
+                        #print data
                         inReplyToScreenName = ""
                         db = DBHelper()
                         db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)

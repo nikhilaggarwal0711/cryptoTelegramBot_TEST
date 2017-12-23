@@ -27,9 +27,9 @@ class FetchBittrex:
 
         for x in range(0,length):
             ##print "Add data for loop  -- Binance"
-            print self.jsonList[x]["symbol"].encode('utf-8')
+            #print self.jsonList[x]["symbol"].encode('utf-8')
             self.MarketName = self.jsonList[x]["symbol"].encode('utf-8')
-            print self.jsonList[x]["price"]
+            #print self.jsonList[x]["price"]
             self.Price = self.jsonList[x]["price"]
 
             self.db.addBinance(self.MarketName,self.Price,self.fetchTime)    
@@ -150,7 +150,7 @@ class FetchBittrex:
 
                 #Populate tweets to final denorm
                 try:
-                    print "Insert denorm -- Tweets"
+                    #print "Insert denorm -- Tweets"
                     self.db.deleteFromDB_oldData("tweets")
                 except Exception as e: 
                     print "exception caught in while loop -- tweet denorm"
@@ -164,7 +164,7 @@ class FetchBittrex:
                                         
                 #Creaete DENORM AND ALERT Tables
                 try:
-                    print "Creating denorm"
+                    #print "Creating denorm"
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
                     print "exception caught in while loop -- denorms"
