@@ -173,6 +173,25 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
   WHERE lower(substring(marketname,1,3)) <> "rrt"
   AND lower(substring(marketname,1,3)) <> "bcu"  
 ) BF
+UNION ALL
+SELECT BN.marketname, 
+CASE
+ WHEN lower(BN.coin) = "iota" THEN "miota"
+ WHEN lower(BN.coin) = "yoyo" THEN "yoyow"
+ WHEN lower(BN.coin) = "bqx"  THEN "ethos"
+ WHEN lower(BN.coin) = "ven"  THEN "vet"
+ WHEN lower(BN.coin) = "bcc"  THEN "bch"
+ ELSE lower(BN.coin)
+END coin, 
+BN.exchange, BN.exchange_last_price, BN.exchange_last_price_in FROM
+(SELECT marketname,
+  LEFT(replace(lower(marketname),'usdt','us-'), CHAR_LENGTH(replace(lower(marketname),'usdt','us-'))-3) AS coin,
+  "binance" exchange,
+  price AS exchange_last_price,
+  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in 
+  FROM binance_dn
+) BN
+WHERE BN.coin not in ( '','123')
 ) COM
 ON lower(CM.symbol) = COM.coin) T1
 LEFT OUTER JOIN
