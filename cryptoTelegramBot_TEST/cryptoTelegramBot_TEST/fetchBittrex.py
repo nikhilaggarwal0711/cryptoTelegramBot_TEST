@@ -82,9 +82,10 @@ class FetchBittrex:
                     self.db.deleteFromDB_BKPonFetchTime("bittrex",self.delTillFetchTime)
                     self.sleepTime = sleepTime
                 except Exception as e:
+                    print "exception caught in while loop -- Bittrex"
                     print(e)
+                    print(e.message)
                     self.sleepTime = 2 *  self.sleepTime
-                    #print "exception caught in while loop -- Bittrex"
                     with open(COMMON.errorDir + Bittrex.errorFileName,'a+') as f:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
@@ -100,7 +101,9 @@ class FetchBittrex:
                     self.db.deleteFromDB_BKPonFetchTime("coinmarketcap",self.delTillFetchTime)
                     self.sleepTime = sleepTime
                 except Exception as e: 
+                    print "exception caught in while loop -- coinmarketcap"
                     print(e)
+                    print(e.message)
                     self.sleepTime = 2 * self.sleepTime
                     with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
                         f.write("\n\nError : ")
@@ -111,7 +114,9 @@ class FetchBittrex:
                 try:
                     self.db.create_denorm_and_alerts()
                 except Exception as e: 
+                    print "exception caught in while loop -- denorms"
                     print(e)
+                    print(e.message)
                     with open(COMMON.errorDir + Denorms.errorFileName,'a+') as f:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
@@ -119,5 +124,6 @@ class FetchBittrex:
 
                 sleep(self.sleepTime)
         except Exception as e: 
+            print "Exception caught in start function -- fetchBittrex"
             print(e)
-            #print "Exception caught in start function -- Bittrex"
+            print(e.message)

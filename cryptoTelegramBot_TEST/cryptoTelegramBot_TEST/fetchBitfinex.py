@@ -93,14 +93,16 @@ class FetchBitfinex:
                     self.deleteFromDB_BKPonFetchTime()
                     self.sleepTime = sleepTime
                 except Exception as e: 
-                    print(e)
                     self.sleepTime = 2 * self.sleepTime
-                    #print "exception caught in while loop -- Bitfinex"
+                    print "exception caught in while loop -- Bitfinex"
+                    print(e.message)
+                    print(e)
                     with open(COMMON.errorDir + Bitfinex.errorFileName,'a+') as f:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
                         f.write(e.message)
                 sleep(self.sleepTime)
         except Exception as e: 
+            print "Exception caught in start function -- Bitfinex"
             print(e)
-            #print "Exception caught in start function -- Bitfinex"
+            print(e.message)

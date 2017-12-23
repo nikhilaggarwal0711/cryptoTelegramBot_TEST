@@ -14,6 +14,7 @@ class DBHelper:
             print "Setting cursor now"
             self.DB = self.conn.cursor()
         except Exception as e: 
+            print "Error while starting curson from DBHelper constructor : DBHelper"
             print(e) 
             print(e.message)
 

@@ -51,7 +51,7 @@ class FetchTweets:
                 try:
                     stream.userstream(_with='nikhilCrypto')
                 except Exception, e:
-                    print "Error. Restarting Stream.... Error: "
+                    print "Error. Restarting Stream.... Error: Inside fetchTweets"
                     print e.__doc__
                     print e.message
                     self.sleepTime = self.sleepTime * 2
@@ -61,8 +61,9 @@ class FetchTweets:
                 #self.sleepTime = sleepTime
             except Exception as e: 
                 print(e)
+                print e.message
                 self.sleepTime = 2 * self.sleepTime
-                #print "exception caught in while loop -- Twitter"
+                print "exception caught in while loop -- Twitter"
             sleep(self.sleepTime)
 
 class StdOutListener(StreamListener):
