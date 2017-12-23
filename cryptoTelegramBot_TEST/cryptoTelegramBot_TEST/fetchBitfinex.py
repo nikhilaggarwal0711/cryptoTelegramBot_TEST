@@ -105,6 +105,6 @@ class FetchBitfinex:
                         f.write(e.message)
                 sleep(self.sleepTime)
         except Exception as e: 
-            #print "Exception caught in start function -- Bitfinex"
-            #print(e)
+            print "Exception caught in start function -- Bitfinex"
+            print(e)
             #print(e.message)
