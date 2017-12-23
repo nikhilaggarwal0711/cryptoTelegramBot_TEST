@@ -136,10 +136,8 @@ twitterMapping TW
 ON CM.id = TW.coinmarketcap_id
 LEFT OUTER JOIN
 ( SELECT screen_name,tweet_id,fetchtime AS tweet_fetchTime 
-  FROM tweets
+  FROM tweets_dn
   WHERE inReplyToScreenName="" 
-  AND (screen_name,fetchTime) 
-  IN ( SELECT screen_name,MAX(fetchTime) AS fetchTime FROM tweets WHERE inReplyToScreenName="" GROUP BY screen_name )
 ) TWEETS
 ON TW.twitter_screen_name = TWEETS.screen_name
 LEFT OUTER JOIN

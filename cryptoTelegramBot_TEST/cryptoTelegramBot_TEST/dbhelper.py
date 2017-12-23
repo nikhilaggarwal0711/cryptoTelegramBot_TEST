@@ -15,6 +15,7 @@ class DBHelper:
             self.DB = self.conn.cursor()
         except Exception as e: 
             print(e) 
+            print(e.message)
 
     def setup(self):
         setup_script = COMMON.sqlDir + SQL_Scripts.setup_script
@@ -104,6 +105,8 @@ class DBHelper:
     def deleteFromDB_oldData(self,tablename):
         if tablename == "coinmarketcap":
             col1 = "id"
+        elif tablename == "tweets":
+            col1 = "screen_name"
         else:
             col1 = "marketname"
         try:
