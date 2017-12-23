@@ -69,6 +69,13 @@ CASE
   WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN "coinmarketcap"
   WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "coinmarketcap"
   WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN "coinmarketcap"
+  WHEN (COM.marketname="BATBNB" OR COM.marketname="BATBTC" OR COM.marketname="BATETH")  AND CM.id="batcoin"       AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="BTGBTC" OR COM.marketname="BTGETH")                             AND CM.id="bitgem"        AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="CMTBNB" OR COM.marketname="CMTBTC" OR COM.marketname="CMTETH")  AND CM.id="comet"         AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="ICNBTC" OR COM.marketname="ICNETH")                             AND CM.id="icoin"         AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="ICXBNB" OR COM.marketname="ICXBTC" OR COM.marketname="ICXETH")  AND CM.id="icon-futures"  AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="KNCBTC" OR COM.marketname="KNCBTC")                             AND CM.id="kingn-coin"    AND COM.exchange = "Binance"   THEN "coinmarketcap"
+  WHEN (COM.marketname="RCNBNB" OR COM.marketname="RCNBTC" OR COM.marketname="RCNETH")  AND CM.id="rcoin"         AND COM.exchange = "Binance"   THEN "coinmarketcap"
   ELSE COALESCE(COM.exchange,"coinmarketcap")
 END AS exchange,
 CASE 
@@ -81,6 +88,13 @@ CASE
   WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN NULL
   WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN NULL
   WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN NULL
+  WHEN (COM.marketname="BATBNB" OR COM.marketname="BATBTC" OR COM.marketname="BATETH")  AND CM.id="batcoin"       AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="BTGBTC" OR COM.marketname="BTGETH")                             AND CM.id="bitgem"        AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="CMTBNB" OR COM.marketname="CMTBTC" OR COM.marketname="CMTETH")  AND CM.id="comet"         AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="ICNBTC" OR COM.marketname="ICNETH")                             AND CM.id="icoin"         AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="ICXBNB" OR COM.marketname="ICXBTC" OR COM.marketname="ICXETH")  AND CM.id="icon-futures"  AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="KNCBTC" OR COM.marketname="KNCBTC")                             AND CM.id="kingn-coin"    AND COM.exchange = "Binance"   THEN NULL
+  WHEN (COM.marketname="RCNBNB" OR COM.marketname="RCNBTC" OR COM.marketname="RCNETH")  AND CM.id="rcoin"         AND COM.exchange = "Binance"   THEN NULL
   ELSE COM.marketname
 END AS marketname,
 CASE 
@@ -93,6 +107,13 @@ CASE
   WHEN COM.marketname="USDT-BTG" AND CM.id="bitgem"  AND COM.exchange = "Bittrex"   THEN CM.exchange_last_price
   WHEN COM.marketname="btgusd"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN CM.exchange_last_price
   WHEN COM.marketname="btgbtc"   AND CM.id="bitgem"  AND COM.exchange = "Bitfinex"  THEN CM.exchange_last_price
+  WHEN (COM.marketname="BATBNB" OR COM.marketname="BATBTC" OR COM.marketname="BATETH")  AND CM.id="batcoin"       AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="BTGBTC" OR COM.marketname="BTGETH")                             AND CM.id="bitgem"        AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="CMTBNB" OR COM.marketname="CMTBTC" OR COM.marketname="CMTETH")  AND CM.id="comet"         AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="ICNBTC" OR COM.marketname="ICNETH")                             AND CM.id="icoin"         AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="ICXBNB" OR COM.marketname="ICXBTC" OR COM.marketname="ICXETH")  AND CM.id="icon-futures"  AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="KNCBTC" OR COM.marketname="KNCBTC")                             AND CM.id="kingn-coin"    AND COM.exchange = "Binance"   THEN CM.exchange_last_price
+  WHEN (COM.marketname="RCNBNB" OR COM.marketname="RCNBTC" OR COM.marketname="RCNETH")  AND CM.id="rcoin"         AND COM.exchange = "Binance"   THEN CM.exchange_last_price
   ELSE COALESCE(COM.exchange_last_price,CM.exchange_last_price)
 END AS exchange_last_price,
 CASE 
@@ -186,7 +207,7 @@ END coin,
 BN.exchange, BN.exchange_last_price, BN.exchange_last_price_in FROM
 (SELECT marketname,
   LEFT(replace(lower(marketname),'usdt','us-'), CHAR_LENGTH(replace(lower(marketname),'usdt','us-'))-3) AS coin,
-  "binance" exchange,
+  "Binance" exchange,
   price AS exchange_last_price,
   replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in 
   FROM binance_dn
