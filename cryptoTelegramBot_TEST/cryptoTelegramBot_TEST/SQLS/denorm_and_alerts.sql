@@ -432,7 +432,7 @@ id,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first,alert_price,price_
 ;
 DELETE FROM alerts_subscription_dn_ld;
 INSERT INTO alerts_subscription_dn_ld SELECT * FROM alerts_subscription_dn_ld_t1;
-
+ 
 delete from alerts_subscription_t1;
 INSERT INTO alerts_subscription_t1 (id,alert_fetchTime)  select id , max(alert_fetchTime) as alert_fetchTime from alerts_subscription_dn_ld group by id;
 delete from alerts_subscription_dn_ld where alert_fetchTime NOT IN ( select alert_fetchTime from alerts_subscription_t1 group by alert_fetchTime);
