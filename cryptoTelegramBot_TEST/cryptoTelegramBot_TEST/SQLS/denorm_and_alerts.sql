@@ -420,12 +420,23 @@ id,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first,alert_price,price_
 
 
 
+DELETE FROM alerts_subscription_dn_ld_t1;
+INSERT INTO alerts_subscription_dn_ld_t1 (
+id,chatId,alert_type,alert_fetchTime,coin_symbol,is_first,alert_price,price_in
+)
+SELECT
+id,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first,alert_price,price_in
+FROM alerts_subscription_dn_ld
+GROUP BY
+id,chatId,alert_type,new_alert_fetchTime,coin_symbol,is_first,alert_price,price_in
+;
+DELETE FROM alerts_subscription_dn_ld;
+INSERT INTO alerts_subscription_dn_ld SELECT * FROM alerts_subscription_dn_ld_t1;
 
 delete from alerts_subscription_t1;
 INSERT INTO alerts_subscription_t1 (id,alert_fetchTime)  select id , max(alert_fetchTime) as alert_fetchTime from alerts_subscription_dn_ld group by id;
 delete from alerts_subscription_dn_ld where alert_fetchTime NOT IN ( select alert_fetchTime from alerts_subscription_t1 group by alert_fetchTime);
 delete from alerts_subscription_dn_ld where (id,alert_fetchTime) NOT IN ( select id , alert_fetchTime from alerts_subscription_t1);
-
 
 RENAME TABLE alerts_subscription_dn TO alerts_subscription_dn_md;
 RENAME TABLE alerts_subscription_dn_ld TO alerts_subscription_dn;
