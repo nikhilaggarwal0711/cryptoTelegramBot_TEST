@@ -432,59 +432,67 @@ class RunTelegram:
                 newMarkets = self.db.get_newMarketListings()
                 allUsers = self.db.getAllUsers()
 
-                if not self.is_empty(newMarkets) :
-                    self.message = "New Market Added"
-                    for market in newMarkets:
-                        rank = str(market[0])
-                        symbol = str(market[1]).upper()
-                        name = str(market[2]).upper()
-                        exchange = str(market[3]).upper()
-                        marketname = str(market[4]).upper()
-                        exchange_last_price = str("%.9f" % Decimal(market[5]))
-                        cmc_price_usd = str("%.9f" % Decimal(market[6]))
-
-                        self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
-
-                    for user in allUsers:
-                        self.chatId = user[0]
-                        self.main_keyboard()
-                        self.sendTelegramMessage()
-                #Update is_new_market to NO , so that it wont be fetched again.
-                self.db.update_priceDenorm_marketTypes()
+                try:
+                    if not self.is_empty(newMarkets) and (newMarkets is not None) :
+                        self.message = "New Market Added"
+                        for market in newMarkets:
+                            rank = str(market[0])
+                            symbol = str(market[1]).upper()
+                            name = str(market[2]).upper()
+                            exchange = str(market[3]).upper()
+                            marketname = str(market[4]).upper()
+                            exchange_last_price = str("%.9f" % Decimal(market[5]))
+                            cmc_price_usd = str("%.9f" % Decimal(market[6]))
+    
+                            self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
+    
+                        for user in allUsers:
+                            self.chatId = user[0]
+                            self.main_keyboard()
+                            self.sendTelegramMessage()
+                        #Update is_new_market to NO , so that it wont be fetched again.
+                        self.db.update_priceDenorm_marketTypes()
+                except Exception as e:
+                    print "New markets alerts Exception "
+                    print e.message 
 
 #Send alerts 
-                for user in allUsers:
-                    alerts = self.db.getAlerts()
-                    if not self.is_empty(alerts):
-                        for alert in alerts:
-                            alert_id = str(alert[0])
-                            self.chatId = str(alert[1])
-                            alert_type = str(alert[2])
-                            coin_symbol = str(alert[3])
-                            alert_price = str("%.9f" % Decimal(alert[4]))
-                            price_in = str(alert[5])
-                            twitter_screen_name = str(alert[6])
-                            tweet_id = str(alert[7])
-                            coin_name = str(alert[8])
-                            exchange = str(alert[9])
-                            new_price = str("%.9f" % Decimal(alert[10]))
-
-                            if alert_type == "tweet":
-                                self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
-                                self.db.delete_send_alert(self.chatId, alert_id)
-                                self.main_keyboard()
-                                self.sendTelegramMessage()
-                            elif alert_type == "p_incr":
-                                self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
-                                self.db.delete_send_alert(self.chatId, alert_id)
-                                self.main_keyboard()
-                                self.sendTelegramMessage()
-                            elif alert_type == "p_decr":
-                                self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
-                                self.db.delete_send_alert(self.chatId, alert_id)
-                                self.main_keyboard()
-                                self.sendTelegramMessage()
-
+                try:
+                    for user in allUsers:
+                        alerts = self.db.getAlerts()
+                        print "ALERTS --> " + str(alerts)
+                        if not self.is_empty(alerts) and (alerts is not None):
+                            for alert in alerts:
+                                alert_id = str(alert[0])
+                                self.chatId = str(alert[1])
+                                alert_type = str(alert[2])
+                                coin_symbol = str(alert[3])
+                                alert_price = str("%.9f" % Decimal(alert[4]))
+                                price_in = str(alert[5])
+                                twitter_screen_name = str(alert[6])
+                                tweet_id = str(alert[7])
+                                coin_name = str(alert[8])
+                                exchange = str(alert[9])
+                                new_price = str("%.9f" % Decimal(alert[10]))
+    
+                                if alert_type == "tweet":
+                                    self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
+                                    self.db.delete_send_alert(self.chatId, alert_id)
+                                    self.main_keyboard()
+                                    self.sendTelegramMessage()
+                                elif alert_type == "p_incr":
+                                    self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.db.delete_send_alert(self.chatId, alert_id)
+                                    self.main_keyboard()
+                                    self.sendTelegramMessage()
+                                elif alert_type == "p_decr":
+                                    self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.db.delete_send_alert(self.chatId, alert_id)
+                                    self.main_keyboard()
+                                    self.sendTelegramMessage()
+                except Exception as e:
+                    print "Alerts Exception "
+                    print e.message 
 
                 newMarkets=""
                 allUsers=""
@@ -492,8 +500,9 @@ class RunTelegram:
                 self.setFetchTime() 
 
             except Exception as e: 
-                #print "Error while processing chat message"                            
+                print "Error while processing alerts"                            
                 print(e)
+                print e.message
                 with open(COMMON.errorDir + TELEGRAM.errorFileName,'a+') as f:
                     f.write("\n\nError : ")
                     f.write(e.__doc__)
