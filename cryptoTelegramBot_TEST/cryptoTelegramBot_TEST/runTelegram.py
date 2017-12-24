@@ -431,9 +431,9 @@ class RunTelegram:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
                 allUsers = self.db.getAllUsers()
-
+                print newMarkets
                 try:
-                    if not self.is_empty(newMarkets) and (newMarkets is not None) :
+                    if (not self.is_empty(newMarkets)) and (newMarkets is not None) :
                         self.message = "New Market Added"
                         for market in newMarkets:
                             rank = str(market[0])
@@ -461,7 +461,7 @@ class RunTelegram:
                     for user in allUsers:
                         alerts = self.db.getAlerts()
                         print "ALERTS --> " + str(alerts)
-                        if not self.is_empty(alerts) and (alerts is not None):
+                        if (not self.is_empty(alerts)) and (alerts is not None):
                             for alert in alerts:
                                 alert_id = str(alert[0])
                                 self.chatId = str(alert[1])
