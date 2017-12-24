@@ -60,8 +60,8 @@ class RunTelegram:
         self.updates = self.TelegramBot.getUpdates(offset=int(self.lastOffset)+1,timeout=60)
 
     def fetchData(self,message):
-        print "Inside fetchData -- Telegram -- Printing message......."
-        print message
+        #print "Inside fetchData -- Telegram -- Printing message......."
+        #print message
         self.text = message["text"]
         self.chatId = message["from"]["id"]
         self.offsetId = message["date"]
@@ -431,7 +431,7 @@ class RunTelegram:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
                 allUsers = self.db.getAllUsers()
-                print newMarkets
+                #print newMarkets
                 try:
                     if (not self.is_empty(newMarkets)) and (newMarkets is not None) :
                         self.message = "New Market Added"
@@ -463,7 +463,7 @@ class RunTelegram:
                 try:
                     for user in allUsers:
                         alerts = self.db.getAlerts()
-                        print "ALERTS --> " + str(alerts)
+                        #print "ALERTS --> " + str(alerts)
                         if (not self.is_empty(alerts)) and (alerts is not None):
                             for alert in alerts:
                                 alert_id = str(alert[0])
