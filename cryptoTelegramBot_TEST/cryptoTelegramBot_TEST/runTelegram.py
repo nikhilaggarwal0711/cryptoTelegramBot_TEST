@@ -442,7 +442,10 @@ class RunTelegram:
                             exchange = str(market[3]).upper()
                             marketname = str(market[4]).upper()
                             exchange_last_price = str("%.9f" % Decimal(market[5]))
-                            cmc_price_usd = str("%.9f" % Decimal(market[6]))
+                            if (not self.is_empty(market[6])) and (market[6] is not None) :
+                                cmc_price_usd = str("%.9f" % Decimal(market[6]))
+                            else:
+                                cmc_price_usd = "-"
     
                             self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
     
