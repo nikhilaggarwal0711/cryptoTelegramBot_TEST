@@ -356,7 +356,7 @@ select
 AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,0.0 AS alert_price,"btc" AS price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,"Coinmarketcap" AS exchange,0.0 AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
-price_denorm P_DN
+price_denorm_ld P_DN
 WHERE P_DN.tweet_fetchTime > AL.alert_fetchTime
 AND   AL.alert_type = "tweet"
 AND   AL.coin_symbol = P_DN.symbol
@@ -365,7 +365,7 @@ UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
-price_denorm P_DN
+price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
 AND   AL.coin_symbol = P_DN.symbol
@@ -375,7 +375,7 @@ UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
-price_denorm P_DN
+price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
 AND   AL.coin_symbol = P_DN.symbol
@@ -385,7 +385,7 @@ UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
-price_denorm P_DN
+price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
 AND   AL.coin_symbol = P_DN.symbol
@@ -395,7 +395,7 @@ UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
 JOIN
-price_denorm P_DN
+price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
 AND   AL.coin_symbol = P_DN.symbol
