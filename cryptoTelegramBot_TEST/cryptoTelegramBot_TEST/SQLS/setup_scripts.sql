@@ -46,5 +46,6 @@ CREATE TABLE IF NOT EXISTS  alerts_subscription_BKP (id int ,chatId text , alert
 CREATE TABLE IF NOT EXISTS  alerts_subscription_dn (id int,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
 CREATE TABLE IF NOT EXISTS  alerts_subscription_dn_ld (id int,chatId text , alert_type text, alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text);
 CREATE TABLE IF NOT EXISTS  alerts_subscription_t1 (id int, alert_fetchTime int);
+CREATE TABLE IF NOT EXISTS  alerts_subscription_dn_ld_t1 AS SELECT  * FROM alerts_subscription_dn_ld LIMIT 0;
 
 CREATE TABLE IF NOT EXISTS  send_alerts (alert_number int NOT NULL AUTO_INCREMENT,id int,chatId text , alert_type text, new_alert_fetchTime int , coin_symbol text,is_first text,alert_price decimal(18,9),price_in text,twitter_screen_name text,tweet_id text,coin_id text, coin_name text,exchange text,new_price decimal(18,9), PRIMARY KEY (alert_number));
