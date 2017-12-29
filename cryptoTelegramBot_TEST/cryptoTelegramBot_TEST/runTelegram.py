@@ -314,6 +314,7 @@ class RunTelegram:
             else:
                 self.message = "Thank you for your response !!"
                 self.del_last_command_map(self.chatId)
+                self.back_to_menu_keyboard()
         else :
             if self.chatId in self.LAST_COMMAND_MAP:
                 self.text = self.LAST_COMMAND_MAP[self.chatId] + " " + self.text
