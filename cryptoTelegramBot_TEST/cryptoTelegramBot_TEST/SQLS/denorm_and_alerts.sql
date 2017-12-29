@@ -355,7 +355,7 @@ COM.id,COM.chatId,COM.alert_type,COM.new_alert_fetchTime,COM.coin_symbol,COM.is_
 select 
 AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,0.0 AS alert_price,"btc" AS price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,"Coinmarketcap" AS exchange,0.0 AS new_price
 FROM alerts_subscription_dn_ld AL
-JOIN
+,
 price_denorm_ld P_DN
 WHERE P_DN.tweet_fetchTime > AL.alert_fetchTime
 AND   AL.alert_type = "tweet"
@@ -364,7 +364,7 @@ AND   P_DN.twitter_screen_name IS NOT NULL
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
-JOIN
+,
 price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
@@ -374,7 +374,7 @@ AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
-JOIN
+,
 price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price > AL.alert_price
 AND   AL.alert_type = "p_incr"
@@ -384,7 +384,7 @@ AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
-JOIN
+,
 price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
@@ -394,13 +394,33 @@ AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 UNION ALL
 select AL.id,AL.chatId,AL.alert_type,P_DN.created_at AS new_alert_fetchTime,AL.coin_symbol,"no" AS is_first,AL.alert_price,AL.price_in,P_DN.twitter_screen_name,P_DN.tweet_id,P_DN.id as coin_id,P_DN.name as coin_name,CASE WHEN lower(AL.price_in)='usd' THEN "Coinmarketcap" ELSE P_DN.exchange END AS exchange,CASE WHEN lower(AL.price_in)='usd' THEN P_DN.cmc_price_usd ELSE P_DN.exchange_last_price END AS new_price
 FROM alerts_subscription_dn_ld AL
-JOIN
+,
 price_denorm_ld P_DN
 WHERE P_DN.exchange_last_price < AL.alert_price
 AND   AL.alert_type = "p_decr"
 AND   AL.coin_symbol = P_DN.symbol
 AND   lower(AL.price_in) = lower(P_DN.exchange_last_price_in)
 AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
+UNION ALL
+SELECT
+AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,P_DN.symbol as coin_symbol,"no" AS is_first,0.0 AS alert_price,"btc" AS price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,"Coinmarketcap" AS exchange,0.0 AS new_price
+FROM alerts_subscription_dn_ld AL
+,
+(
+SELECT
+P_DN1.tweet_fetchTime,P_DN1.twitter_screen_name,P_DN1.tweet_id,P_DN1.id,P_DN1.name,P_DN1.symbol
+FROM
+price_denorm_ld P_DN1
+JOIN
+tweets_dn TW_DN
+ON P_DN1.tweet_id = TW_DN.tweet_id
+WHERE lower(TW_DN.tweet) like '%fork%' OR lower(TW_DN.tweet) like '%rebranding%'
+GROUP BY
+P_DN1.tweet_fetchTime,P_DN1.twitter_screen_name,P_DN1.tweet_id,P_DN1.id,P_DN1.name,P_DN1.symbol
+) P_DN
+WHERE P_DN.tweet_fetchTime > AL.alert_fetchTime
+AND   AL.alert_type = "special_tweet"
+AND   P_DN.twitter_screen_name IS NOT NULL
 ) COM
 GROUP BY
 COM.id,COM.chatId,COM.alert_type,COM.new_alert_fetchTime,COM.coin_symbol,COM.is_first,COM.alert_price,COM.price_in,COM.twitter_screen_name,COM.tweet_id,COM.coin_id,COM.coin_name,COM.exchange,COM.new_price

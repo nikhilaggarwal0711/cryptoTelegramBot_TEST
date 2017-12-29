@@ -454,7 +454,7 @@ class RunTelegram:
                                 cmc_price_usd = str("%.9f" % Decimal(market[6]))
                             else:
                                 cmc_price_usd = "-"
-    
+
                             self.message = self.message + "\n\nExchange : " + exchange + "\nMarket Name : "+marketname +"\nSymbol : "+symbol+"\nName : "+name+"\nRank : "+ rank +"\nLast Price : "+exchange_last_price+"\nActual Price in USD : " + cmc_price_usd
     
                         for user in allUsers:
@@ -471,6 +471,7 @@ class RunTelegram:
                 try:
                     for user in allUsers:
                         alerts = self.db.getAlerts()
+                        self.message = ""
                         #print "ALERTS --> " + str(alerts)
                         if (not self.is_empty(alerts)) and (alerts is not None):
                             for alert in alerts:
@@ -485,22 +486,29 @@ class RunTelegram:
                                 coin_name = str(alert[8])
                                 exchange = str(alert[9])
                                 new_price = str("%.9f" % Decimal(alert[10]))
-    
+
                                 if alert_type == "tweet":
-                                    self.message = "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
+                                    self.message = self.message + "<br>" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    self.main_keyboard()
-                                    self.sendTelegramMessage()
+                                    #self.main_keyboard()
+                                    #self.sendTelegramMessage()
                                 elif alert_type == "p_incr":
-                                    self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.message = self.message + "<br>" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    self.main_keyboard()
-                                    self.sendTelegramMessage()
+                                    #self.main_keyboard()
+                                    #self.sendTelegramMessage()
                                 elif alert_type == "p_decr":
-                                    self.message = "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.message = self.message + "<br>" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    self.main_keyboard()
-                                    self.sendTelegramMessage()
+                                    #self.main_keyboard()
+                                    #self.sendTelegramMessage()
+                                elif alert_type == "special_tweet" and (self.chatId == "443841255" or self.chat_id == "477750932" ):
+                                    self.message = self.message + "<br>" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted about FORK or REBRANDING : </a>"
+                                    self.db.delete_send_alert(self.chatId, alert_id)
+                                    #self.main_keyboard()
+                                    #self.sendTelegramMessage()
+                            self.main_keyboard()
+                            self.sendTelegramMessage()
                 except Exception as e:
                     print "Alerts Exception "
                     print e.message 
