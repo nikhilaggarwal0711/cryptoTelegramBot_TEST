@@ -502,7 +502,7 @@ class RunTelegram:
                                     self.db.delete_send_alert(self.chatId, alert_id)
                                     #self.main_keyboard()
                                     #self.sendTelegramMessage()
-                                elif alert_type == "special_tweet" and (self.chatId == "443841255" or self.chat_id == "477750932" ):
+                                elif alert_type == "special_tweet" and (self.chatId == "443841255" or self.chatId == "477750932" ):
                                     self.message = self.message + "<br>" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted about FORK or REBRANDING : </a>"
                                     self.db.delete_send_alert(self.chatId, alert_id)
                                     #self.main_keyboard()
