@@ -77,7 +77,7 @@ class StdOutListener(StreamListener):
                     tweet_id=str(config["id"]).encode('utf-8')
                     screen_name = config["user"]["screen_name"].encode('utf-8')
                     created_at = config["created_at"].encode('utf-8')
-                    #tweet = config["text"].encode('utf-8')
+                    tweet = config["text"].encode('utf-8')
                     inReplyToScreenName = config["in_reply_to_screen_name"]
                     
                     #config["retweeted_status"]["full_text"]
@@ -95,7 +95,7 @@ class StdOutListener(StreamListener):
                         inReplyToScreenName = ""
                         try:
                             db = DBHelper()
-                            db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),fetchTime)
+                            db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),tweet,fetchTime)
                             #db.closeConnection()
                         except Exception, e:
                             print "Error. Inside StdOutListener class.... Error: "

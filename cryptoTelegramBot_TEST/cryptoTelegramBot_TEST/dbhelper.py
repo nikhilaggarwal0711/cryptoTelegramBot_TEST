@@ -101,9 +101,9 @@ class DBHelper:
             print e.message
             print idd,name,symbol,rank,price_usd,price_btc,h24_volume_usd,market_cap_usd,available_supply,total_supply,percent_change_1h,percent_change_24h,percent_change_7d,last_updated,fetchTime
 
-    def insertIntoTweets(self, tweet_id, screen_name, created_at, inReplyToScreenName, fetchTime):
+    def insertIntoTweets(self, tweet_id, screen_name, created_at, inReplyToScreenName,tweet, fetchTime):
         try:
-            self.DB.execute("""INSERT INTO tweets (tweet_id, screen_name, created_at, inReplyToScreenName, fetchTime) VALUES (%s,%s,%s,%s,%s)""",(tweet_id,screen_name, created_at, inReplyToScreenName, int(fetchTime) ))
+            self.DB.execute("""INSERT INTO tweets (tweet_id, screen_name, created_at, inReplyToScreenName, tweet, fetchTime) VALUES (%s,%s,%s,%s,%s,%s)""",(tweet_id,screen_name, created_at, inReplyToScreenName,tweet, int(fetchTime) ))
             self.conn.commit()
         except Exception as e: 
             print(e) 

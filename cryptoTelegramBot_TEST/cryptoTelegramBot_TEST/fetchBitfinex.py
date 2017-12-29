@@ -10,7 +10,9 @@ class FetchBitfinex:
         #print "inside Bitfinex constructor"
         self.allSymbols_link = "https://api.bitfinex.com/v1/symbols"
         self.symbolDetails_link = "https://api.bitfinex.com/v1/pubticker/"
-        
+        #Version -2 will have following way of fetching data... need to check if symbol fetching will remain same ?
+        #https://api.bitfinex.com/v2/tickers?symbols=tBTCUSD,tLTCUSD,fUSD,tSANETH
+
         self.db = DBHelper()
         #self.db.setup()
         
