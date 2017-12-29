@@ -310,6 +310,7 @@ class RunTelegram:
             if len(self.textArray) == 1:            
                 self.set_last_command_map("/answer")
                 self.message="Please provide your response : "
+                self.keyboard=''
             else:
                 self.message = "Thank you for your response !!"
                 self.del_last_command_map(self.chatId)
