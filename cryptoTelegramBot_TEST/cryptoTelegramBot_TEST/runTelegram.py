@@ -461,7 +461,7 @@ class RunTelegram:
     
                         for user in allUsers:
                             self.chatId = user[0]
-                            self.main_keyboard()
+                            self.back_to_menu_keyboard()
                             self.sendTelegramMessage()
                         #Update is_new_market to NO , so that it wont be fetched again.
                         self.db.update_priceDenorm_marketTypes()
@@ -509,7 +509,7 @@ class RunTelegram:
                                     self.db.delete_send_alert(self.chatId, alert_id)
                                     #self.main_keyboard()
                                     #self.sendTelegramMessage()
-                            self.main_keyboard()
+                            self.back_to_menu_keyboard()
                             self.sendTelegramMessage()
                 except Exception as e:
                     print "Alerts Exception "
