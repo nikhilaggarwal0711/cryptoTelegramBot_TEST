@@ -59,6 +59,15 @@ class DBHelper:
         except Exception as e: 
             print(e)
 
+    def addCryptopia(self,marketname,last_price,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO cryptopia VALUES (%s,%s,%s)""",(marketname,float(last_price),fetchTime))
+            self.conn.commit()
+        except Exception as e:
+            print "Exception caught while Inserting data in cryptopia table"
+            print(e)
+            print e.message
+
     def addKucoin(self,coinType,symbol,lastDealPrice,fetchTime):
         #coinType --> symbol in DB table
         #symbol --> marketname in DB table

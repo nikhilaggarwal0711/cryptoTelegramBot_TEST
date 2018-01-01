@@ -3,7 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
-from config import Bittrex,Coinmarketcap,Denorms,COMMON,Binance,Twitter,Kucoin
+from config import Bittrex,Coinmarketcap,Denorms,COMMON,Binance,Twitter,Kucoin,Cryptopia
 
 class FetchBittrex:
     def __init__(self):
@@ -12,12 +12,29 @@ class FetchBittrex:
         self.link2 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
         self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
         self.link4 = "https://api.kucoin.com/v1/open/tick"
+        self.link5 = "https://www.cryptopia.co.nz/api/GetMarkets"
         self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
+
+    def fetchData_Cryptopia(self):
+        #print "fetchData -- Cryptopia"
+        self.f1 = requests.get(url = self.link5)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        length = len(json.loads(self.data)["Data"])
+
+        for x in range(0,length):
+            ##print "Add data for loop  -- Cryptopia"
+            self.marketname = self.jsonList["Data"][x]["Label"].encode('utf-8')
+            self.last_price = self.jsonList["Data"][x]["LastPrice"]
+
+            if self.trading == True:
+                #print "Inserting Data"
+                self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
 
     def fetchData_Kucoin(self):
         #print "fetchData -- Kucoin"
@@ -157,6 +174,25 @@ class FetchBittrex:
                     self.sleepTime = 2 * self.sleepTime
                     with open(COMMON.errorDir + Binance.errorFileName,'a+') as f:
                         f.write("\n\nBinance Error : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+                #Fetch Cryptopia data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Cryptopia()
+                    self.db.deleteFromDB_oldData("cryptopia")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("cryptopia",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e:
+                    print "exception caught in while loop -- Cryptopia"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Cryptopia.errorFileName,'a+') as f:
+                        f.write("\n\nCryptopia Error : ")
                         f.write(e.__doc__)
                         f.write(e.message)
 
