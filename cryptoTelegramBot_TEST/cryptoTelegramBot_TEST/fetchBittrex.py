@@ -32,9 +32,8 @@ class FetchBittrex:
             self.marketname = self.jsonList["Data"][x]["Label"].encode('utf-8')
             self.last_price = self.jsonList["Data"][x]["LastPrice"]
 
-            if self.trading == True:
-                #print "Inserting Data"
-                self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
+            #print "Inserting Data"
+            self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
 
     def fetchData_Kucoin(self):
         #print "fetchData -- Kucoin"
