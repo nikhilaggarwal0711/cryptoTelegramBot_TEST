@@ -46,7 +46,7 @@ class FetchBittrex:
             #self.low = self.jsonList["data"][x]["low"]
             #self.changeRate = self.jsonList["data"][x]["changeRate"]
 
-            if self.trading == "true":
+            if self.trading == True:
                 self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
 
     def fetchData_Binance(self):
