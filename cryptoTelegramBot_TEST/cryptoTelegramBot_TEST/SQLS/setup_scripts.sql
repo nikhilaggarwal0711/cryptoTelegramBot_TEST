@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS coinmarketcap ( id text,name text,symbol text,rank in
 
 CREATE TABLE IF NOT EXISTS bittrex ( marketname text,high decimal(18,9) ,low decimal(18,9) ,volume decimal(38,9) ,last decimal(18,9) ,basevolume decimal(38,9) ,timestampp text,bid decimal(18,9) ,ask decimal(18,9) ,openbuyorders int(11) ,opensellorders int(11) ,prevday decimal(18,9) ,created text,fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS binance ( marketname text,price decimal(18,9) ,fetchTime int(11) );
+CREATE TABLE IF NOT EXISTS kucoin  ( symbol text,marketname text,price decimal(18,9) ,fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS bitfinex (marketname text,mid decimal(18,9),bid decimal(18,9),ask decimal(18,9),last_price decimal(18,9),low decimal(18,9),high decimal(18,9),volume decimal(38,9), timestampp text,fetchTime int);
 CREATE TABLE IF NOT EXISTS poloniex (currencySymbol text,id text,name text,disabled int,delisted int,frozen int,fetchTime int);
 CREATE TABLE IF NOT EXISTS tweets (tweet_id text,screen_name text, created_at text, inReplyToScreenName text,fetchTime int);
@@ -25,10 +26,10 @@ CREATE TABLE IF NOT EXISTS binance_dn AS SELECT  * FROM binance LIMIT 0;
 CREATE TABLE IF NOT EXISTS binance_BKP AS SELECT  * FROM binance LIMIT 0;
 CREATE TABLE IF NOT EXISTS binance_t1 AS SELECT  * FROM binance LIMIT 0;
 
-CREATE TABLE IF NOT EXISTS bitfinex_dn_ld AS SELECT  * FROM bitfinex LIMIT 0;
-CREATE TABLE IF NOT EXISTS bitfinex_dn AS SELECT  * FROM bitfinex LIMIT 0;
-CREATE TABLE IF NOT EXISTS bitfinex_BKP AS SELECT  * FROM bitfinex LIMIT 0;
-CREATE TABLE IF NOT EXISTS bitfinex_t1 AS SELECT  * FROM bitfinex LIMIT 0;
+CREATE TABLE IF NOT EXISTS kucoin_dn_ld AS SELECT  * FROM kucoin LIMIT 0;
+CREATE TABLE IF NOT EXISTS kucoin_dn AS SELECT  * FROM kucoin LIMIT 0;
+CREATE TABLE IF NOT EXISTS kucoin_BKP AS SELECT  * FROM kucoin LIMIT 0;
+CREATE TABLE IF NOT EXISTS kucoin_t1 AS SELECT  * FROM kucoin LIMIT 0;
 
 CREATE TABLE IF NOT EXISTS tweets_dn_ld AS SELECT  * FROM tweets LIMIT 0;
 CREATE TABLE IF NOT EXISTS tweets_dn AS SELECT  * FROM tweets LIMIT 0;

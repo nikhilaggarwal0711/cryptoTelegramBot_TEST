@@ -473,7 +473,8 @@ class RunTelegram:
                 try:
                     for user in allUsers:
                         alerts = self.db.getAlerts()
-                        self.message = ""
+                        self.message = " "
+                        flag = 0
                         #print "ALERTS --> " + str(alerts)
                         if (not self.is_empty(alerts)) and (alerts is not None):
                             for alert in alerts:
@@ -490,27 +491,33 @@ class RunTelegram:
                                 new_price = str("%.9f" % Decimal(alert[10]))
 
                                 if alert_type == "tweet":
-                                    self.message = self.message + "\n" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
+                                    self.message = self.message + "\n\n" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted : </a>"
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    #self.main_keyboard()
-                                    #self.sendTelegramMessage()
+                                    self.back_to_menu_keyboard()
+                                    self.sendTelegramMessage()
+                                    flag = 0
                                 elif alert_type == "p_incr":
                                     self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    #self.main_keyboard()
+                                    flag = 1
+                                    #self.back_to_menu_keyboard()
                                     #self.sendTelegramMessage()
                                 elif alert_type == "p_decr":
                                     self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    #self.main_keyboard()
+                                    flag = 1
+                                    #self.back_to_menu_keyboard()
                                     #self.sendTelegramMessage()
-                                elif alert_type == "special_tweet" and (self.chatId == "443841255" or self.chatId == "477750932" ):
-                                    self.message = self.message + "\n" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted about FORK or REBRANDING : </a>"
+                                elif alert_type == "special_tweet":
+                                    self.message = self.message + "\n\n" + "<a href='https://twitter.com/"+twitter_screen_name+"/status/"+tweet_id+"'>"+coin_symbol +"("+coin_name+") tweeted something related to FORK or REBRANDING : </a>"
                                     self.db.delete_send_alert(self.chatId, alert_id)
-                                    #self.main_keyboard()
-                                    #self.sendTelegramMessage()
-                            self.back_to_menu_keyboard()
-                            self.sendTelegramMessage()
+                                    self.back_to_menu_keyboard()
+                                    self.sendTelegramMessage()
+                                    flag = 0
+                            
+                            if flag == 1:
+                                self.back_to_menu_keyboard()
+                                self.sendTelegramMessage()
                 except Exception as e:
                     print "Alerts Exception "
                     print e.message 

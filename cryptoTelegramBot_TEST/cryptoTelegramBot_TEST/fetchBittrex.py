@@ -3,7 +3,7 @@ import requests
 import json
 from dbhelper import  DBHelper
 from time import sleep
-from config import Bittrex,Coinmarketcap,Denorms,COMMON,Binance,Twitter
+from config import Bittrex,Coinmarketcap,Denorms,COMMON,Binance,Twitter,Kucoin
 
 class FetchBittrex:
     def __init__(self):
@@ -11,12 +11,42 @@ class FetchBittrex:
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
         self.link2 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
         self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
+        self.link4 = "https://api.kucoin.com/v1/open/tick"
         self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
+
+    def fetchData_Kucoin(self):
+        #print "fetchData -- Kucoin"
+        self.f1 = requests.get(url = self.link4)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        length = len(json.loads(self.data)["data"])
+
+        for x in range(0,length):
+            ##print "Add data for loop  -- Kucoin"
+            self.coinType = self.jsonList["data"][x]["coinType"].encode('utf-8')
+            self.trading = self.jsonList["data"][x]["trading"].encode('utf-8')
+            self.symbol = self.jsonList["data"][x]["symbol"].encode('utf-8')
+            self.lastDealPrice = self.jsonList["data"][x]["lastDealPrice"]
+            #self.buy = self.jsonList["data"][x]["buy"]
+            #self.sell = self.jsonList["data"][x]["sell"]
+            #self.change = self.jsonList["data"][x]["change"]
+            #self.coinTypePair = self.jsonList["data"][x]["coinTypePair"].encode('utf-8')
+            #self.sort = self.jsonList["data"][x]["sort"]
+            #self.feeRate = self.jsonList["data"][x]["feeRate"]
+            #self.volValue = self.jsonList["data"][x]["volValue"]
+            #self.high = self.jsonList["data"][x]["high"]
+            #self.datetime = self.jsonList["data"][x]["datetime"]
+            #self.vol = self.jsonList["data"][x]["vol"]
+            #self.low = self.jsonList["data"][x]["low"]
+            #self.changeRate = self.jsonList["data"][x]["changeRate"]
+
+            if self.trading == "true":
+                self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
 
     def fetchData_Binance(self):
         #print "fetchData -- Binance"
@@ -105,7 +135,7 @@ class FetchBittrex:
                     print(e.message)
                     self.sleepTime = 2 *  self.sleepTime
                     with open(COMMON.errorDir + Bittrex.errorFileName,'a+') as f:
-                        f.write("\n\nError : ")
+                        f.write("\n\nBittrex Error : ")
                         f.write(e.__doc__)
                         f.write(e.message)
 
@@ -124,7 +154,26 @@ class FetchBittrex:
                     print(e.message)
                     self.sleepTime = 2 * self.sleepTime
                     with open(COMMON.errorDir + Binance.errorFileName,'a+') as f:
-                        f.write("\n\nError : ")
+                        f.write("\n\nBinance Error : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+                #Fetch Kucoin data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Kucoin()
+                    self.db.deleteFromDB_oldData("kucoin")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("kucoin",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e:
+                    print "exception caught in while loop -- Kucoin"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Kucoin.errorFileName,'a+') as f:
+                        f.write("\n\nKucoin Error : ")
                         f.write(e.__doc__)
                         f.write(e.message)
 

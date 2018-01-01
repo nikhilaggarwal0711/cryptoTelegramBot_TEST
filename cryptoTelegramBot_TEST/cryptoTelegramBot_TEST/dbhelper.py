@@ -59,6 +59,17 @@ class DBHelper:
         except Exception as e: 
             print(e)
 
+    def addKucoin(self,coinType,symbol,lastDealPrice,fetchTime):
+        #coinType --> symbol in DB table
+        #symbol --> marketname in DB table
+        try:
+            self.DB.execute("""INSERT INTO kucoin VALUES (%s,%s,%s,%s)""",(coinType,symbol,float(lastDealPrice),fetchTime))
+            self.conn.commit()
+        except Exception as e:
+            print "Exception caught while Inserting data in kucoin table"
+            print(e)
+            print e.message
+
     def addBittrex(self,MarketName,High,Low,Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime):
         try:
             self.DB.execute("""INSERT INTO bittrex VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(MarketName,float(High),float(Low),Volume,Last,BaseVolume,TimeStamp,Bid,Ask,OpenBuyOrders,OpenSellOrders,PrevDay,Created,fetchTime))
