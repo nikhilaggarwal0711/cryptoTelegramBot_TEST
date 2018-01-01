@@ -29,7 +29,8 @@ class FetchBittrex:
         for x in range(0,length):
             ##print "Add data for loop  -- Kucoin"
             self.coinType = self.jsonList["data"][x]["coinType"].encode('utf-8')
-            self.trading = self.jsonList["data"][x]["trading"].encode('utf-8')
+            self.trading = self.jsonList["data"][x]["trading"]
+            print self.trading
             self.symbol = self.jsonList["data"][x]["symbol"].encode('utf-8')
             self.lastDealPrice = self.jsonList["data"][x]["lastDealPrice"]
             #self.buy = self.jsonList["data"][x]["buy"]
