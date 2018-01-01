@@ -30,7 +30,7 @@ class FetchBittrex:
             ##print "Add data for loop  -- Kucoin"
             self.coinType = self.jsonList["data"][x]["coinType"].encode('utf-8')
             self.trading = self.jsonList["data"][x]["trading"]
-            print self.trading
+            #print self.trading
             self.symbol = self.jsonList["data"][x]["symbol"].encode('utf-8')
             self.lastDealPrice = self.jsonList["data"][x]["lastDealPrice"]
             #self.buy = self.jsonList["data"][x]["buy"]
@@ -47,7 +47,7 @@ class FetchBittrex:
             #self.changeRate = self.jsonList["data"][x]["changeRate"]
 
             if self.trading == True:
-                print "Inserting Data"
+                #print "Inserting Data"
                 self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
 
     def fetchData_Binance(self):
