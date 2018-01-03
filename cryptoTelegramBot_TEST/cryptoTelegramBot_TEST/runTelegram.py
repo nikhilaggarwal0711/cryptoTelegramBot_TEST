@@ -498,13 +498,13 @@ class RunTelegram:
                                     self.message = " "
                                     flag = 0
                                 elif alert_type == "p_incr":
-                                    self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) increases &#9650; to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
                                     flag = 1
                                     #self.back_to_menu_keyboard()
                                     #self.sendTelegramMessage()
                                 elif alert_type == "p_decr":
-                                    self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
+                                    self.message = self.message + "\n" + "Price of " + coin_symbol.upper() + " ( " + coin_name + " ) decreases &#128315; to " + new_price + " " + price_in.upper() + " on " + exchange + " exchange."
                                     self.db.delete_send_alert(self.chatId, alert_id)
                                     flag = 1
                                     #self.back_to_menu_keyboard()
