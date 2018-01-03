@@ -404,7 +404,14 @@ AND   (P_DN.created_at - AL.alert_fetchTime) > 21600
 UNION ALL
 SELECT
 AL.id,AL.chatId,AL.alert_type,P_DN.tweet_fetchTime AS new_alert_fetchTime,P_DN.symbol as coin_symbol,"no" AS is_first,0.0 AS alert_price,"btc" AS price_in,P_DN.twitter_screen_name,P_DN.tweet_id AS tweet_id,P_DN.id AS coin_id,P_DN.name AS coin_name,"Coinmarketcap" AS exchange,0.0 AS new_price
-FROM alerts_subscription_dn_ld AL
+FROM 
+(
+SELECT "-1" id, "special_tweet" alert_type, BM.chatId , AS_DN.alert_fetchTime
+FROM
+( SELECT chatId FROM botMessages GROUP BY chatId ) BM
+,
+( SELECT  max(alert_fetchTime) alert_fetchTime FROM alerts_subscription_dn_ld WHERE alert_type="special_tweet" ) AS_DN
+)AL
 ,
 (
 SELECT
@@ -412,7 +419,7 @@ P_DN1.tweet_fetchTime,P_DN1.twitter_screen_name,P_DN1.tweet_id,P_DN1.id,P_DN1.na
 FROM
 price_denorm_ld P_DN1
 JOIN
-tweets_dn TW_DN
+tweets_dn_ld TW_DN
 ON P_DN1.tweet_id = TW_DN.tweet_id
 WHERE lower(TW_DN.tweet) like '%fork%' OR lower(TW_DN.tweet) like '%rebranding%'
 GROUP BY
