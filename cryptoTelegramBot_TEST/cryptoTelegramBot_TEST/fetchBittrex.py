@@ -29,11 +29,13 @@ class FetchBittrex:
 
         for x in range(0,length):
             ##print "Add data for loop  -- Cryptopia"
-            self.marketname = self.jsonList["Data"][x]["Label"].encode('utf-8')
-            self.last_price = self.jsonList["Data"][x]["LastPrice"]
-
-            #print "Inserting Data"
-            self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
+            try:
+                self.marketname = self.jsonList["Data"][x]["Label"].encode('utf-8')
+                self.last_price = self.jsonList["Data"][x]["LastPrice"]
+                #print "Inserting Data"
+                self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
+            except Exception as e:
+                print e.message
 
     def fetchData_Kucoin(self):
         #print "fetchData -- Kucoin"
@@ -44,28 +46,31 @@ class FetchBittrex:
 
         for x in range(0,length):
             ##print "Add data for loop  -- Kucoin"
-            self.coinType = self.jsonList["data"][x]["coinType"].encode('utf-8')
-            self.trading = self.jsonList["data"][x]["trading"]
-            #print self.trading
-            self.symbol = self.jsonList["data"][x]["symbol"].encode('utf-8')
-            self.lastDealPrice = self.jsonList["data"][x]["lastDealPrice"]
-            #self.buy = self.jsonList["data"][x]["buy"]
-            #self.sell = self.jsonList["data"][x]["sell"]
-            #self.change = self.jsonList["data"][x]["change"]
-            #self.coinTypePair = self.jsonList["data"][x]["coinTypePair"].encode('utf-8')
-            #self.sort = self.jsonList["data"][x]["sort"]
-            #self.feeRate = self.jsonList["data"][x]["feeRate"]
-            #self.volValue = self.jsonList["data"][x]["volValue"]
-            #self.high = self.jsonList["data"][x]["high"]
-            #self.datetime = self.jsonList["data"][x]["datetime"]
-            #self.vol = self.jsonList["data"][x]["vol"]
-            #self.low = self.jsonList["data"][x]["low"]
-            #self.changeRate = self.jsonList["data"][x]["changeRate"]
-
-            if self.trading == True:
-                #print "Inserting Data"
-                self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
-
+            try:
+                self.coinType = self.jsonList["data"][x]["coinType"].encode('utf-8')
+                self.trading = self.jsonList["data"][x]["trading"]
+                #print self.trading
+                self.symbol = self.jsonList["data"][x]["symbol"].encode('utf-8')
+                self.lastDealPrice = self.jsonList["data"][x]["lastDealPrice"]
+                #self.buy = self.jsonList["data"][x]["buy"]
+                #self.sell = self.jsonList["data"][x]["sell"]
+                #self.change = self.jsonList["data"][x]["change"]
+                #self.coinTypePair = self.jsonList["data"][x]["coinTypePair"].encode('utf-8')
+                #self.sort = self.jsonList["data"][x]["sort"]
+                #self.feeRate = self.jsonList["data"][x]["feeRate"]
+                #self.volValue = self.jsonList["data"][x]["volValue"]
+                #self.high = self.jsonList["data"][x]["high"]
+                #self.datetime = self.jsonList["data"][x]["datetime"]
+                #self.vol = self.jsonList["data"][x]["vol"]
+                #self.low = self.jsonList["data"][x]["low"]
+                #self.changeRate = self.jsonList["data"][x]["changeRate"]
+    
+                if self.trading == True:
+                    #print "Inserting Data"
+                    self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
+            except Exception as e:
+                print e.message
+ 
     def fetchData_Binance(self):
         #print "fetchData -- Binance"
         self.f1 = requests.get(url = self.link3)
