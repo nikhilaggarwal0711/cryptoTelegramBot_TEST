@@ -315,6 +315,10 @@ class RunTelegram:
                 self.message = "Thank you for your response !!"
                 self.del_last_command_map(self.chatId)
                 self.back_to_menu_keyboard()
+        elif self.textArray[0] == "/IamActive":
+            self.message = "Thank you for your response, we will update you very soon with your reward !!"
+            self.del_last_command_map(self.chatId)
+            self.back_to_menu_keyboard()
         else :
             if self.chatId in self.LAST_COMMAND_MAP:
                 self.text = self.LAST_COMMAND_MAP[self.chatId] + " " + self.text
