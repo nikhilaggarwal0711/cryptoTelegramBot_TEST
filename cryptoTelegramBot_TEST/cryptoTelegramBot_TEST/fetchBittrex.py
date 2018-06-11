@@ -13,7 +13,7 @@ class FetchBittrex:
         self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
         self.link4 = "https://api.kucoin.com/v1/open/tick"
         self.link5 = "https://www.cryptopia.co.nz/api/GetMarkets"
-        self.db = DBHelper()
+        #self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
@@ -138,12 +138,13 @@ class FetchBittrex:
 
             self.db.addCoinMarketCap(self.id,self.name,self.symbol,self.rank,self.price_usd,self.price_btc,self.h24_volume_usd,self.market_cap_usd,self.available_supply,self.total_supply,self.percent_change_1h,self.percent_change_24h,self.percent_change_7d,self.last_updated,self.fetchTime)
 
-        
+
     def start(self,sleepTime):
         #print "Start method -- Bittrex"
         self.sleepTime = sleepTime
         try:
             while True:
+                self.db = DBHelper()
                 try:
                     self.setFetchTime()
                     self.fetchData_Bittrex()
@@ -265,7 +266,8 @@ class FetchBittrex:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
                         f.write(e.message)
-
+                
+                self.db.closeConnection()
                 sleep(self.sleepTime)
         except Exception as e: 
             print "Exception caught in start function -- fetchBittrex"

@@ -13,7 +13,7 @@ class RunTelegram:
         #print "Inside telegram constructor -- Telegram"
         self.TOKEN = TELEGRAM.token
         self.TelegramBot = telepot.Bot(self.TOKEN)
-        self.db = DBHelper()
+        #self.db = DBHelper()
         #self.db.setup()
         self.category = "g"
         self.LAST_COMMAND_MAP = {}
@@ -38,7 +38,7 @@ class RunTelegram:
         self.keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Back to Menu",callback_data='backToMenu'),
                                                           ],
                                                          ])
-    
+
     def setup_pythonAnyWhere(self):
         #print "Inside setup method -- Telegram" 
         proxy_url = TELEGRAM.proxy_url
@@ -62,10 +62,18 @@ class RunTelegram:
     def fetchData(self,message):
         #print "Inside fetchData -- Telegram -- Printing message......."
         #print message
-        self.text = message["text"]
-        self.chatId = message["from"]["id"]
+        self.text = message["text"].encode('utf8')
+        self.text = self.text.replace("@mycoins_bot", "")
+        self.type = message["chat"]["type"]
+        if self.type == "group" or self.type=="supergroup" :
+            self.chatId = message["chat"]["id"]  #This represents group name
+            self.userId = message["from"]["id"]  
+        else:
+            self.chatId = message["from"]["id"]
+            self.userId = message["from"]["id"]
+
         self.offsetId = message["date"]
-        self.firstName = message["from"]["first_name"]
+        self.firstName = message["from"]["first_name"].encode('utf8')
 
     #Following function will return either new or old
     def checkUser(self):
@@ -78,8 +86,7 @@ class RunTelegram:
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
-        self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text)
-        
+        self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text , self.userId)
 
     def set_last_command_map(self,command):
         if self.chatId in self.LAST_COMMAND_MAP:
@@ -257,7 +264,7 @@ class RunTelegram:
                         price_in=str(alert[5]).upper()
 
                         if alert_type == "tweet":
-                            print "Inside TWEET CONDITION CHECK "
+                            #print "Inside TWEET CONDITION CHECK "
                             self.message = self.message + "Tweet alert : "+ coin_symbol + "\n To delete --> /del_alert__" + alert_id + "\n\n"
                         elif alert_type == "p_incr":
                             self.message = self.message + "Price Increase alert : "+ coin_symbol + " " + alert_price + " " + price_in.upper() + "\n To delete --> /del_alert__" + alert_id + "\n\n"
@@ -303,7 +310,7 @@ class RunTelegram:
                 self.message = "We will look into your suggestion. If selected, your referral link will be shared with 70% of our members and we will notify you."
                 self.del_last_command_map(self.chatId)                
         elif self.textArray[0] == "/help":
-            self.message = "I can help you managing your crypto currency world and earn a lot of BTC.\n\n<b>Commands Usage Example :</b>\n\n/check_tweet ETH\n/check_price ETH\n/set_alert_tweet ETH\n/set_alert_price_incr ETH 0.06 BTC\n/set_alert_price_decr ETH 0.03 BTC\n/suggest_2x_coin XEM Catapult Update, WeChat update, Easy 2x in a week Buy: Under 3000 satoshi StopLoss: 2500 satoshi \n/suggest_free_coin SPHERE YOUR_REFERRAL_LINK \n/feedback We LOVE your project. Keep Sharing.\n/report ISSUE_DESCRIPTION\n\n<b>Features</b> : \n1. New Market Addition on Exchange alert ( Bittrex, Bitfinex and Binance)\n2. Tweet alerts\n3. Price increase alerts\n4. Price decrease alerts\n5. Check last tweet\n6. Check last price\n7. Earn FREE BTC by suggesting 2x coin\n8. FREE coins/ Airdrop alerts\n9. DoubleTrouble -- Game to 100 BTC from 0.1 BTC9. New Market Addition alert ( Currently Bittrex, Bitfinex and Binance)\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates\n\n<b>Earning Model : </b>\n1. Suggest 2x coin\nIf you were the first one with proper justification of 2x coin and it works like that in a month, then you will earn 5% of total profit from admin for sure and 30% from all donations we will receive.\nCommission : 5% on profit + 30% on donation\n\n2. Suggest Free coins / Airdrops : \nSuggest free coin and we will share your referral link with 70% of our members. You will get huge referrals by letting us know.\n\n3. Free coins / Airdrops : \nCollect all Airdrops signals and you will have plenty of amount after a year. Slow but steady.\n\n\n<b>What is DoubleTrouble Game ?</b>\nYou just need 10 signals which can go 2x and only these 10 signals will increase your portfolio by 1000 times. Yes, you read that correct 1000 TIMES (1024 to be precise).\n\nWe are starting with 0.1 BTC and will take it to 100 BTC within a year.\nInstead of providing you 100 coins, we will provide you only 2 coins for a month. \nOne coin from top 50 and other below 150 rank. Keep 80 percent in first coin and 20 percent in second coin but only 50% of your portfolio.\n\nConsider you have 1 BTC then distribute it as : \nTotal Holding : 1 BTC\nFirst coin : 0.4\nSecond coin : 0.1\nRest 0.5 BTC should not be touched.\n\nWithin a year, I am expecting many millionaires in this group.\n\n<b>Donate : </b>\nBTC - 16YhanuEHv4UguTfTrD71383xxtwfaf4Hk\nETH - 0x50ca788af6cb75f48fc20feb324a6f02865ef3ff"
+            self.message = "I can help you managing your crypto currency world and earn a lot of BTC.\n\n<b>Commands Usage Example :</b>\n\n/check_tweet ETH\n/check_price ETH\n/set_alert_tweet ETH\n/set_alert_price_incr ETH 0.06 BTC\n/set_alert_price_decr ETH 0.03 BTC\n/suggest_2x_coin XEM Catapult Update, WeChat update, Easy 2x in a week Buy: Under 3000 satoshi StopLoss: 2500 satoshi \n/suggest_free_coin SPHERE YOUR_REFERRAL_LINK \n/feedback We LOVE your project. Keep Sharing.\n/report ISSUE_DESCRIPTION\n\n<b>Features</b> : \n1. New Market Addition on Exchange alert ( Bittrex, Bitfinex and Binance)\n2. Tweet alerts\n3. Price increase alerts\n4. Price decrease alerts\n5. Check last tweet\n6. Check last price\n7. Earn FREE BTC by suggesting 2x coin\n8. FREE coins/ Airdrop alerts\n9. DoubleTrouble -- Game to 100 BTC from 0.1 BTC9. New Market Addition alert ( Currently Bittrex, Bitfinex and Binance)\n\n<b>Future Upgrades</b> : \n1. More Exchanges \n2. Portfolio Tracker\n3. DoubleTrouble Game - More Updates\n4. Better UI\n5. Upcoming Coin updates\n\n<b>Earning Model : </b>\n1. Suggest 2x coin\nIf you were the first one with proper justification of 2x coin and it works like that in a month, then you will earn 5% of total profit from admin for sure and 30% from all donations we will receive.\nCommission : 5% on profit + 30% on donation\n\n2. Suggest Free coins / Airdrops : \nSuggest free coin and we will share your referral link with 70% of our members. You will get huge referrals by letting us know.\n\n3. Free coins / Airdrops : \nCollect all Airdrops signals and you will have plenty of amount after a year. Slow but steady.\n\n\n<b>What is DoubleTrouble Game ?</b>\nYou just need 10 signals which can go 2x and only these 10 signals will increase your portfolio by 1000 times. Yes, you read that correct 1000 TIMES (1024 to be precise).\n\nWe are starting with 0.1 BTC and will take it to 100 BTC within a year.\nInstead of providing you 100 coins, we will provide you only 2 coins for a month. \nOne coin from top 50 and other below 150 rank. Keep 80 percent in first coin and 20 percent in second coin but only 50% of your portfolio.\n\nConsider you have 1 BTC then distribute it as : \nTotal Holding : 1 BTC\nFirst coin : 0.4\nSecond coin : 0.1\nRest 0.5 BTC should not be touched.\n\nWithin a year, I am expecting many millionaires in this group.\n\n"
             self.back_to_menu_keyboard()
             self.del_last_command_map(self.chatId)
         elif self.textArray[0] == "/answer":
@@ -320,19 +327,23 @@ class RunTelegram:
             self.del_last_command_map(self.chatId)
             self.back_to_menu_keyboard()
         else :
-            if self.chatId in self.LAST_COMMAND_MAP:
+            if self.chatId < 0:
+                self.groupSilence = True;
+            elif self.chatId in self.LAST_COMMAND_MAP:
                 self.text = self.LAST_COMMAND_MAP[self.chatId] + " " + self.text
                 #print "New text" 
                 #print self.text
                 #self.del_last_command_map(self.chatId)
                 self.handleUpdate()
             else:
-                self.main_keyboard()
-                self.message = "Please choose from below menu"
+                    self.main_keyboard()
+                    self.message = "Please choose from below menu"
 
     def sendTelegramMessage(self):
         ##print "Inside sendTelegramMessage -- Telegram"
         try:
+            if self.chatId < 0 or str(self.chatId).startswith("-"):
+                self.keyboard=''
             self.TelegramBot.sendMessage(parse_mode='HTML',chat_id=self.chatId,text=self.message,reply_markup=self.keyboard)
         except Exception as e:
             print(e)
@@ -342,7 +353,7 @@ class RunTelegram:
 
     def insertIntoBitfinex_DB(self, marketName , fetchTime):
         self.db.insertIntoBitfinex_DuplicateRow(marketName , fetchTime)
-            
+
     def insertIntoPoloniex_DB(self, currencySymbol , fetchTime):
         self.db.insertIntoPoloniex_DuplicateRow(currencySymbol , fetchTime)
 
@@ -356,6 +367,7 @@ class RunTelegram:
 
 
     def on_callback_query(self,msg):
+        self.db = DBHelper()
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
         print "MESSAGE"
         print msg
@@ -435,12 +447,14 @@ class RunTelegram:
             self.main_keyboard()
             self.message = "Please choose from below option"
             self.TelegramBot.editMessageReplyMarkup(tup,reply_markup=self.keyboard)
+        self.db.closeConnection()
 
 
     def start(self,sleepTime):
         #print "Start method -- Telegram"
         self.sleepTime = sleepTime
         while True:
+            self.db = DBHelper()
             try:
 #               Send New Market Notification
                 newMarkets = self.db.get_newMarketListings()
@@ -465,7 +479,6 @@ class RunTelegram:
     
                         for user in allUsers:
                             self.chatId = user[0]
-                            self.back_to_menu_keyboard()
                             self.sendTelegramMessage()
                         #Update is_new_market to NO , so that it wont be fetched again.
                         self.db.update_priceDenorm_marketTypes()
@@ -543,16 +556,26 @@ class RunTelegram:
                     f.write(e.message)
                 #print "Exception Caught"
             #sleep(self.sleepTime)
+            self.db.closeConnection()
             sleep(30)
 
     def on_chat_message(self,msg):
         try:
-            self.setFetchTime()
+            self.groupSilence = False  #to stop replying on messages in groups which are not commands related to this bot
             self.fetchData(msg)
-            #print "Offset : " + str(self.lastOffset)
-            self.handleUpdate()
-            self.addBotMessageInDB()
-            self.sendTelegramMessage()
+            if self.chatId > 0 and self.chatId not in self.LAST_COMMAND_MAP and not self.text.startswith("/") :
+                self.back_to_menu_keyboard()
+                self.message = "Please choose from below menu"
+                self.sendTelegramMessage()
+            else:
+                self.db = DBHelper()
+                self.setFetchTime()
+                #print "Offset : " + str(self.lastOffset)
+                self.handleUpdate()
+                self.addBotMessageInDB()
+                if self.groupSilence == False:
+                    self.sendTelegramMessage()
+                self.db.closeConnection()
         except Exception as e:
             print "Error while processing chat message"
             print(e)      

@@ -8,7 +8,7 @@ class FetchPoloniex:
     def __init__(self):
         print "inside Poloniex constructor"
         self.link1 = "https://poloniex.com/public?command=returnCurrencies"
-        self.db = DBHelper()
+        #self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
@@ -68,6 +68,7 @@ class FetchPoloniex:
         self.sleepTime = sleepTime
         try:
             while True:
+                self.db = DBHelper()
                 try:
                     self.setFetchTime()
                     self.fetchData()
@@ -79,6 +80,7 @@ class FetchPoloniex:
                     print(e)
                     self.sleepTime = 2 * self.sleepTime
                     print "exception caught in while loop -- Poloniex"
+                self.db.closeConnection()
                 sleep(self.sleepTime)
         except Exception as e: 
             print(e)

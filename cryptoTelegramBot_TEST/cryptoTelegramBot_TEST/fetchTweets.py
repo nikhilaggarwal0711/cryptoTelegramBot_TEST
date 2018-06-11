@@ -13,8 +13,8 @@ from config import Twitter,COMMON
 #This is a basic listener that just prints received tweets to stdout.
 class FetchTweets:
     def __init__(self):
-        #print "inside Twitter constructor"
-        self.db = DBHelper()
+        print "inside Twitter constructor"
+        #self.db = DBHelper()
         #self.db.setup()
     
     def setFetchTime(self):
@@ -37,6 +37,7 @@ class FetchTweets:
         #print "Start method -- Twitter"
         self.sleepTime = sleepTime
         while True:
+            self.db = DBHelper()
             try:
                 print "Waiting for " + str(self.sleepTime) + " seconds before trying .... "
                 time.sleep(self.sleepTime)
@@ -64,6 +65,7 @@ class FetchTweets:
                 print e.message
                 self.sleepTime = 2 * self.sleepTime
                 print "exception caught in while loop -- Twitter"
+            self.db.closeConnection()
             sleep(self.sleepTime)
 
 class StdOutListener(StreamListener):

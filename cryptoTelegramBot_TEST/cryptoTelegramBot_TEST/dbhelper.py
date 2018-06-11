@@ -51,10 +51,10 @@ class DBHelper:
                 lastOffset = lastOffset[0]
         return lastOffset
 
-    def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text):
+    def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text, userId):
         ##print "Inside addBotMessage -- DBHELPER"
         try:
-            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message) VALUES (%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text))
+            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message, userId) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text, userId))
             self.conn.commit()
         except Exception as e: 
             print(e)

@@ -13,7 +13,7 @@ class FetchBitfinex:
         #Version -2 will have following way of fetching data... need to check if symbol fetching will remain same ?
         #https://api.bitfinex.com/v2/tickers?symbols=tBTCUSD,tLTCUSD,fUSD,tSANETH
 
-        self.db = DBHelper()
+        #self.db = DBHelper()
         #self.db.setup()
         
     def setFetchTime(self):
@@ -88,6 +88,7 @@ class FetchBitfinex:
         self.sleepTime = sleepTime
         try:
             while True:
+                self.db = DBHelper()
                 try:
                     #print "inserting again."
                     self.setFetchTime()
@@ -105,6 +106,7 @@ class FetchBitfinex:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
                         f.write(e.message)
+                self.db.closeConnection()
                 sleep(self.sleepTime)
         except Exception as e: 
             print "Exception caught in start function -- Bitfinex"

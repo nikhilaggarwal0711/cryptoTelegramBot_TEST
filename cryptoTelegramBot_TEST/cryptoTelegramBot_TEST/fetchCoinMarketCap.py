@@ -10,7 +10,7 @@ class FetchCoinMarketCap:
     def __init__(self):
         #print "Inside fetchCoinmarketcap constructor"
         self.link1 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
-        self.db = DBHelper()
+        #self.db = DBHelper()
         #self.db.setup()
     
     def setFetchTime(self):
@@ -66,6 +66,7 @@ class FetchCoinMarketCap:
         self.sleepTime = sleepTime
         try:
             while True:
+                self.db = DBHelper()
                 try:
                     self.setFetchTime()
                     self.fetchData()
@@ -75,7 +76,8 @@ class FetchCoinMarketCap:
                 except Exception as e: 
                     print(e)
                     self.sleepTime = 2 * self.sleepTime
-                    #print "exception caught in while loop"            
+                    #print "exception caught in while loop"   
+                self.db.closeConnection()         
                 sleep(self.sleepTime)
 
         except Exception as e: 
