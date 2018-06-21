@@ -93,6 +93,13 @@ class DBHelper:
         except Exception as e: 
             print(e) 
 
+    def addIdex(self,MarketName,Price,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO idex VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addPoloniex(self,currencySymbol,idd,name,disabled,delisted,frozen,fetchTime):
         try:
             self.DB.execute("""INSERT INTO poloniex VALUES (%s,%s,%s,%s,%s,%s,%s)""",(currencySymbol,idd,name,disabled,delisted,frozen,fetchTime))
@@ -140,6 +147,7 @@ class DBHelper:
         if tablename == "coinmarketcap":
             col1 = "id"
             col2 = "fetchTime"
+            self.DB.execute("DELETE FROM "+  tablename + "_dn_ld") #Deleting data from ld otherwise old ids were getting stuck in table.. need to generalise this below.
         elif tablename == "tweets":
             col1 = "screen_name"
             col2 = "tweet_id"
@@ -216,10 +224,24 @@ class DBHelper:
         currencySymbol = str(currencySymbol).lower()
         print "Inside fetchPrice method" + str(currencySymbol)
         try:
-            self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
+            #self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
+            self.DB.execute("SELECT symbol, name , cmc_price_usd , cmc_price_btc , cmc_percent_change_24h , cmc_market_cap_usd , cmc_24h_volume_usd , exchange , exchange_last_price, upper(exchange_last_price_in) , cmc_percent_change_1h , cmc_percent_change_7d, rank FROM price_denorm WHERE lower(symbol) = lower(%s) and (exchange_last_price_in =\"btc\" or ( exchange_last_price_in =\"eth\" and exchange =\"idex\")) order by rank,exchange_last_price_in",[currencySymbol])
             print "Inside try block : After executing query"
             prices = self.DB.fetchall()
             print "fetched result" + str(prices)
+            return prices
+        except Exception as e: 
+            print(e) 
+    
+    def fetchPrice_not_on_CMC(self,currencySymbol):
+        currencySymbol = str(currencySymbol).lower()
+        #print "Inside fetchPrice_not_on_CMC method" + str(currencySymbol)
+        try:
+            #self.DB.execute("SELECT name,exchange,exchange_last_price,upper(exchange_last_price_in),cmc_price_usd FROM price_denorm WHERE lower(symbol) = lower(%s) and exchange_last_price_in =\"btc\" ",[currencySymbol])
+            self.DB.execute("SELECT exchange, marketname, exchange_last_price, exchange_last_price_in FROM price_denorm WHERE id = \"-\" and marketname like %s ORDER BY exchange, exchange_last_price_in",("%" + currencySymbol + "%",))
+            #print "Inside try block : After executing query"
+            prices = self.DB.fetchall()
+            #print "fetched result" + str(prices)
             return prices
         except Exception as e: 
             print(e) 
@@ -235,6 +257,26 @@ class DBHelper:
         try:
             #print "fetching data"
             self.DB.execute("SELECT id,chatId,alert_type,coin_symbol,alert_price,price_in FROM alerts_subscription_dn WHERE chatId=%s order by chatId,alert_type,id,coin_symbol,alert_price,price_in",[chatId] )
+            #print "DATA FETCHED........"
+            alerts = self.DB.fetchall()
+            return alerts
+        except Exception as e: 
+            print(e) 
+
+    def top_coins(self):
+        try:
+            #print "fetching data"
+            self.DB.execute("SELECT symbol,name,cmc_percent_change_24h from price_denorm where rank<200  group by symbol, name,cmc_percent_change_24h order by cmc_percent_change_24h desc limit 10")
+            #print "DATA FETCHED........"
+            alerts = self.DB.fetchall()
+            return alerts
+        except Exception as e: 
+            print(e) 
+
+    def bottom_coins(self):
+        try:
+            #print "fetching data"
+            self.DB.execute("SELECT symbol,name,cmc_percent_change_24h from price_denorm where rank<200  group by symbol, name,cmc_percent_change_24h order by cmc_percent_change_24h asc limit 10")
             #print "DATA FETCHED........"
             alerts = self.DB.fetchall()
             return alerts
@@ -268,7 +310,15 @@ class DBHelper:
 
     def get_newMarketListings(self):
         try:
-            self.DB.execute("SELECT rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd FROM price_denorm WHERE is_new_market = \"yes\" GROUP BY rank,symbol,name,exchange,marketname,exchange_last_price,cmc_price_usd")
+            self.DB.execute("SELECT rank,symbol,name,exchange,cmc_price_usd,GROUP_CONCAT(marketname SEPARATOR ', ') AS marketname FROM price_denorm WHERE is_new_market = \"yes\" GROUP BY rank,symbol,name,exchange,cmc_price_usd")
+            newMarkets = self.DB.fetchall()
+            return newMarkets
+        except Exception as e: 
+            print(e) 
+
+    def get_newMarketListings_for_groups(self):
+        try:
+            self.DB.execute("SELECT F_DN.exchange , GROUP_CONCAT(F_DN.symbol SEPARATOR ', ') AS symbol FROM (SELECT N_DN.exchange, N_DN.symbol FROM (select N_MKT.exchange , N_MKT.symbol , P_DN.is_new_market FROM (select exchange , symbol from price_denorm where is_new_market = \"yes\" and exchange <> \"Coinmarketcap\" group by exchange , symbol) N_MKT JOIN (select exchange , symbol , is_new_market from price_denorm group by exchange ,symbol ,is_new_market) P_DN ON  N_MKT.exchange = P_DN.exchange AND N_MKT.symbol = P_DN.symbol ) N_DN group by N_DN.exchange , N_DN.symbol  having count(N_DN.is_new_market)=1) F_DN GROUP BY F_DN.exchange")
             newMarkets = self.DB.fetchall()
             return newMarkets
         except Exception as e: 

@@ -1,8 +1,14 @@
 from myThread import MyThread
 from dbhelper import  DBHelper
+from config import COMMON
+from time import gmtime,strftime
+
 
 def main():
     #print "inside main "
+    with open(COMMON.errorDir + "STARTING_Application_LOGS.txt",'a+') as f:
+        f.write("Application Started at : " + strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime()) + "\n")
+
     db = DBHelper()
     db.setup()
     db.closeConnection()

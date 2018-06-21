@@ -37,7 +37,7 @@ class FetchTweets:
         #print "Start method -- Twitter"
         self.sleepTime = sleepTime
         while True:
-            self.db = DBHelper()
+            #self.db = DBHelper()
             try:
                 print "Waiting for " + str(self.sleepTime) + " seconds before trying .... "
                 time.sleep(self.sleepTime)
@@ -65,7 +65,7 @@ class FetchTweets:
                 print e.message
                 self.sleepTime = 2 * self.sleepTime
                 print "exception caught in while loop -- Twitter"
-            self.db.closeConnection()
+            #self.db.closeConnection()
             sleep(self.sleepTime)
 
 class StdOutListener(StreamListener):
@@ -98,17 +98,17 @@ class StdOutListener(StreamListener):
                         try:
                             db = DBHelper()
                             db.insertIntoTweets(tweet_id,screen_name,created_at,str(inReplyToScreenName),tweet,fetchTime)
-                            #db.closeConnection()
+                            db.closeConnection()
                         except Exception, e:
-                            print "Error. Inside StdOutListener class.... Error: "
+                            print "Error. Inside StdOutListener class....After try to enter data in database Error: "
                             print e.__doc__
                             print e.message
-                            #db.closeConnection()
                             with open(COMMON.errorDir + Twitter.errorFileName,'a+') as f:
                                 f.write("\n\nTwitter Write to DB Error : ")
                                 f.write(data)
                                 f.write(e.__doc__)
                                 f.write(e.message)
+                            db.closeConnection()
                         #print "inReplyToScreenName --> " + inReplyToScreenName
 
                     #db.deleteFromDB_oldData("tweets")

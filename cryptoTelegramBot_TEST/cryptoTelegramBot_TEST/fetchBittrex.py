@@ -13,6 +13,7 @@ class FetchBittrex:
         self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
         self.link4 = "https://api.kucoin.com/v1/open/tick"
         self.link5 = "https://www.cryptopia.co.nz/api/GetMarkets"
+        self.link6 = "https://api.idex.market/returnTicker"
         #self.db = DBHelper()
         #self.db.setup()
 
@@ -86,6 +87,24 @@ class FetchBittrex:
             self.Price = self.jsonList[x]["price"]
 
             self.db.addBinance(self.MarketName,self.Price,self.fetchTime)    
+
+
+    def fetchData_Idex(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link6)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        #length = len(self.jsonList)
+
+        for elem in self.jsonList:
+            ##print "For loop  -- Idex"
+            #print elem.encode('utf-8')
+            self.MarketName = elem.encode('utf-8')
+            #print self.jsonList[self.MarketName]["last"].encode('utf-8')
+            self.Price = self.jsonList[self.MarketName]["last"].encode('utf-8')
+            if self.Price == "N/A":
+                self.Price = 0
+            self.db.addIdex(self.MarketName,self.Price,self.fetchTime)
 
 
     def fetchData_Bittrex(self):
@@ -231,6 +250,26 @@ class FetchBittrex:
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print "exception caught in while loop -- coinmarketcap"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch IDEX data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Idex()
+                    self.db.deleteFromDB_oldData("idex")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("idex",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- idex"
                     print(e)
                     print(e.message)
                     self.sleepTime = 2 * self.sleepTime
