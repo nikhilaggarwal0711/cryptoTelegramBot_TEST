@@ -1,3 +1,20 @@
+DROP TABLE IF EXISTS exchange_last_fetch;
+CREATE TABLE IF NOT EXISTS exchange_last_fetch AS
+select "Coinmarketcap" AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  coinmarketcap_dn    UNION ALL
+select "Binance"       AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  binance_dn    UNION ALL
+select "Bittrex"       AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  bittrex_dn    UNION ALL
+select "Kucoin"        AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  kucoin_dn    UNION ALL
+select "Cryptopia"     AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  cryptopia_dn    UNION ALL
+select "Hitbtc"        AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  hitbtc_dn    UNION ALL
+select "Idex"          AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  idex_dn    UNION ALL
+select "Bitbns"    AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  bitbns_dn    UNION ALL
+select "Zebpay"    AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  zebpay_dn    UNION ALL
+select "Koinex"    AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  koinex_dn    UNION ALL
+select "Coindelta" AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  coindelta_dn UNION ALL
+select "WazirX"    AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  wazirx_dn    UNION ALL
+select "Unocoin"   AS exchange,"Indian" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  unocoin_dn ;
+
+
 INSERT INTO price_denorm_BKP SELECT * FROM price_denorm;
 
 drop table if exists price_denorm_temp1;
@@ -172,6 +189,70 @@ LEFT OUTER JOIN
 ON TW.twitter_screen_name = TWEETS.screen_name
 LEFT OUTER JOIN
 (
+SELECT BT_DN.marketname, BT_DN.coin, BT_DN.exchange, BT_DN.exchange_last_price, BT_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'-',1)) AS coin,  
+  "Bitbns" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  FROM bitbns_dn 
+) BT_DN
+UNION ALL
+SELECT ZP_DN.marketname, ZP_DN.coin, ZP_DN.exchange, ZP_DN.exchange_last_price, ZP_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'-',1)) AS coin,  
+  "Zebpay" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  FROM zebpay_dn 
+) ZP_DN
+UNION ALL
+SELECT KN_DN.marketname, KN_DN.coin, KN_DN.exchange, KN_DN.exchange_last_price, KN_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'-',1)) AS coin,  
+  "Koinex" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  FROM koinex_dn 
+) KN_DN
+UNION ALL
+SELECT CD_DN.marketname, CD_DN.coin, CD_DN.exchange, CD_DN.exchange_last_price, CD_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'-',1)) AS coin,  
+  "Coindelta" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  FROM coindelta_dn 
+) CD_DN
+UNION ALL
+SELECT WX_DN.marketname, WX_DN.coin, WX_DN.exchange, WX_DN.exchange_last_price, WX_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'/',1)) AS coin,  
+  "WazirX" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in
+  FROM wazirx_dn 
+) WX_DN
+UNION ALL
+SELECT UC_DN.marketname, UC_DN.coin, UC_DN.exchange, UC_DN.exchange_last_price, UC_DN.exchange_last_price_in FROM
+(SELECT marketname,
+  lower(substring_index(marketname,'-',1)) AS coin,  
+  "Unocoin" exchange,
+  price AS exchange_last_price,
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  FROM unocoin_dn 
+) UC_DN
+UNION ALL
+SELECT HIT_DN.marketname, HIT_DN.coin, HIT_DN.exchange, HIT_DN.exchange_last_price, HIT_DN.exchange_last_price_in FROM
+( SELECT 
+  marketname,
+  LEFT(replace(lower(marketname),'usdt','us-'), CHAR_LENGTH(replace(lower(marketname),'usdt','us-'))-3) AS coin,
+  "Hitbtc" exchange,
+  price AS exchange_last_price,
+  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in 
+  FROM hitbtc_dn
+) HIT_DN
+UNION ALL
 SELECT C_DN.marketname, C_DN.coin, C_DN.exchange, C_DN.exchange_last_price, C_DN.exchange_last_price_in FROM
 ( SELECT 
   marketname,
@@ -320,6 +401,29 @@ SELECT
 99999 AS rank,"-" AS id,"-" AS symbol,"-" AS name,MKTS.exchange,MKTS.marketname,MKTS.exchange_last_price,MKTS.exchange_last_price_in,"yes" AS is_new_market,unix_timestamp() AS created_at
 FROM
 (
+SELECT "Bitbns" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+FROM bitbns_dn
+UNION ALL
+SELECT "Zebpay" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+FROM zebpay_dn
+UNION ALL
+SELECT "Koinex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+FROM koinex_dn
+UNION ALL
+SELECT "Coindelta" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+FROM coindelta_dn
+UNION ALL
+SELECT "Wazirx" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in 
+FROM wazirx_dn
+UNION ALL
+SELECT "Unocoin" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+FROM unocoin_dn
+UNION ALL
+SELECT 
+"Hitbtc" AS exchange,marketname,price AS exchange_last_price,
+replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in
+FROM hitbtc_dn
+UNION ALL
 SELECT "Idex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'_',1)) AS exchange_last_price_in 
 FROM idex_dn
 UNION ALL
@@ -387,6 +491,16 @@ COM.cmc_percent_change_7d,
 COM.is_new_market,
 COM.created_at
 ;
+
+DROP TABLE IF EXISTS price_denorm_new_exchange_check;
+CREATE TABLE IF NOT EXISTS price_denorm_new_exchange_check AS
+SELECT count(*) as counts FROM price_denorm_ld WHERE is_new_market="yes" AND exchange<>"coinmarketcap";
+
+UPDATE price_denorm_ld P_DN  , price_denorm_new_exchange_check P_CHK
+SET P_DN.is_new_market="no"
+WHERE P_DN.is_new_market="yes" AND P_CHK.counts > 7
+;
+
 
 RENAME TABLE price_denorm TO price_denorm_md;
 RENAME TABLE price_denorm_ld TO price_denorm;
@@ -551,7 +665,7 @@ FROM
 (
 SELECT "-1" id, "special_tweet" alert_type, BM.chatId , AS_DN.alert_fetchTime
 FROM
-( SELECT chatId FROM botMessages WHERE chatId > 0 GROUP BY chatId ) BM
+( SELECT chatId FROM botMessages WHERE chatId > 0  GROUP BY chatId ) BM
 ,
 ( SELECT  max(alert_fetchTime) alert_fetchTime FROM alerts_subscription_dn_ld WHERE alert_type="special_tweet" ) AS_DN
 )AL
@@ -565,6 +679,7 @@ JOIN
 tweets_dn_ld TW_DN
 ON P_DN1.tweet_id = TW_DN.tweet_id
 WHERE lower(TW_DN.tweet) like '%fork%' OR lower(TW_DN.tweet) like '%rebranding%'
+AND P_DN1.rank < 30
 GROUP BY
 P_DN1.tweet_fetchTime,P_DN1.twitter_screen_name,P_DN1.tweet_id,P_DN1.id,P_DN1.name,P_DN1.symbol
 ) P_DN

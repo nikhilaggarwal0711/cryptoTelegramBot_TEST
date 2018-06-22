@@ -14,12 +14,150 @@ class FetchBittrex:
         self.link4 = "https://api.kucoin.com/v1/open/tick"
         self.link5 = "https://www.cryptopia.co.nz/api/GetMarkets"
         self.link6 = "https://api.idex.market/returnTicker"
+        self.link7 = "https://api.hitbtc.com/api/2/public/ticker"
+        self.link8  = "https://bitbns.com/order/getTickerWithVolume/"
+        self.link9  = "https://www.zebapi.com/api/v1/market/"
+        self.link10 = "https://koinex.in/api/ticker"
+        self.link11 = "https://api.coindelta.com/api/v1/public/getticker/"
+        self.link12 = "https://api.wazirx.com/api/v2/tickers"
+        self.link13 = "https://api.unocoin.com/api/exchange/unodax-ticker"
         #self.db = DBHelper()
         #self.db.setup()
 
     def setFetchTime(self):
         #print "setFetchTime -- Bittrex"
         self.fetchTime = int(time.time())
+
+    def fetchData_Bitbns(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link8)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        #length = len(self.jsonList)
+
+        for elem in self.jsonList:
+            ##print "For loop  -- BitBns"
+            try:
+                self.MarketName = elem.encode('utf-8')
+                self.Price = self.jsonList[self.MarketName]["last_traded_price"]
+                try:
+                    self.volume = self.jsonList[self.MarketName]["volume"]["volume"]
+                except Exception as e:
+                    self.volume=0
+                    #print "no volume"
+                self.db.addBitbns(self.MarketName+"-INR",self.Price,self.volume,self.fetchTime)
+            except Exception as e:
+                print e.message
+
+    def fetchData_Zebpay(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link9)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        #length = len(self.jsonList)
+
+        for elem in self.jsonList:
+            ##print "For loop  -- BitBns"
+            try:
+                self.MarketName = elem["pair"].encode('utf-8')
+                self.Price = elem["buy"]
+                try:
+                    self.volume = elem["volume"]
+                except Exception as e:
+                    self.volume=0
+                    #print "no volume"
+                self.db.addZebpay(self.MarketName,self.Price,self.volume,self.fetchTime)
+            except Exception as e:
+                print e.message
+
+    def fetchData_Koinex(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link10)
+        self.data = self.f1.text.replace("null","0")
+        jsonList  = json.loads(self.data)
+        #length = len(self.jsonList)
+
+        for elem in jsonList["stats"]:
+            #print elem
+            #print jsonList["stats"][elem]
+            if elem == "bitcoin":
+                market = "btc"
+            elif elem == "ether":
+                market = "eth"
+            elif elem == "ripple":
+                market = "xrp"
+            elif elem == "inr":
+                market = "inr"
+            else:
+                market = "NA"
+            for coin in jsonList["stats"][elem]:
+                #print coin
+                try:
+                    currency = jsonList["stats"][elem][coin]["currency_short_form"].encode('utf-8')
+                    last_price = jsonList["stats"][elem][coin]["last_traded_price"]
+                    volume = jsonList["stats"][elem][coin]["vol_24hrs"]
+                    Marketname = currency + "-" + market
+                    #print coin + "-" + market + " | " + last_price + " | " + volume
+                    self.db.addKoinex(Marketname,last_price,volume,self.fetchTime)
+                except Exception as e:
+                    print e.message
+
+
+    def fetchData_Coindelta(self):
+        #print "fetchData -- Cryptopia"
+        self.f1 = requests.get(url = self.link11)
+        data = self.f1.text.replace("null","0")
+        jsonList  = json.loads(data)
+        length = len(jsonList)
+
+        for x in range(0,length):
+            ##print "Add data for loop  -- Cryptopia"
+            try:
+                MarketName = jsonList[x]["MarketName"].encode('utf-8')
+                last_price = jsonList[x]["Last"]
+                self.db.addCoindelta(MarketName,last_price,self.fetchTime)    
+            except Exception as e:
+                print e.message
+
+    def fetchData_Wazirx(self):
+        #print "fetchData -- Cryptopia"
+        self.f1 = requests.get(url = self.link12)
+        data = self.f1.text.replace("null","0")
+        jsonList  = json.loads(data)
+        #length = len(jsonList)
+
+        for elem in jsonList:
+            ##print "Add data for loop  -- Cryptopia"
+            try:
+                MarketName = jsonList[elem]["name"].encode('utf-8')
+                last_price = jsonList[elem]["last"]
+                volume = jsonList[elem]["volume"]
+                #print MarketName + " | " + last_price + " - " + volume
+                self.db.addWazirx(MarketName,last_price,volume,self.fetchTime)    
+            except Exception as e:
+                print e.message
+
+    def fetchData_Unocoin(self):
+        #print "fetchData -- Cryptopia"
+        self.f1 = requests.get(url = self.link13)
+        data = self.f1.text.replace("null","0")
+        jsonList  = json.loads(data)
+        #length = len(jsonList)
+
+        for elem in jsonList["stats"]:
+            ##print "Add data for loop  -- Cryptopia"
+            market = elem
+            for coin in jsonList["stats"][elem]:
+                #print coin
+                try:
+                    currency = jsonList["stats"][elem][coin]["currency_short_form"]
+                    last_price = jsonList["stats"][elem][coin]["last_traded_price"]
+                    volume = jsonList["stats"][elem][coin]["vol_24hrs"]
+                    Marketname = currency + "-" + market
+                    #print coin + "-" + Marketname + " | " + last_price + " | " + volume
+                    self.db.addUnocoin(Marketname,last_price,volume,self.fetchTime)
+                except Exception as e : 
+                    print e.message
 
     def fetchData_Cryptopia(self):
         #print "fetchData -- Cryptopia"
@@ -105,6 +243,22 @@ class FetchBittrex:
             if self.Price == "N/A":
                 self.Price = 0
             self.db.addIdex(self.MarketName,self.Price,self.fetchTime)
+
+    def fetchData_Hitbtc(self):
+        #print "fetchData -- Binance"
+        self.f1 = requests.get(url = self.link7)
+        self.data = self.f1.text.replace("null","0")
+        self.jsonList  = json.loads(self.data)
+        length = len(self.jsonList)
+
+        for x in range(0,length):
+            ##print "Add data for loop  -- Binance"
+            #print self.jsonList[x]["symbol"].encode('utf-8')
+            self.MarketName = self.jsonList[x]["symbol"].encode('utf-8')
+            #print self.jsonList[x]["price"]
+            self.last_price = self.jsonList[x]["last"]
+
+            self.db.addHitbtc(self.MarketName,self.last_price,self.fetchTime) 
 
 
     def fetchData_Bittrex(self):
@@ -270,6 +424,146 @@ class FetchBittrex:
                     self.sleepTime = sleepTime
                 except Exception as e: 
                     print "exception caught in while loop -- idex"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch HitBtc data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Hitbtc()
+                    self.db.deleteFromDB_oldData("hitbtc")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("hitbtc",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- hitbtc"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch BitBns data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Bitbns()
+                    self.db.deleteFromDB_oldData("bitbns")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("bitbns",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- bitbns"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch Zebpay data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Zebpay()
+                    self.db.deleteFromDB_oldData("zebpay")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("zebpay",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- zebpay"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch Koinex data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Koinex()
+                    self.db.deleteFromDB_oldData("koinex")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("koinex",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- koinex"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch CoinDelta data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Coindelta()
+                    self.db.deleteFromDB_oldData("coindelta")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("coindelta",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- coindelta"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch WazirX data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Wazirx()
+                    self.db.deleteFromDB_oldData("wazirx")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("wazirx",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- wazirx"
+                    print(e)
+                    print(e.message)
+                    self.sleepTime = 2 * self.sleepTime
+                    with open(COMMON.errorDir + Coinmarketcap.errorFileName,'a+') as f:
+                        f.write("\n\nError : ")
+                        f.write(e.__doc__)
+                        f.write(e.message)
+
+
+                #Fetch Unocoin data.
+                try:
+                    self.setFetchTime()
+                    self.fetchData_Unocoin()
+                    self.db.deleteFromDB_oldData("unocoin")
+                    deleteTime = 172800
+                    self.delTillFetchTime = self.fetchTime - deleteTime
+                    self.db.deleteFromDB_BKPonFetchTime("unocoin",self.delTillFetchTime)
+                    self.sleepTime = sleepTime
+                except Exception as e: 
+                    print "exception caught in while loop -- unocoin"
                     print(e)
                     print(e.message)
                     self.sleepTime = 2 * self.sleepTime

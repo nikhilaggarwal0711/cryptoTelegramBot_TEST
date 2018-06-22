@@ -15,9 +15,9 @@ def main():
 #    last_update_id = None
     print "Starting Thread"
 #    thread1 = MyThread("coinMarketCap",43200)
-    thread2 = MyThread("bittrex_and_coinMarketCap_and_denorm",70)
+    thread2 = MyThread("bittrex_and_coinMarketCap_and_denorm",90)
     thread3 = MyThread("telegram",0.5)
-    thread4 = MyThread("bitfinex",90)
+    #thread4 = MyThread("bitfinex",90)
 #    thread5 = MyThread("poloniex",60)
     thread6 = MyThread("twitter",1)
 
@@ -26,7 +26,7 @@ def main():
 #    thread1.start()
     thread2.start()
     thread3.start()
-    thread4.start()
+    #thread4.start()
 #    thread5.start()
     thread6.start()
 
@@ -34,7 +34,7 @@ def main():
 #    thread1.join()
     thread2.join()
     thread3.join()
-    thread4.join()
+    #thread4.join()
 #    thread5.join()
     thread6.join()
     print "Program Ends"

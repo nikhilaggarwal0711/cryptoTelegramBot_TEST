@@ -51,10 +51,10 @@ class DBHelper:
                 lastOffset = lastOffset[0]
         return lastOffset
 
-    def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text, userId):
+    def addBotMessage(self, chatId ,firstName, category , offsetId, fetchTime, text, userId, username_user, username_group):
         ##print "Inside addBotMessage -- DBHELPER"
         try:
-            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message, userId) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text, userId))
+            self.DB.execute("""INSERT INTO botMessages (chatId, firstName, category, offsetId, fetchTime, message, userId, username_user, username_group) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (chatId ,firstName, category , offsetId, fetchTime, text, userId, username_user, username_group))
             self.conn.commit()
         except Exception as e: 
             print(e)
@@ -93,9 +93,64 @@ class DBHelper:
         except Exception as e: 
             print(e) 
 
+
+    def addBitbns(self,MarketName,Price,volume,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO bitbns VALUES (%s,%s,%s,%s)""",(MarketName,float(Price),volume,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def addZebpay(self,MarketName,Price,volume,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO zebpay VALUES (%s,%s,%s,%s)""",(MarketName,float(Price),volume,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def addKoinex(self,MarketName,Price,volume,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO koinex VALUES (%s,%s,%s,%s)""",(MarketName,float(Price),volume,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def addCoindelta(self,MarketName,Price,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO coindelta VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def addWazirx(self,MarketName,Price,volume,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO wazirx VALUES (%s,%s,%s,%s)""",(MarketName,float(Price),volume,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+
+    def addUnocoin(self,MarketName,Price,volume,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO unocoin VALUES (%s,%s,%s,%s)""",(MarketName,float(Price),volume,fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
     def addIdex(self,MarketName,Price,fetchTime):
         try:
             self.DB.execute("""INSERT INTO idex VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.conn.commit()
+        except Exception as e: 
+            print(e) 
+
+    def addHitbtc(self,MarketName,Price,fetchTime):
+        try:
+            self.DB.execute("""INSERT INTO hitbtc VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
             self.conn.commit()
         except Exception as e: 
             print(e) 

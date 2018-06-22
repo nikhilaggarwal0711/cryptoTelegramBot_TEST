@@ -68,15 +68,32 @@ class RunTelegram:
         self.text = message["text"].encode('utf8')
         self.text = self.text.replace("@mycoins_bot", "")
         self.type = message["chat"]["type"]
+        self.username_group = ""
+        self.username_user  = ""
         if self.type == "group" or self.type=="supergroup" :
             self.chatId = message["chat"]["id"]  #This represents group name
-            self.userId = message["from"]["id"]  
+            self.userId = message["from"]["id"]
+            try:
+                self.username_group = message["chat"]["username"].encode('utf8')
+            except Exception as e:
+                self.username_group = ""
+                print "Exception from REFRESH DENORM method" 
+                print e.message
+                print(e)    
         else:
             self.chatId = message["from"]["id"]
             self.userId = message["from"]["id"]
 
         self.offsetId = message["date"]
         self.firstName = message["from"]["first_name"].encode('utf8')
+        try: 
+            self.username_user = message["from"]["username"].encode('utf8')
+        except Exception as e:
+            self.username_user = ""
+            print "Exception from REFRESH DENORM method" 
+            print e.message
+            print(e)
+
 
     #Following function will return either new or old
     def checkUser(self):
@@ -89,7 +106,7 @@ class RunTelegram:
         
     def addBotMessageInDB(self):
         #print "Inside addBotMessageInDB -- Telegram"
-        self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text , self.userId)
+        self.db.addBotMessage(self.chatId , self.firstName, self.category , self.offsetId, self.fetchTime, self.text , self.userId, self.username_user,self.username_group)
 
     def set_last_command_map(self,command):
         if self.chatId in self.LAST_COMMAND_MAP:
@@ -598,7 +615,7 @@ class RunTelegram:
                             exchange = str(market[0]).upper()
                             crypto =  str(market[1]).upper()
                             group_message = group_message + "\nExchange : <b>" + exchange + "</b> | Crypto : <b>" + crypto + "</b>"
-                            
+
                     if not user_message == "-" or not group_message == "-":
                         for user in allUsers:
                             self.chatId = user[0]
@@ -606,7 +623,8 @@ class RunTelegram:
                                 self.message = group_message
                             else:
                                 self.message = user_message
-                            self.sendTelegramMessage()  
+                            if self.message.count(",") < 30 and not self.message == "-":    #comma separates markets and more than 30 means new exchange was added and trying to send message by mistake
+                                self.sendTelegramMessage()  
                         #Update is_new_market to NO , so that it wont be fetched again.
                         self.db.update_priceDenorm_marketTypes()
                 except Exception as e:

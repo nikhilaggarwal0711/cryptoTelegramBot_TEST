@@ -62,13 +62,19 @@ class FetchBitfinex:
                 self.volume = self.jsonList2["volume"]
                 self.timestamp = self.jsonList2["timestamp"]
                 
+                self.db = DBHelper()
                 self.saveIntoDB()
+                self.db.closeConnection()
                 #Added delay of 1 second so as to avoid crossing ErrorLimit 
                 sleep(12)
             except Exception as e: 
                 #print "Exception Caught : fetchData -- Bitfinex"
                 #print(e)
                 print e.message
+                with open(COMMON.errorDir + Bitfinex.errorFileName,'a+') as f:
+                    f.write("\n\nError : ")
+                    f.write(e.__doc__)
+                    f.write(e.message)
                 #print "mid --> " + self.jsonList2["mid"]
 
     def saveIntoDB(self):
@@ -88,7 +94,7 @@ class FetchBitfinex:
         self.sleepTime = sleepTime
         try:
             while True:
-                self.db = DBHelper()
+                #self.db = DBHelper()
                 try:
                     #print "inserting again."
                     self.setFetchTime()
@@ -106,7 +112,7 @@ class FetchBitfinex:
                         f.write("\n\nError : ")
                         f.write(e.__doc__)
                         f.write(e.message)
-                self.db.closeConnection()
+                #self.db.closeConnection()
                 sleep(self.sleepTime)
         except Exception as e: 
             print "Exception caught in start function -- Bitfinex"
