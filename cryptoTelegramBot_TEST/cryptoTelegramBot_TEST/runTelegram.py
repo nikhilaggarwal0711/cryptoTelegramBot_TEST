@@ -8,7 +8,6 @@ from decimal import Decimal
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
 import locale
-from twisted.python.finalize import fin
 
 class RunTelegram:
     def __init__(self):
