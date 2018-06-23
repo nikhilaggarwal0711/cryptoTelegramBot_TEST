@@ -59,20 +59,20 @@ class DBHelper:
         except Exception as e: 
             print(e)
 
-    def addCryptopia(self,marketname,last_price,fetchTime):
+    def addCryptopia(self,marketname,last_price,BaseVolume,volume,fetchTime):
         try:
-            self.DB.execute("""INSERT INTO cryptopia VALUES (%s,%s,%s)""",(marketname,float(last_price),fetchTime))
+            self.DB.execute("""INSERT INTO cryptopia VALUES (%s,%s,%s,%s,%s)""",(marketname,float(last_price),BaseVolume,volume,fetchTime))
             self.conn.commit()
         except Exception as e:
             print "Exception caught while Inserting data in cryptopia table"
             print(e)
             print e.message
 
-    def addKucoin(self,coinType,symbol,lastDealPrice,fetchTime):
+    def addKucoin(self,coinType,symbol,lastDealPrice,volValue,vol,fetchTime):
         #coinType --> symbol in DB table
         #symbol --> marketname in DB table
         try:
-            self.DB.execute("""INSERT INTO kucoin VALUES (%s,%s,%s,%s)""",(coinType,symbol,float(lastDealPrice),fetchTime))
+            self.DB.execute("""INSERT INTO kucoin VALUES (%s,%s,%s,%s,%s,%s)""",(coinType,symbol,float(lastDealPrice),volValue,vol,fetchTime))
             self.conn.commit()
         except Exception as e:
             print "Exception caught while Inserting data in kucoin table"
@@ -86,9 +86,9 @@ class DBHelper:
         except Exception as e: 
             print(e) 
 
-    def addBinance(self,MarketName,Price,fetchTime):
+    def addBinance(self,MarketName,Price,quoteVolume,volume,fetchTime):
         try:
-            self.DB.execute("""INSERT INTO binance VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.DB.execute("""INSERT INTO binance VALUES (%s,%s,%s,%s,%s)""",(MarketName,float(Price),quoteVolume,volume,fetchTime))
             self.conn.commit()
         except Exception as e: 
             print(e) 
@@ -141,16 +141,16 @@ class DBHelper:
         except Exception as e: 
             print(e) 
 
-    def addIdex(self,MarketName,Price,fetchTime):
+    def addIdex(self,MarketName,Price,baseVolume,quoteVolume,fetchTime):
         try:
-            self.DB.execute("""INSERT INTO idex VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.DB.execute("""INSERT INTO idex VALUES (%s,%s,%s,%s,%s)""",(MarketName,float(Price),baseVolume,quoteVolume,fetchTime))
             self.conn.commit()
         except Exception as e: 
             print(e) 
 
-    def addHitbtc(self,MarketName,Price,fetchTime):
+    def addHitbtc(self,MarketName,Price,volumeQuote,volume,fetchTime):
         try:
-            self.DB.execute("""INSERT INTO hitbtc VALUES (%s,%s,%s)""",(MarketName,float(Price),fetchTime))
+            self.DB.execute("""INSERT INTO hitbtc VALUES (%s,%s,%s,%s,%s)""",(MarketName,float(Price),volumeQuote,volume,fetchTime))
             self.conn.commit()
         except Exception as e: 
             print(e) 

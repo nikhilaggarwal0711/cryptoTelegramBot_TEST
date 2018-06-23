@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS exchange_last_fetch (exchange text, country text, las
 CREATE TABLE IF NOT EXISTS coinmarketcap ( id text,name text,symbol text,rank int(11) ,price_usd decimal(18,9) ,price_btc decimal(18,9) ,24h_volume_usd decimal(38,9) ,market_cap_usd decimal(38,9) ,available_supply decimal(38,9) ,total_supply decimal(38,9) ,percent_change_1h decimal(18,9) ,percent_change_24h decimal(18,9) ,percent_change_7d decimal(18,9) ,last_updated text,fetchTime int(11) );
 
 CREATE TABLE IF NOT EXISTS bittrex ( marketname text,high decimal(18,9) ,low decimal(18,9) ,volume decimal(38,9) ,last decimal(18,9) ,basevolume decimal(38,9) ,timestampp text,bid decimal(18,9) ,ask decimal(18,9) ,openbuyorders int(11) ,opensellorders int(11) ,prevday decimal(18,9) ,created text,fetchTime int(11) );
-CREATE TABLE IF NOT EXISTS binance ( marketname text,price decimal(18,9) ,fetchTime int(11) );
+CREATE TABLE IF NOT EXISTS binance ( marketname text,price decimal(18,9),quoteVolume decimal(38,9),volume decimal(38,9) ,fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS idex ( marketname text,price decimal(18,9) ,fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS bitbns ( marketname text,price decimal(18,9) ,volume decimal(38,9), fetchTime int(11) );
 CREATE TABLE IF NOT EXISTS zebpay ( marketname text,price decimal(18,9) ,volume decimal(38,9), fetchTime int(11) );

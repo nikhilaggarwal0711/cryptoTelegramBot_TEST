@@ -10,7 +10,7 @@ class FetchBittrex:
         #print "inside Bittrex constructor"
         self.link1 = "https://bittrex.com/api/v1.1/public/getmarketsummaries"
         self.link2 = "https://api.coinmarketcap.com/v1/ticker/?limit=0"
-        self.link3 = "https://api.binance.com/api/v1/ticker/allPrices"
+        self.link3 = "https://api.binance.com/api/v1/ticker/24hr"
         self.link4 = "https://api.kucoin.com/v1/open/tick"
         self.link5 = "https://www.cryptopia.co.nz/api/GetMarkets"
         self.link6 = "https://api.idex.market/returnTicker"
@@ -171,8 +171,10 @@ class FetchBittrex:
             try:
                 self.marketname = self.jsonList["Data"][x]["Label"].encode('utf-8')
                 self.last_price = self.jsonList["Data"][x]["LastPrice"]
+                self.BaseVolume = self.jsonList["Data"][x]["BaseVolume"]
+                self.Volume = self.jsonList["Data"][x]["Volume"]
                 #print "Inserting Data"
-                self.db.addCryptopia(self.marketname,self.last_price,self.fetchTime)    
+                self.db.addCryptopia(self.marketname,self.last_price,self.BaseVolume,self.volume,self.fetchTime)    
             except Exception as e:
                 print e.message
 
@@ -197,16 +199,16 @@ class FetchBittrex:
                 #self.coinTypePair = self.jsonList["data"][x]["coinTypePair"].encode('utf-8')
                 #self.sort = self.jsonList["data"][x]["sort"]
                 #self.feeRate = self.jsonList["data"][x]["feeRate"]
-                #self.volValue = self.jsonList["data"][x]["volValue"]
+                self.volValue = self.jsonList["data"][x]["volValue"]
                 #self.high = self.jsonList["data"][x]["high"]
                 #self.datetime = self.jsonList["data"][x]["datetime"]
-                #self.vol = self.jsonList["data"][x]["vol"]
+                self.vol = self.jsonList["data"][x]["vol"]
                 #self.low = self.jsonList["data"][x]["low"]
                 #self.changeRate = self.jsonList["data"][x]["changeRate"]
     
                 if self.trading == True:
                     #print "Inserting Data"
-                    self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.fetchTime)    
+                    self.db.addKucoin(self.coinType,self.symbol,self.lastDealPrice,self.volValue,self.vol,self.fetchTime)    
             except Exception as e:
                 print e.message
  
@@ -222,9 +224,11 @@ class FetchBittrex:
             #print self.jsonList[x]["symbol"].encode('utf-8')
             self.MarketName = self.jsonList[x]["symbol"].encode('utf-8')
             #print self.jsonList[x]["price"]
-            self.Price = self.jsonList[x]["price"]
+            self.Price = self.jsonList[x]["lastPrice"]
+            self.quoteVolume = self.jsonList[x]["quoteVolume"]
+            self.volume = self.jsonList[x]["volume"]
 
-            self.db.addBinance(self.MarketName,self.Price,self.fetchTime)    
+            self.db.addBinance(self.MarketName,self.Price,self.quoteVolume,self.volume,self.fetchTime)    
 
 
     def fetchData_Idex(self):
@@ -240,9 +244,11 @@ class FetchBittrex:
             self.MarketName = elem.encode('utf-8')
             #print self.jsonList[self.MarketName]["last"].encode('utf-8')
             self.Price = self.jsonList[self.MarketName]["last"].encode('utf-8')
+            self.baseVolume = self.jsonList[self.MarketName]["baseVolume"]
+            self.quoteVolume = self.jsonList[self.MarketName]["quoteVolume"]
             if self.Price == "N/A":
                 self.Price = 0
-            self.db.addIdex(self.MarketName,self.Price,self.fetchTime)
+            self.db.addIdex(self.MarketName,self.Price,self.baseVolume,self.quoteVolume,self.fetchTime)
 
     def fetchData_Hitbtc(self):
         #print "fetchData -- Binance"
@@ -257,8 +263,10 @@ class FetchBittrex:
             self.MarketName = self.jsonList[x]["symbol"].encode('utf-8')
             #print self.jsonList[x]["price"]
             self.last_price = self.jsonList[x]["last"]
+            self.volumeQuote = self.jsonList[x]["volumeQuote"]
+            self.volume = self.jsonList[x]["volume"]
 
-            self.db.addHitbtc(self.MarketName,self.last_price,self.fetchTime) 
+            self.db.addHitbtc(self.MarketName,self.last_price,self.volumeQuote,self.volume,self.fetchTime) 
 
 
     def fetchData_Bittrex(self):
