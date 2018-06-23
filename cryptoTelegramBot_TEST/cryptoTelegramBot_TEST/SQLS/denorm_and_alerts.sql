@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS exchange_last_fetch;
-CREATE TABLE IF NOT EXISTS exchange_last_fetch AS
+DELETE FROM exchange_last_fetch;
+INSERT INTO exchange_last_fetch ( exchange, country, last_update, present_time, time_diff)
 select "Coinmarketcap" AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  coinmarketcap_dn    UNION ALL
 select "Binance"       AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  binance_dn    UNION ALL
 select "Bittrex"       AS exchange,"Global" AS country,max(fetchTime) AS last_update,unix_timestamp() AS present_time,unix_timestamp()-max(fetchTime) AS time_diff from  bittrex_dn    UNION ALL
@@ -28,7 +28,7 @@ delete from price_denorm_t2 where id = "-" and marketname in ( select marketname
 
 DELETE FROM price_denorm_t1;
 
-INSERT INTO price_denorm_t1(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at) 
+INSERT INTO price_denorm_t1(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,volume,created_at) 
 SELECT
 All_Coins.rank,
 All_Coins.id,
@@ -49,6 +49,7 @@ All_Coins.percent_change_1h AS cmc_percent_change_1h,
 All_Coins.percent_change_24h AS cmc_percent_change_24h,
 All_Coins.percent_change_7d AS cmc_percent_change_7d,
 All_Coins.is_new_market,
+All_Coins.volume,
 unix_timestamp() AS created_at
 FROM
 (SELECT
@@ -75,7 +76,8 @@ CASE
   WHEN P_DN.is_new_market = "yes" THEN "yes"
   WHEN T1.exchange <> "coinmarketcap" AND P_DN.marketname IS NULL     THEN "yes"
   ELSE NULL
-END AS is_new_market
+END AS is_new_market,
+T1.volume
 FROM
 (SELECT 
 CM.rank,
@@ -160,7 +162,8 @@ CM.24h_volume_usd,
 CM.market_cap_usd,
 CM.percent_change_1h,
 CM.percent_change_24h,
-CM.percent_change_7d
+CM.percent_change_7d,
+COALESCE(COM.volume,"-1") AS volume
 FROM 
 (SELECT 
  rank,
@@ -189,100 +192,110 @@ LEFT OUTER JOIN
 ON TW.twitter_screen_name = TWEETS.screen_name
 LEFT OUTER JOIN
 (
-SELECT BT_DN.marketname, BT_DN.coin, BT_DN.exchange, BT_DN.exchange_last_price, BT_DN.exchange_last_price_in FROM
+SELECT BT_DN.marketname, BT_DN.coin, BT_DN.exchange, BT_DN.exchange_last_price, BT_DN.exchange_last_price_in, BT_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'-',1)) AS coin,  
   "Bitbns" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  volume
   FROM bitbns_dn 
 ) BT_DN
 UNION ALL
-SELECT ZP_DN.marketname, ZP_DN.coin, ZP_DN.exchange, ZP_DN.exchange_last_price, ZP_DN.exchange_last_price_in FROM
+SELECT ZP_DN.marketname, ZP_DN.coin, ZP_DN.exchange, ZP_DN.exchange_last_price, ZP_DN.exchange_last_price_in, ZP_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'-',1)) AS coin,  
   "Zebpay" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  volume
   FROM zebpay_dn 
 ) ZP_DN
 UNION ALL
-SELECT KN_DN.marketname, KN_DN.coin, KN_DN.exchange, KN_DN.exchange_last_price, KN_DN.exchange_last_price_in FROM
+SELECT KN_DN.marketname, KN_DN.coin, KN_DN.exchange, KN_DN.exchange_last_price, KN_DN.exchange_last_price_in, KN_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'-',1)) AS coin,  
   "Koinex" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  volume
   FROM koinex_dn 
 ) KN_DN
 UNION ALL
-SELECT CD_DN.marketname, CD_DN.coin, CD_DN.exchange, CD_DN.exchange_last_price, CD_DN.exchange_last_price_in FROM
+SELECT CD_DN.marketname, CD_DN.coin, CD_DN.exchange, CD_DN.exchange_last_price, CD_DN.exchange_last_price_in, CD_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'-',1)) AS coin,  
   "Coindelta" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  -1 as volume
   FROM coindelta_dn 
 ) CD_DN
 UNION ALL
-SELECT WX_DN.marketname, WX_DN.coin, WX_DN.exchange, WX_DN.exchange_last_price, WX_DN.exchange_last_price_in FROM
+SELECT WX_DN.marketname, WX_DN.coin, WX_DN.exchange, WX_DN.exchange_last_price, WX_DN.exchange_last_price_in, WX_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'/',1)) AS coin,  
   "WazirX" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in,
+  volume
   FROM wazirx_dn 
 ) WX_DN
 UNION ALL
-SELECT UC_DN.marketname, UC_DN.coin, UC_DN.exchange, UC_DN.exchange_last_price, UC_DN.exchange_last_price_in FROM
+SELECT UC_DN.marketname, UC_DN.coin, UC_DN.exchange, UC_DN.exchange_last_price, UC_DN.exchange_last_price_in, UC_DN.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'-',1)) AS coin,  
   "Unocoin" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  volume
   FROM unocoin_dn 
 ) UC_DN
 UNION ALL
-SELECT HIT_DN.marketname, HIT_DN.coin, HIT_DN.exchange, HIT_DN.exchange_last_price, HIT_DN.exchange_last_price_in FROM
+SELECT HIT_DN.marketname, HIT_DN.coin, HIT_DN.exchange, HIT_DN.exchange_last_price, HIT_DN.exchange_last_price_in, HIT_DN.volume FROM
 ( SELECT 
   marketname,
   LEFT(replace(lower(marketname),'usdt','us-'), CHAR_LENGTH(replace(lower(marketname),'usdt','us-'))-3) AS coin,
   "Hitbtc" exchange,
   price AS exchange_last_price,
-  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in 
+  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in ,
+  volume
   FROM hitbtc_dn
 ) HIT_DN
 UNION ALL
-SELECT C_DN.marketname, C_DN.coin, C_DN.exchange, C_DN.exchange_last_price, C_DN.exchange_last_price_in FROM
+SELECT C_DN.marketname, C_DN.coin, C_DN.exchange, C_DN.exchange_last_price, C_DN.exchange_last_price_in, C_DN.volume FROM
 ( SELECT 
   marketname,
   lower(substring_index(marketname,'/',1)) coin,
   "Cryptopia" exchange,
   last_price AS exchange_last_price,
-  lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in,
+  volume
   FROM cryptopia_dn
 ) C_DN
 UNION ALL
-SELECT K_DN.marketname, K_DN.coin, K_DN.exchange, K_DN.exchange_last_price, K_DN.exchange_last_price_in FROM
+SELECT K_DN.marketname, K_DN.coin, K_DN.exchange, K_DN.exchange_last_price, K_DN.exchange_last_price_in, K_DN.volume FROM
 ( SELECT 
   marketname,
   lower(substring_index(marketname,'-',1)) coin,
   "Kucoin" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in,
+  vol AS volume
   FROM kucoin_dn
 ) K_DN
 UNION ALL
-SELECT IX.marketname, IX.coin, IX.exchange, IX.exchange_last_price, IX.exchange_last_price_in FROM
+SELECT IX.marketname, IX.coin, IX.exchange, IX.exchange_last_price, IX.exchange_last_price_in, IX.volume FROM
 (SELECT marketname,
   lower(substring_index(marketname,'_',-1)) AS coin,  
   "Idex" exchange,
   price AS exchange_last_price,
-  lower(substring_index(marketname,'_',1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'_',1)) AS exchange_last_price_in,
+  quoteVolume AS volume
   FROM idex_dn 
 ) IX
 UNION ALL
-SELECT BX.marketname, BX.coin, BX.exchange, BX.exchange_last_price, BX.exchange_last_price_in FROM
+SELECT BX.marketname, BX.coin, BX.exchange, BX.exchange_last_price, BX.exchange_last_price_in, BX.volume FROM
 (SELECT marketname,
   CASE 
    WHEN lower(substring_index(marketname,'-',-1)) = "bcc" THEN "bch" 
@@ -292,11 +305,12 @@ SELECT BX.marketname, BX.coin, BX.exchange, BX.exchange_last_price, BX.exchange_
   END coin, 
   "Bittrex" exchange,
   last AS exchange_last_price,
-  lower(substring_index(marketname,'-',1)) AS exchange_last_price_in
+  lower(substring_index(marketname,'-',1)) AS exchange_last_price_in,
+  volume
   FROM bittrex_dn 
 ) BX
 UNION ALL
-SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_last_price_in FROM
+SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_last_price_in,BF.volume FROM
 (SELECT marketname,
   CASE
    WHEN lower(substring(marketname,1,3)) = "dat" THEN "data"
@@ -317,7 +331,8 @@ SELECT BF.marketname, BF.coin, BF.exchange, BF.exchange_last_price, BF.exchange_
   END coin, 
   "Bitfinex" exchange,
   last_price AS exchange_last_price,
-  lower(substring(marketname,4,6)) AS exchange_last_price_in
+  lower(substring(marketname,4,6)) AS exchange_last_price_in,
+  -1 as volume
   FROM bitfinex_dn
   WHERE lower(substring(marketname,1,3)) <> "rrt"
   AND lower(substring(marketname,1,3)) <> "bcu"  
@@ -332,12 +347,13 @@ CASE
  WHEN lower(BN.coin) = "bcc"  THEN "bch"
  ELSE lower(BN.coin)
 END coin, 
-BN.exchange, BN.exchange_last_price, BN.exchange_last_price_in FROM
+BN.exchange, BN.exchange_last_price, BN.exchange_last_price_in, BN.volume FROM
 (SELECT marketname,
   LEFT(replace(lower(marketname),'usdt','us-'), CHAR_LENGTH(replace(lower(marketname),'usdt','us-'))-3) AS coin,
   "Binance" exchange,
   price AS exchange_last_price,
-  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in 
+  replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in ,
+  volume
   FROM binance_dn
 ) BN
 WHERE BN.coin not in ( '','123')
@@ -366,7 +382,8 @@ cmc_market_cap_usd,
 cmc_percent_change_1h,
 cmc_percent_change_24h,
 cmc_percent_change_7d,
-is_new_market
+is_new_market,
+volume
 FROM price_denorm
 WHERE id = "-"
 ) All_Coins
@@ -389,55 +406,62 @@ All_Coins.market_cap_usd,
 All_Coins.percent_change_1h,
 All_Coins.percent_change_24h,
 All_Coins.percent_change_7d,
-All_Coins.is_new_market
+All_Coins.is_new_market,
+All_Coins.volume
 ;
 
 
 
 DELETE FROM price_denorm_t2;
 
-INSERT INTO price_denorm_t2(rank,id,symbol,name,exchange,marketname,exchange_last_price,exchange_last_price_in,is_new_market,created_at) 
+INSERT INTO price_denorm_t2(rank,id,symbol,name,exchange,marketname,exchange_last_price,exchange_last_price_in,is_new_market,volume,created_at) 
 SELECT
 99999 AS rank,"-" AS id,"-" AS symbol,"-" AS name,MKTS.exchange,MKTS.marketname,MKTS.exchange_last_price,MKTS.exchange_last_price_in,"yes" AS is_new_market,unix_timestamp() AS created_at
 FROM
 (
-SELECT "Bitbns" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+SELECT "Bitbns" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in , volume AS volume
 FROM bitbns_dn
 UNION ALL
-SELECT "Zebpay" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+SELECT "Zebpay" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in  , volume AS volume
 FROM zebpay_dn
 UNION ALL
-SELECT "Koinex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+SELECT "Koinex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in  , volume AS volume
 FROM koinex_dn
 UNION ALL
-SELECT "Coindelta" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+SELECT "Coindelta" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in  , -1 AS volume
 FROM coindelta_dn
 UNION ALL
-SELECT "Wazirx" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in 
+SELECT "Wazirx" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in  , volume AS volume
 FROM wazirx_dn
 UNION ALL
-SELECT "Unocoin" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in 
+SELECT "Unocoin" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in  , volume AS volume
 FROM unocoin_dn
+UNION ALL
+SELECT "Cryptopia" AS exchange, marketname,last_price  AS exchange_last_price,lower(substring_index(marketname,'/',-1)) AS exchange_last_price_in  , volume AS volume
+FROM cryptopia_dn
+UNION ALL
+SELECT "Kucoin" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'-',-1)) AS exchange_last_price_in  , vol AS volume
+FROM kucoin_dn
 UNION ALL
 SELECT 
 "Hitbtc" AS exchange,marketname,price AS exchange_last_price,
-replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in
+replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in , volume AS volume
 FROM hitbtc_dn
 UNION ALL
-SELECT "Idex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'_',1)) AS exchange_last_price_in 
+SELECT "Idex" AS exchange, marketname,price       AS exchange_last_price,lower(substring_index(marketname,'_',1)) AS exchange_last_price_in  , quoteVolume AS volume
 FROM idex_dn
 UNION ALL
-SELECT "Bittrex" AS exchange, marketname,last       AS exchange_last_price,lower(substring_index(marketname,'-',1)) AS exchange_last_price_in 
+SELECT "Bittrex" AS exchange, marketname,last       AS exchange_last_price,lower(substring_index(marketname,'-',1)) AS exchange_last_price_in  , volume AS volume
 FROM bittrex_dn
 UNION ALL
-SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower(substring(marketname,4,6)) AS exchange_last_price_in 
+SELECT "Bitfinex" AS exchange,marketname,last_price AS exchange_last_price,lower(substring(marketname,4,6)) AS exchange_last_price_in  , volume AS volume
 FROM bitfinex_dn
 WHERE   lower(substring(marketname,1,3)) <> "bcu"
 AND     lower(substring(marketname,1,3)) <> "rrt"
 UNION ALL
 SELECT 
 "Binance" AS exchange,marketname,price AS exchange_last_price,
-replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in
+replace(right(replace(lower(marketname),'usdt','us-'),3),'us-','usdt') AS exchange_last_price_in , volume AS volume
 FROM binance_dn
 WHERE   marketname not in ("123456" , "ETC")
 ) MKTS
@@ -449,25 +473,25 @@ WHERE MKTS.marketname NOT IN ( SELECT marketname FROM price_denorm_t1 WHERE mark
 DELETE FROM price_denorm_ld;
 
 INSERT INTO price_denorm_ld
-(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at)
+(rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,volume,created_at)
 SELECT
-COM.rank,COM.id,COM.symbol,COM.name,COM.twitter_screen_name,COM.tweet_id,COM.tweet_fetchTime,COM.exchange,COM.marketname,COM.exchange_last_price,COM.exchange_last_price_in,COM.cmc_price_usd,COM.cmc_price_btc,COM.cmc_24h_volume_usd,COM.cmc_market_cap_usd,COM.cmc_percent_change_1h,COM.cmc_percent_change_24h,COM.cmc_percent_change_7d,COM.is_new_market,COM.created_at
+COM.rank,COM.id,COM.symbol,COM.name,COM.twitter_screen_name,COM.tweet_id,COM.tweet_fetchTime,COM.exchange,COM.marketname,COM.exchange_last_price,COM.exchange_last_price_in,COM.cmc_price_usd,COM.cmc_price_btc,COM.cmc_24h_volume_usd,COM.cmc_market_cap_usd,COM.cmc_percent_change_1h,COM.cmc_percent_change_24h,COM.cmc_percent_change_7d,COM.is_new_market,COM.volume,COM.created_at
 FROM
 (
 SELECT 
-rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t1
+rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,volume,created_at FROM price_denorm_t1
 UNION ALL
 SELECT 
-rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,created_at FROM price_denorm_t2
+rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,exchange,marketname,exchange_last_price,exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,is_new_market,volume,created_at FROM price_denorm_t2
 UNION ALL
 SELECT 
-rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,"Coinmarketcap" as exchange,NULL AS marketname,1.0 AS exchange_last_price,"btc" AS exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,"no" AS is_new_market,created_at FROM price_denorm_t1 WHERE lower(symbol) = "btc"
+rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,"Coinmarketcap" as exchange,NULL AS marketname,1.0 AS exchange_last_price,"btc" AS exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,"no" AS is_new_market,volume,created_at FROM price_denorm_t1 WHERE lower(symbol) = "btc"
 UNION ALL
 SELECT 
-rank, id, symbol, name, twitter_screen_name, tweet_id, tweet_fetchTime, "Coinmarketcap" as exchange, NULL AS marketname, cmc_price_btc AS exchange_last_price, "btc" AS exchange_last_price_in, cmc_price_usd, cmc_price_btc, cmc_24h_volume_usd, cmc_market_cap_usd, cmc_percent_change_1h, cmc_percent_change_24h, cmc_percent_change_7d, "no" AS is_new_market, created_at  FROM price_denorm_t1 WHERE lower(symbol) <> "btc"
+rank, id, symbol, name, twitter_screen_name, tweet_id, tweet_fetchTime, "Coinmarketcap" as exchange, NULL AS marketname, cmc_price_btc AS exchange_last_price, "btc" AS exchange_last_price_in, cmc_price_usd, cmc_price_btc, cmc_24h_volume_usd, cmc_market_cap_usd, cmc_percent_change_1h, cmc_percent_change_24h, cmc_percent_change_7d, "no" AS is_new_market, volume,created_at  FROM price_denorm_t1 WHERE lower(symbol) <> "btc"
 UNION ALL
 SELECT 
-rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,"Coinmarketcap" as exchange,NULL AS marketname,cmc_price_usd AS exchange_last_price,"usd" AS exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,"no" AS is_new_market,created_at FROM price_denorm_t1
+rank,id,symbol,name,twitter_screen_name,tweet_id,tweet_fetchTime,"Coinmarketcap" as exchange,NULL AS marketname,cmc_price_usd AS exchange_last_price,"usd" AS exchange_last_price_in,cmc_price_usd,cmc_price_btc,cmc_24h_volume_usd,cmc_market_cap_usd,cmc_percent_change_1h,cmc_percent_change_24h,cmc_percent_change_7d,"no" AS is_new_market,volume,created_at FROM price_denorm_t1
 )COM
 GROUP BY 
 COM.rank,
@@ -489,6 +513,7 @@ COM.cmc_percent_change_1h,
 COM.cmc_percent_change_24h,
 COM.cmc_percent_change_7d,
 COM.is_new_market,
+COM.volume,
 COM.created_at
 ;
 
